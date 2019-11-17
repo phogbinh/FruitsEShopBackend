@@ -13,7 +13,7 @@ import (
 
 const (
 	DatabaseUsersTableName = "users"
-	userNameColumnName     = "name"
+	userNameColumnName     = "username"
 	userPasswordColumnName = "password"
 	// Errors
 	noError                                               = ""
