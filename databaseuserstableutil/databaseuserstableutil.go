@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 
+	. "backend/model"
 	"backend/symbolutil"
 
 	"github.com/gin-gonic/gin"
@@ -30,12 +31,6 @@ const (
 	errorPrepareDeleteUserFromDatabaseUsersTable          = errorText + "preparing to delete user to" + errorDatabaseTableText + symbolutil.Colon
 	errorDeleteUserFromDatabaseUsersTable                 = errorText + "deleting user to" + errorDatabaseTableText + symbolutil.Colon
 )
-
-// An User represents an user tuple in the database table 'users'.
-type User struct {
-	Name     string `json:"name" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
 
 // A Status contains an http status code and its associated error message.
 type Status struct {
@@ -76,7 +71,7 @@ func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
 	var users []User
 	for databaseUsersTableRowsPtr.Next() {
 		var user User
-		scanError := databaseUsersTableRowsPtr.Scan(&user.Name, &user.Password)
+		scanError := databaseUsersTableRowsPtr.Scan(&user.UserName, &user.Password)
 		if scanError != nil {
 			return nil, Status{
 				httpStatusCode: http.StatusInternalServerError,
@@ -127,7 +122,7 @@ func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
 			httpStatusCode: http.StatusInternalServerError,
 			errorMessage:   errorPrepareInsertUserToDatabaseUsersTable + prepareError.Error()}
 	}
-	_, insertError := preparedStatementPtr.Exec(user.Name, user.Password)
+	_, insertError := preparedStatementPtr.Exec(user.UserName, user.Password)
 	if insertError != nil {
 		return Status{
 			httpStatusCode: http.StatusInternalServerError,
@@ -184,8 +179,8 @@ func UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUser(databasePtr *sq
 			context.String(getStatus.httpStatusCode, getStatus.errorMessage)
 			return
 		}
-		if userName != newPasswordUser.Name {
-			context.String(http.StatusBadRequest, "The user name given in the context parameter - "+userName+" - does not match the user name provided by the requested JSON object - "+newPasswordUser.Name+".")
+		if userName != newPasswordUser.UserName {
+			context.String(http.StatusBadRequest, "The user name given in the context parameter - "+userName+" - does not match the user name provided by the requested JSON object - "+newPasswordUser.UserName+".")
 			return
 		}
 		updateStatus := updateUserPasswordToDatabaseUsersTable(newPasswordUser, databasePtr)
@@ -204,7 +199,7 @@ func updateUserPasswordToDatabaseUsersTable(userOfNewPassword User, databasePtr 
 			httpStatusCode: http.StatusInternalServerError,
 			errorMessage:   errorPrepareUpdateUserPasswordToDatabaseUsersTable + prepareError.Error()}
 	}
-	_, updateError := preparedStatementPtr.Exec(userOfNewPassword.Password, userOfNewPassword.Name)
+	_, updateError := preparedStatementPtr.Exec(userOfNewPassword.Password, userOfNewPassword.UserName)
 	if updateError != nil {
 		return Status{
 			httpStatusCode: http.StatusInternalServerError,
