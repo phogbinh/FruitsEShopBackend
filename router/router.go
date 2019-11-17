@@ -1,14 +1,14 @@
 package router
 
 import (
-	"backend/handler"
-	"backend/middleware"
 	"database/sql"
 	"log"
 
+	DUTU "backend/database_users_table_util"
+	"backend/handler"
+	"backend/middleware"
 	"backend/symbolutil"
 
-	DUTU "backend/database_users_table_util"
 	"github.com/gin-gonic/gin"
 )
 

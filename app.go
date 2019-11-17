@@ -1,11 +1,12 @@
 package main
 
 import (
+	"database/sql"
+	"log"
+
 	db "backend/database"
 	DUTU "backend/database_users_table_util"
 	"backend/router"
-	"database/sql"
-	"log"
 
 	"github.com/gin-gonic/gin"
 )
