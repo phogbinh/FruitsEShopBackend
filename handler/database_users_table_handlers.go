@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"net/http"
 
+	DUTU "backend/database_users_table_util"
 	. "backend/model"
 	"backend/symbolutil"
-	DUTU "backend/database_users_table_util"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -28,12 +28,6 @@ const (
 	errorPrepareDeleteUserFromDatabaseUsersTable          = errorText + "preparing to delete user to" + errorDatabaseTableText + symbolutil.ColonSpace
 	errorDeleteUserFromDatabaseUsersTable                 = errorText + "deleting user to" + errorDatabaseTableText + symbolutil.ColonSpace
 )
-
-// CreateDatabaseUsersTableIfNotExists creates a table named 'users' for the given database pointer if the table has not already existed.
-func CreateDatabaseUsersTableIfNotExists(databasePtr *sql.DB) error {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS users (" + DUTU.UserNameColumnName + " VARCHAR(255) PRIMARY KEY, " + DUTU.PasswordColumnName + " VARCHAR(255) NOT NULL)")
-	return createTableError
-}
 
 // ResponseJsonOfAllUsersFromDatabaseUsersTableHandler responses to the client the json of all users from the database table 'users'.
 func ResponseJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
