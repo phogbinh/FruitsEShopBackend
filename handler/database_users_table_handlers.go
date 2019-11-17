@@ -3,6 +3,7 @@ package handler
 import (
 	"database/sql"
 	"net/http"
+	"strconv"
 
 	DUTU "backend/database_users_table_util"
 	. "backend/model"
@@ -22,7 +23,7 @@ const (
 	errorPrepareInsertUserToDatabaseUsersTable            = errorText + "preparing to insert user to" + errorDatabaseTableText + symbolutil.ColonSpace
 	errorInsertUserToDatabaseUsersTable                   = errorText + "inserting user to" + errorDatabaseTableText + symbolutil.ColonSpace
 	errorSelectGetUserFromDatabaseUsersTable              = errorText + "selecting an user from" + errorDatabaseTableText + symbolutil.ColonSpace
-	errorGetManyUsersGetUserFromDatabaseUsersTable        = errorText + "want to get one but got many users from" + errorDatabaseTableText + symbolutil.ColonSpace
+	errorGetManyUsersGetUserFromDatabaseUsersTable        = errorText + "want to get one but got none or many users from" + errorDatabaseTableText + symbolutil.ColonSpace
 	errorPrepareUpdateUserPasswordToDatabaseUsersTable    = errorText + "preparing to update user password to" + errorDatabaseTableText + symbolutil.ColonSpace
 	errorUpdateUserPasswordToDatabaseUsersTable           = errorText + "updating user password to" + errorDatabaseTableText + symbolutil.ColonSpace
 	errorPrepareDeleteUserFromDatabaseUsersTable          = errorText + "preparing to delete user to" + errorDatabaseTableText + symbolutil.ColonSpace
@@ -147,7 +148,7 @@ func getUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, 
 	if len(users) != 1 {
 		return dumpUser, Status{
 			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   errorGetManyUsersGetUserFromDatabaseUsersTable}
+			ErrorMessage:   errorGetManyUsersGetUserFromDatabaseUsersTable + strconv.Itoa(len(users)) + " user(s)."}
 	}
 	return users[0], Status{
 		HttpStatusCode: http.StatusOK,
