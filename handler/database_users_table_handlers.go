@@ -38,8 +38,8 @@ func CreateDatabaseUsersTableIfNotExists(databasePtr *sql.DB) error {
 	return createTableError
 }
 
-// ResponseJsonOfAllUsersFromDatabaseUsersTable responses to the client the json of all users from the database table 'users'.
-func ResponseJsonOfAllUsersFromDatabaseUsersTable(databasePtr *sql.DB) gin.HandlerFunc {
+// ResponseJsonOfAllUsersFromDatabaseUsersTableHandler responses to the client the json of all users from the database table 'users'.
+func ResponseJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		users, status := getAllUsersFromDatabaseUsersTable(databasePtr)
 		if status.HttpStatusCode != http.StatusOK {
@@ -78,9 +78,9 @@ func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
 		ErrorMessage:   noError}
 }
 
-// CreateUserToDatabaseUsersTableAndResponseJsonOfUser creates the user given in the context to the database table 'users'.
+// CreateUserToDatabaseUsersTableAndResponseJsonOfUserHandler creates the user given in the context to the database table 'users'.
 // Also, it responses to the client the json of the given user.
-func CreateUserToDatabaseUsersTableAndResponseJsonOfUser(databasePtr *sql.DB) gin.HandlerFunc {
+func CreateUserToDatabaseUsersTableAndResponseJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		user, getStatus := getUserFromContext(context)
 		if getStatus.HttpStatusCode != http.StatusOK {
@@ -127,8 +127,8 @@ func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
 		ErrorMessage:   noError}
 }
 
-// ResponseJsonOfUserFromDatabaseUsersTable responses to the client the json of the user given in the context parameter from the database table 'users'.
-func ResponseJsonOfUserFromDatabaseUsersTable(databasePtr *sql.DB) gin.HandlerFunc {
+// ResponseJsonOfUserFromDatabaseUsersTableHandler responses to the client the json of the user given in the context parameter from the database table 'users'.
+func ResponseJsonOfUserFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(userNameColumnName)
 		user, status := getUserFromDatabaseUsersTable(userName, databasePtr)
@@ -163,9 +163,9 @@ func getUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, 
 		ErrorMessage:   noError}
 }
 
-// UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUser updates the password of the user in the database table 'users' whose name is given in the context parameter and the requested JSON object.
+// UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUserHandler updates the password of the user in the database table 'users' whose name is given in the context parameter and the requested JSON object.
 // Also, it responses to the client the json of the given user.
-func UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUser(databasePtr *sql.DB) gin.HandlerFunc {
+func UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(userNameColumnName)
 		newPasswordUser, getStatus := getUserFromContext(context)
@@ -204,9 +204,9 @@ func updateUserPasswordToDatabaseUsersTable(userOfNewPassword User, databasePtr 
 		ErrorMessage:   noError}
 }
 
-// DeleteUserFromDatabaseUsersTableAndResponseJsonOfUserName deletes the user whose name is given in the context parameter from the database table 'users'.
+// DeleteUserFromDatabaseUsersTableAndResponseJsonOfUserNameHandler deletes the user whose name is given in the context parameter from the database table 'users'.
 // Also, it responses to the client the json of the given user name.
-func DeleteUserFromDatabaseUsersTableAndResponseJsonOfUserName(databasePtr *sql.DB) gin.HandlerFunc {
+func DeleteUserFromDatabaseUsersTableAndResponseJsonOfUserNameHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(userNameColumnName)
 		deleteStatus := deleteUserFromDatabaseUsersTable(userName, databasePtr)
