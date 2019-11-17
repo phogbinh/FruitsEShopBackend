@@ -6,6 +6,9 @@ import (
 	"database/sql"
 	"log"
 
+	"backend/symbolutil"
+
+	DUTU "backend/database_users_table_util"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,10 +27,34 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 	router.DELETE("/deleteorderitemincart", handler.DeleteOrderItemToCartHandler)
 	router.GET("/getorderitemsincart", handler.GetOrderItemsInCartHandler)
 	router.PUT("/modifyorderitemquantity", handler.ModifyOrderItemQuantityHandler)
+	initializeRouterDatabaseUsersTableHandlers(router, databasePtr)
 
 	auth := router.Group("/auth")
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
 		// TODO: authed api will be here
 	}
+}
+
+func initializeRouterDatabaseUsersTableHandlers(router *gin.Engine, databasePtr *sql.DB) {
+	const userNamePath = ":name"
+	router.GET(
+		symbolutil.RightSlash+DUTU.TableName,
+		handler.ResponseJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr))
+
+	router.POST(
+		symbolutil.RightSlash+DUTU.TableName,
+		handler.CreateUserToDatabaseUsersTableAndResponseJsonOfUserHandler(databasePtr))
+
+	router.GET(
+		symbolutil.RightSlash+DUTU.TableName+symbolutil.RightSlash+userNamePath,
+		handler.ResponseJsonOfUserFromDatabaseUsersTableHandler(databasePtr))
+
+	router.PUT(
+		symbolutil.RightSlash+DUTU.TableName+symbolutil.RightSlash+userNamePath,
+		handler.UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUserHandler(databasePtr))
+
+	router.DELETE(
+		symbolutil.RightSlash+DUTU.TableName+symbolutil.RightSlash+userNamePath,
+		handler.DeleteUserFromDatabaseUsersTableAndResponseJsonOfUserNameHandler(databasePtr))
 }
