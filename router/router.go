@@ -3,6 +3,7 @@ package router
 import (
 	"backend/handler"
 	"backend/middleware"
+	"database/sql"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +12,7 @@ import (
 /*
 Register is a place to register rotes
 */
-func Register(router *gin.Engine) {
+func Register(router *gin.Engine, databasePtr *sql.DB) {
 	authMiddleware, err := middleware.NewAuthMiddleware()
 	if err != nil {
 		log.Panicln(err)
