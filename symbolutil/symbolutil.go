@@ -6,4 +6,5 @@ const (
 	OpeningParenthesis = "("
 	ClosingParenthesis = ")"
 	RightSlash         = "/"
+	ColonSpace         = ": "
 )
