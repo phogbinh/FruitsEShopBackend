@@ -18,7 +18,7 @@ const (
 	// Errors
 	noError                                               = ""
 	errorText                                             = "Error "
-	errorDatabaseTableText                                = " the database table " + DatabaseUsersTableName
+	errorDatabaseTableText                                = " the database table '" + DatabaseUsersTableName + "'"
 	errorSelectGetAllUsersFromDatabaseUsersTable          = errorText + "selecting all users from" + errorDatabaseTableText + symbolutil.Colon
 	errorScanGetAllUsersFromDatabaseUsersTableRowsPointer = errorText + "scanning all users from" + errorDatabaseTableText + "'s rows pointer" + symbolutil.Colon
 	errorGetUserFromContext                               = errorText + "getting user from context" + symbolutil.Colon
