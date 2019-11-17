@@ -37,7 +37,7 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 }
 
 func initializeRouterDatabaseUsersTableHandlers(router *gin.Engine, databasePtr *sql.DB) {
-	const userNamePath = ":name"
+	const userNamePath = ":" + DUTU.UserNameColumnName
 	router.GET(
 		symbolutil.RightSlash+DUTU.TableName,
 		handler.ResponseJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr))
