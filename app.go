@@ -2,6 +2,7 @@ package main
 
 import (
 	db "backend/database"
+	DUTU "backend/database_users_table_util"
 	"backend/router"
 	"database/sql"
 	"log"
@@ -20,6 +21,10 @@ func getDatabaseHandler() *sql.DB {
 func run() {
 	databasePtr := getDatabaseHandler()
 	defer databasePtr.Close()
+	createDatabaseUsersTableError := DUTU.CreateDatabaseUsersTableIfNotExists(databasePtr)
+	if createDatabaseUsersTableError != nil {
+		log.Fatalf("Error creating database table: %q.", createDatabaseUsersTableError)
+	}
 	db.SqlDb = databasePtr
 	db.CreateDatabases(db.SqlDb)
 
