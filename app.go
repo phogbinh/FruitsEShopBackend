@@ -1,12 +1,16 @@
 package main
 
 import (
+	db "backend/database"
 	"backend/router"
 
 	"github.com/gin-gonic/gin"
 )
 
 func run() {
+	db.Init()
+	db.CreateDatabases(db.SqlDb)
+
 	var httpServer *gin.Engine
 
 	httpServer = gin.Default()
