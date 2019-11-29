@@ -218,7 +218,7 @@ func deleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) Stat
 	if executeError != nil {
 		return Status{
 			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(deleteUserFromDatabaseUsersTable) + prepareError.Error()}
+			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(deleteUserFromDatabaseUsersTable) + executeError.Error()}
 	}
 	return Status{
 		HttpStatusCode: http.StatusOK,
