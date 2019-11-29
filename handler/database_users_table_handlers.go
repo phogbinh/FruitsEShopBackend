@@ -93,11 +93,11 @@ func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
 	if prepareStatus.HttpStatusCode != http.StatusOK {
 		return prepareStatus
 	}
-	_, insertError := prepareStatementPtr.Exec(user.UserName, user.Password)
-	if insertError != nil {
+	_, executeError := prepareStatementPtr.Exec(user.UserName, user.Password)
+	if executeError != nil {
 		return Status{
 			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(insertUserToDatabaseUsersTable) + insertError.Error()}
+			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(insertUserToDatabaseUsersTable) + executeError.Error()}
 	}
 	return Status{
 		HttpStatusCode: http.StatusOK,
@@ -182,11 +182,11 @@ func updateUserPasswordToDatabaseUsersTable(userOfNewPassword User, databasePtr 
 			HttpStatusCode: http.StatusInternalServerError,
 			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(updateUserPasswordToDatabaseUsersTable) + prepareError.Error()}
 	}
-	_, updateError := prepareStatementPtr.Exec(userOfNewPassword.Password, userOfNewPassword.UserName)
-	if updateError != nil {
+	_, executeError := prepareStatementPtr.Exec(userOfNewPassword.Password, userOfNewPassword.UserName)
+	if executeError != nil {
 		return Status{
 			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(updateUserPasswordToDatabaseUsersTable) + updateError.Error()}
+			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(updateUserPasswordToDatabaseUsersTable) + executeError.Error()}
 	}
 	return Status{
 		HttpStatusCode: http.StatusOK,
@@ -214,8 +214,8 @@ func deleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) Stat
 			HttpStatusCode: http.StatusInternalServerError,
 			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(deleteUserFromDatabaseUsersTable) + prepareError.Error()}
 	}
-	_, deleteError := prepareStatementPtr.Exec(userName)
-	if deleteError != nil {
+	_, executeError := prepareStatementPtr.Exec(userName)
+	if executeError != nil {
 		return Status{
 			HttpStatusCode: http.StatusInternalServerError,
 			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(deleteUserFromDatabaseUsersTable) + prepareError.Error()}
