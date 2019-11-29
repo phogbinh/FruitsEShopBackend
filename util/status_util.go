@@ -31,5 +31,5 @@ func StatusBadRequest(functionInterface interface{}, err error) Status {
 func getErrorStatus(httpStatusCode int, functionInterface interface{}, err error) Status {
 	return Status{
 		HttpStatusCode: httpStatusCode,
-		ErrorMessage:   GetErrorMessageHeaderContainingFunctionName(functionInterface) + err.Error()}
+		ErrorMessage:   getErrorMessageHeaderContainingFunctionName(functionInterface) + err.Error()}
 }

@@ -5,8 +5,7 @@ import (
 	"runtime"
 )
 
-// GetErrorMessageHeaderContainingFunctionName returns the header of an error message which contains the given function name.
-func GetErrorMessageHeaderContainingFunctionName(functionInterface interface{}) string {
+func getErrorMessageHeaderContainingFunctionName(functionInterface interface{}) string {
 	return "Error occurred at function [" + getFunctionName(functionInterface) + "]" + ColonSpace
 }
 
