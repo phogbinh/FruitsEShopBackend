@@ -152,6 +152,18 @@ func getUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, 
 		ErrorMessage:   noError}
 }
 
+func getUserQueryRowsPtrFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (*sql.Rows, Status) {
+	queryRowsPtr, queryError := databasePtr.Query("SELECT * FROM "+DUTU.TableName+" WHERE "+DUTU.UserNameColumnName+" = ?", userName)
+	if queryError != nil {
+		return nil, Status{
+			HttpStatusCode: http.StatusInternalServerError,
+			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(getUserQueryRowsPtrFromDatabaseUsersTable) + queryError.Error()}
+	}
+	return queryRowsPtr, Status{
+		HttpStatusCode: http.StatusOK,
+		ErrorMessage:   noError}
+}
+
 // UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUserHandler updates the password of the user in the database table 'users' whose name is given in the context parameter and the requested JSON object.
 // Also, it responses to the client the json of the given user.
 func UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
