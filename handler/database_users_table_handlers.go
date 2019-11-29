@@ -186,11 +186,9 @@ func UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUserHandler(database
 }
 
 func updateUserPasswordToDatabaseUsersTable(userOfNewPassword User, databasePtr *sql.DB) Status {
-	prepareStatementPtr, prepareError := databasePtr.Prepare("UPDATE " + DUTU.TableName + " SET " + DUTU.PasswordColumnName + " = ? WHERE " + DUTU.UserNameColumnName + " = ?")
-	if prepareError != nil {
-		return Status{
-			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(updateUserPasswordToDatabaseUsersTable) + prepareError.Error()}
+	prepareStatementPtr, prepareStatus := prepareUpdateUserPasswordToDatabaseUsersTable(userOfNewPassword, databasePtr)
+	if prepareStatus.HttpStatusCode != http.StatusOK {
+		return prepareStatus
 	}
 	_, executeError := prepareStatementPtr.Exec(userOfNewPassword.Password, userOfNewPassword.UserName)
 	if executeError != nil {
