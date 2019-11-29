@@ -76,7 +76,7 @@ func getUserFromContext(context *gin.Context) (User, Status) {
 }
 
 func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
-	prepareStatementPtr, prepareStatus := prepareInsertUserToDatabaseUsersTable(user, databasePtr)
+	prepareStatementPtr, prepareStatus := prepareInsertUserToDatabaseUsersTable(databasePtr)
 	if !util.IsStatusOK(prepareStatus) {
 		return prepareStatus
 	}
@@ -87,7 +87,7 @@ func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
 	return util.StatusOK()
 }
 
-func prepareInsertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) (*sql.Stmt, Status) {
+func prepareInsertUserToDatabaseUsersTable(databasePtr *sql.DB) (*sql.Stmt, Status) {
 	prepareStatementPtr, prepareError := databasePtr.Prepare("INSERT INTO " + DUTU.TableName + " VALUES(?, ?)")
 	if prepareError != nil {
 		return nil, util.StatusInternalServerError(prepareInsertUserToDatabaseUsersTable, prepareError)
