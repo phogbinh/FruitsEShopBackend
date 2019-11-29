@@ -191,7 +191,7 @@ func DeleteUserFromDatabaseUsersTableAndResponseJsonOfUserNameHandler(databasePt
 }
 
 func deleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) Status {
-	prepareStatementPtr, prepareStatus := prepareDeleteUserFromDatabaseUsersTable(userName, databasePtr)
+	prepareStatementPtr, prepareStatus := prepareDeleteUserFromDatabaseUsersTable(databasePtr)
 	if !util.IsStatusOK(prepareStatus) {
 		return prepareStatus
 	}
@@ -202,7 +202,7 @@ func deleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) Stat
 	return util.StatusOK()
 }
 
-func prepareDeleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (*sql.Stmt, Status) {
+func prepareDeleteUserFromDatabaseUsersTable(databasePtr *sql.DB) (*sql.Stmt, Status) {
 	prepareStatementPtr, prepareError := databasePtr.Prepare("DELETE FROM " + DUTU.TableName + " WHERE " + DUTU.UserNameColumnName + " = ?")
 	if prepareError != nil {
 		return nil, util.StatusInternalServerError(prepareDeleteUserFromDatabaseUsersTable, prepareError)
