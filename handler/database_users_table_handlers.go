@@ -228,11 +228,9 @@ func DeleteUserFromDatabaseUsersTableAndResponseJsonOfUserNameHandler(databasePt
 }
 
 func deleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) Status {
-	prepareStatementPtr, prepareError := databasePtr.Prepare("DELETE FROM " + DUTU.TableName + " WHERE " + DUTU.UserNameColumnName + " = ?")
-	if prepareError != nil {
-		return Status{
-			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(deleteUserFromDatabaseUsersTable) + prepareError.Error()}
+	prepareStatementPtr, prepareStatus := prepareDeleteUserFromDatabaseUsersTable(userName, databasePtr)
+	if prepareStatus.HttpStatusCode != http.StatusOK {
+		return prepareStatus
 	}
 	_, executeError := prepareStatementPtr.Exec(userName)
 	if executeError != nil {
