@@ -157,7 +157,7 @@ func UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUserHandler(database
 }
 
 func updateUserPasswordToDatabaseUsersTable(userOfNewPassword User, databasePtr *sql.DB) Status {
-	prepareStatementPtr, prepareStatus := prepareUpdateUserPasswordToDatabaseUsersTable(userOfNewPassword, databasePtr)
+	prepareStatementPtr, prepareStatus := prepareUpdateUserPasswordToDatabaseUsersTable(databasePtr)
 	if !util.IsStatusOK(prepareStatus) {
 		return prepareStatus
 	}
@@ -168,7 +168,7 @@ func updateUserPasswordToDatabaseUsersTable(userOfNewPassword User, databasePtr 
 	return util.StatusOK()
 }
 
-func prepareUpdateUserPasswordToDatabaseUsersTable(userOfNewPassword User, databasePtr *sql.DB) (*sql.Stmt, Status) {
+func prepareUpdateUserPasswordToDatabaseUsersTable(databasePtr *sql.DB) (*sql.Stmt, Status) {
 	prepareStatementPtr, prepareError := databasePtr.Prepare("UPDATE " + DUTU.TableName + " SET " + DUTU.PasswordColumnName + " = ? WHERE " + DUTU.UserNameColumnName + " = ?")
 	if prepareError != nil {
 		return nil, util.StatusInternalServerError(prepareUpdateUserPasswordToDatabaseUsersTable, prepareError)
