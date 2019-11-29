@@ -2,6 +2,7 @@ package handler
 
 import (
 	"database/sql"
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -28,9 +29,7 @@ func ResponseJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr *sql.DB) gi
 func getAllUsersFromDatabaseUsersTable(databasePtr *sql.DB) ([]User, Status) {
 	queryRowsPtr, queryError := databasePtr.Query("SELECT * FROM " + DUTU.TableName)
 	if queryError != nil {
-		return nil, Status{
-			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(getAllUsersFromDatabaseUsersTable) + queryError.Error()}
+		return nil, util.StatusInternalServerError(getAllUsersFromDatabaseUsersTable, queryError)
 	}
 	defer queryRowsPtr.Close()
 	return getAllUsers(queryRowsPtr)
@@ -42,9 +41,7 @@ func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
 		var user User
 		scanError := databaseUsersTableRowsPtr.Scan(&user.UserName, &user.Password)
 		if scanError != nil {
-			return nil, Status{
-				HttpStatusCode: http.StatusInternalServerError,
-				ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(getAllUsers) + scanError.Error()}
+			return nil, util.StatusInternalServerError(getAllUsers, scanError)
 		}
 		users = append(users, user)
 	}
@@ -87,9 +84,7 @@ func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
 	}
 	_, executeError := prepareStatementPtr.Exec(user.UserName, user.Password)
 	if executeError != nil {
-		return Status{
-			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(insertUserToDatabaseUsersTable) + executeError.Error()}
+		return util.StatusInternalServerError(insertUserToDatabaseUsersTable, executeError)
 	}
 	return util.StatusOK()
 }
@@ -97,9 +92,7 @@ func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
 func prepareInsertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) (*sql.Stmt, Status) {
 	prepareStatementPtr, prepareError := databasePtr.Prepare("INSERT INTO " + DUTU.TableName + " VALUES(?, ?)")
 	if prepareError != nil {
-		return nil, Status{
-			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(prepareInsertUserToDatabaseUsersTable) + prepareError.Error()}
+		return nil, util.StatusInternalServerError(prepareInsertUserToDatabaseUsersTable, prepareError)
 	}
 	return prepareStatementPtr, util.StatusOK()
 }
@@ -129,9 +122,7 @@ func getUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, 
 		return dumpUser, getStatus
 	}
 	if len(users) != 1 {
-		return dumpUser, Status{
-			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(getUserFromDatabaseUsersTable) + strconv.Itoa(len(users)) + " user(s)."}
+		return dumpUser, util.StatusInternalServerError(getUserFromDatabaseUsersTable, errors.New("Query 1 user but got "+strconv.Itoa(len(users))+" user(s) instead."))
 	}
 	return users[0], util.StatusOK()
 }
@@ -139,9 +130,7 @@ func getUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, 
 func getUserQueryRowsPtrFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (*sql.Rows, Status) {
 	queryRowsPtr, queryError := databasePtr.Query("SELECT * FROM "+DUTU.TableName+" WHERE "+DUTU.UserNameColumnName+" = ?", userName)
 	if queryError != nil {
-		return nil, Status{
-			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(getUserQueryRowsPtrFromDatabaseUsersTable) + queryError.Error()}
+		return nil, util.StatusInternalServerError(getUserQueryRowsPtrFromDatabaseUsersTable, queryError)
 	}
 	return queryRowsPtr, util.StatusOK()
 }
@@ -176,9 +165,7 @@ func updateUserPasswordToDatabaseUsersTable(userOfNewPassword User, databasePtr 
 	}
 	_, executeError := prepareStatementPtr.Exec(userOfNewPassword.Password, userOfNewPassword.UserName)
 	if executeError != nil {
-		return Status{
-			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(updateUserPasswordToDatabaseUsersTable) + executeError.Error()}
+		return util.StatusInternalServerError(updateUserPasswordToDatabaseUsersTable, executeError)
 	}
 	return util.StatusOK()
 }
@@ -186,9 +173,7 @@ func updateUserPasswordToDatabaseUsersTable(userOfNewPassword User, databasePtr 
 func prepareUpdateUserPasswordToDatabaseUsersTable(userOfNewPassword User, databasePtr *sql.DB) (*sql.Stmt, Status) {
 	prepareStatementPtr, prepareError := databasePtr.Prepare("UPDATE " + DUTU.TableName + " SET " + DUTU.PasswordColumnName + " = ? WHERE " + DUTU.UserNameColumnName + " = ?")
 	if prepareError != nil {
-		return nil, Status{
-			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(prepareUpdateUserPasswordToDatabaseUsersTable) + prepareError.Error()}
+		return nil, util.StatusInternalServerError(prepareUpdateUserPasswordToDatabaseUsersTable, prepareError)
 	}
 	return prepareStatementPtr, util.StatusOK()
 }
@@ -214,9 +199,7 @@ func deleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) Stat
 	}
 	_, executeError := prepareStatementPtr.Exec(userName)
 	if executeError != nil {
-		return Status{
-			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(deleteUserFromDatabaseUsersTable) + executeError.Error()}
+		return util.StatusInternalServerError(deleteUserFromDatabaseUsersTable, executeError)
 	}
 	return util.StatusOK()
 }
@@ -224,9 +207,7 @@ func deleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) Stat
 func prepareDeleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (*sql.Stmt, Status) {
 	prepareStatementPtr, prepareError := databasePtr.Prepare("DELETE FROM " + DUTU.TableName + " WHERE " + DUTU.UserNameColumnName + " = ?")
 	if prepareError != nil {
-		return nil, Status{
-			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(prepareDeleteUserFromDatabaseUsersTable) + prepareError.Error()}
+		return nil, util.StatusInternalServerError(prepareDeleteUserFromDatabaseUsersTable, prepareError)
 	}
 	return prepareStatementPtr, util.StatusOK()
 }
