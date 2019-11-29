@@ -131,11 +131,9 @@ func ResponseJsonOfUserFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.Ha
 
 func getUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, Status) {
 	var dumpUser User
-	queryRowsPtr, queryError := databasePtr.Query("SELECT * FROM "+DUTU.TableName+" WHERE "+DUTU.UserNameColumnName+" = ?", userName)
-	if queryError != nil {
-		return dumpUser, Status{
-			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(getUserFromDatabaseUsersTable) + queryError.Error()}
+	queryRowsPtr, queryStatus := getUserQueryRowsPtrFromDatabaseUsersTable(userName, databasePtr)
+	if queryStatus.HttpStatusCode != http.StatusOK {
+		return dumpUser, queryStatus
 	}
 	defer queryRowsPtr.Close()
 	users, getStatus := getAllUsers(queryRowsPtr)
