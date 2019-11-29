@@ -203,6 +203,18 @@ func updateUserPasswordToDatabaseUsersTable(userOfNewPassword User, databasePtr 
 		ErrorMessage:   noError}
 }
 
+func prepareUpdateUserPasswordToDatabaseUsersTable(userOfNewPassword User, databasePtr *sql.DB) (*sql.Stmt, Status) {
+	prepareStatementPtr, prepareError := databasePtr.Prepare("UPDATE " + DUTU.TableName + " SET " + DUTU.PasswordColumnName + " = ? WHERE " + DUTU.UserNameColumnName + " = ?")
+	if prepareError != nil {
+		return nil, Status{
+			HttpStatusCode: http.StatusInternalServerError,
+			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(prepareUpdateUserPasswordToDatabaseUsersTable) + prepareError.Error()}
+	}
+	return prepareStatementPtr, Status{
+		HttpStatusCode: http.StatusOK,
+		ErrorMessage:   noError}
+}
+
 // DeleteUserFromDatabaseUsersTableAndResponseJsonOfUserNameHandler deletes the user whose name is given in the context parameter from the database table 'users'.
 // Also, it responses to the client the json of the given user name.
 func DeleteUserFromDatabaseUsersTableAndResponseJsonOfUserNameHandler(databasePtr *sql.DB) gin.HandlerFunc {
