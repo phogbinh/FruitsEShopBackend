@@ -13,10 +13,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const (
-	noError = ""
-)
-
 // ResponseJsonOfAllUsersFromDatabaseUsersTableHandler responses to the client the json of all users from the database table 'users'.
 func ResponseJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
