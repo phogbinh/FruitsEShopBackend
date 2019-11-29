@@ -244,3 +244,15 @@ func deleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) Stat
 		HttpStatusCode: http.StatusOK,
 		ErrorMessage:   noError}
 }
+
+func prepareDeleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (*sql.Stmt, Status) {
+	prepareStatementPtr, prepareError := databasePtr.Prepare("DELETE FROM " + DUTU.TableName + " WHERE " + DUTU.UserNameColumnName + " = ?")
+	if prepareError != nil {
+		return nil, Status{
+			HttpStatusCode: http.StatusInternalServerError,
+			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(prepareDeleteUserFromDatabaseUsersTable) + prepareError.Error()}
+	}
+	return prepareStatementPtr, Status{
+		HttpStatusCode: http.StatusOK,
+		ErrorMessage:   noError}
+}
