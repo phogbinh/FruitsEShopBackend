@@ -30,14 +30,14 @@ func ResponseJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr *sql.DB) gi
 }
 
 func getAllUsersFromDatabaseUsersTable(databasePtr *sql.DB) ([]User, Status) {
-	selectRowsPtr, selectError := databasePtr.Query("SELECT * FROM " + DUTU.TableName)
-	if selectError != nil {
+	queryRowsPtr, queryError := databasePtr.Query("SELECT * FROM " + DUTU.TableName)
+	if queryError != nil {
 		return nil, Status{
 			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(getAllUsersFromDatabaseUsersTable) + selectError.Error()}
+			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(getAllUsersFromDatabaseUsersTable) + queryError.Error()}
 	}
-	defer selectRowsPtr.Close()
-	return getAllUsers(selectRowsPtr)
+	defer queryRowsPtr.Close()
+	return getAllUsers(queryRowsPtr)
 }
 
 func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
@@ -131,14 +131,14 @@ func ResponseJsonOfUserFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.Ha
 
 func getUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, Status) {
 	var dumpUser User
-	selectRowsPtr, selectError := databasePtr.Query("SELECT * FROM "+DUTU.TableName+" WHERE "+DUTU.UserNameColumnName+" = ?", userName)
-	if selectError != nil {
+	queryRowsPtr, queryError := databasePtr.Query("SELECT * FROM "+DUTU.TableName+" WHERE "+DUTU.UserNameColumnName+" = ?", userName)
+	if queryError != nil {
 		return dumpUser, Status{
 			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(getUserFromDatabaseUsersTable) + selectError.Error()}
+			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(getUserFromDatabaseUsersTable) + queryError.Error()}
 	}
-	defer selectRowsPtr.Close()
-	users, getStatus := getAllUsers(selectRowsPtr)
+	defer queryRowsPtr.Close()
+	users, getStatus := getAllUsers(queryRowsPtr)
 	if getStatus.HttpStatusCode != http.StatusOK {
 		return dumpUser, getStatus
 	}
