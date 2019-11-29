@@ -52,9 +52,7 @@ func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
 		}
 		users = append(users, user)
 	}
-	return users, Status{
-		HttpStatusCode: http.StatusOK,
-		ErrorMessage:   noError}
+	return users, util.StatusOK()
 }
 
 // CreateUserToDatabaseUsersTableAndResponseJsonOfUserHandler creates the user given in the context to the database table 'users'.
@@ -83,9 +81,7 @@ func getUserFromContext(context *gin.Context) (User, Status) {
 			HttpStatusCode: http.StatusBadRequest,
 			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(getUserFromContext) + bindError.Error()}
 	}
-	return user, Status{
-		HttpStatusCode: http.StatusOK,
-		ErrorMessage:   noError}
+	return user, util.StatusOK()
 }
 
 func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
@@ -99,9 +95,7 @@ func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
 			HttpStatusCode: http.StatusInternalServerError,
 			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(insertUserToDatabaseUsersTable) + executeError.Error()}
 	}
-	return Status{
-		HttpStatusCode: http.StatusOK,
-		ErrorMessage:   noError}
+	return util.StatusOK()
 }
 
 func prepareInsertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) (*sql.Stmt, Status) {
@@ -111,9 +105,7 @@ func prepareInsertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) (*sql
 			HttpStatusCode: http.StatusInternalServerError,
 			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(prepareInsertUserToDatabaseUsersTable) + prepareError.Error()}
 	}
-	return prepareStatementPtr, Status{
-		HttpStatusCode: http.StatusOK,
-		ErrorMessage:   noError}
+	return prepareStatementPtr, util.StatusOK()
 }
 
 // ResponseJsonOfUserFromDatabaseUsersTableHandler responses to the client the json of the user given in the context parameter from the database table 'users'.
@@ -145,9 +137,7 @@ func getUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, 
 			HttpStatusCode: http.StatusInternalServerError,
 			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(getUserFromDatabaseUsersTable) + strconv.Itoa(len(users)) + " user(s)."}
 	}
-	return users[0], Status{
-		HttpStatusCode: http.StatusOK,
-		ErrorMessage:   noError}
+	return users[0], util.StatusOK()
 }
 
 func getUserQueryRowsPtrFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (*sql.Rows, Status) {
@@ -157,9 +147,7 @@ func getUserQueryRowsPtrFromDatabaseUsersTable(userName string, databasePtr *sql
 			HttpStatusCode: http.StatusInternalServerError,
 			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(getUserQueryRowsPtrFromDatabaseUsersTable) + queryError.Error()}
 	}
-	return queryRowsPtr, Status{
-		HttpStatusCode: http.StatusOK,
-		ErrorMessage:   noError}
+	return queryRowsPtr, util.StatusOK()
 }
 
 // UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUserHandler updates the password of the user in the database table 'users' whose name is given in the context parameter and the requested JSON object.
@@ -196,9 +184,7 @@ func updateUserPasswordToDatabaseUsersTable(userOfNewPassword User, databasePtr 
 			HttpStatusCode: http.StatusInternalServerError,
 			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(updateUserPasswordToDatabaseUsersTable) + executeError.Error()}
 	}
-	return Status{
-		HttpStatusCode: http.StatusOK,
-		ErrorMessage:   noError}
+	return util.StatusOK()
 }
 
 func prepareUpdateUserPasswordToDatabaseUsersTable(userOfNewPassword User, databasePtr *sql.DB) (*sql.Stmt, Status) {
@@ -208,9 +194,7 @@ func prepareUpdateUserPasswordToDatabaseUsersTable(userOfNewPassword User, datab
 			HttpStatusCode: http.StatusInternalServerError,
 			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(prepareUpdateUserPasswordToDatabaseUsersTable) + prepareError.Error()}
 	}
-	return prepareStatementPtr, Status{
-		HttpStatusCode: http.StatusOK,
-		ErrorMessage:   noError}
+	return prepareStatementPtr, util.StatusOK()
 }
 
 // DeleteUserFromDatabaseUsersTableAndResponseJsonOfUserNameHandler deletes the user whose name is given in the context parameter from the database table 'users'.
@@ -238,9 +222,7 @@ func deleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) Stat
 			HttpStatusCode: http.StatusInternalServerError,
 			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(deleteUserFromDatabaseUsersTable) + executeError.Error()}
 	}
-	return Status{
-		HttpStatusCode: http.StatusOK,
-		ErrorMessage:   noError}
+	return util.StatusOK()
 }
 
 func prepareDeleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (*sql.Stmt, Status) {
@@ -250,7 +232,5 @@ func prepareDeleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.D
 			HttpStatusCode: http.StatusInternalServerError,
 			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(prepareDeleteUserFromDatabaseUsersTable) + prepareError.Error()}
 	}
-	return prepareStatementPtr, Status{
-		HttpStatusCode: http.StatusOK,
-		ErrorMessage:   noError}
+	return prepareStatementPtr, util.StatusOK()
 }
