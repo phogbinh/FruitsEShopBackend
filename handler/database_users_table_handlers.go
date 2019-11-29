@@ -70,9 +70,7 @@ func getUserFromContext(context *gin.Context) (User, Status) {
 	var user User
 	bindError := context.ShouldBindJSON(&user)
 	if bindError != nil {
-		return user, Status{
-			HttpStatusCode: http.StatusBadRequest,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(getUserFromContext) + bindError.Error()}
+		return user, util.StatusBadRequest(getUserFromContext, bindError)
 	}
 	return user, util.StatusOK()
 }
