@@ -15,16 +15,12 @@ func StatusOK() Status {
 
 // StatusInternalServerError returns an http.StatusInternalServerError associated with the error message consisting of the function name and the given error.
 func StatusInternalServerError(functionInterface interface{}, err error) Status {
-	return Status{
-		HttpStatusCode: http.StatusInternalServerError,
-		ErrorMessage:   GetErrorMessageHeaderContainingFunctionName(functionInterface) + err.Error()}
+	return getErrorStatus(http.StatusInternalServerError, functionInterface, err)
 }
 
 // StatusBadRequest returns an http.StatusBadRequest associated with the error message consisting of the function name and the given error.
 func StatusBadRequest(functionInterface interface{}, err error) Status {
-	return Status{
-		HttpStatusCode: http.StatusBadRequest,
-		ErrorMessage:   GetErrorMessageHeaderContainingFunctionName(functionInterface) + err.Error()}
+	return getErrorStatus(http.StatusBadRequest, functionInterface, err)
 }
 
 func getErrorStatus(httpStatusCode int, functionInterface interface{}, err error) Status {
