@@ -19,7 +19,7 @@ func ResponseJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr *sql.DB) gi
 	return func(context *gin.Context) {
 		users, status := getAllUsersFromDatabaseUsersTable(databasePtr)
 		if !util.IsStatusOK(status) {
-			context.String(status.HttpStatusCode, status.ErrorMessage)
+			context.JSON(status.HttpStatusCode, gin.H{util.JsonError: status.ErrorMessage})
 			return
 		}
 		context.JSON(http.StatusOK, users)
@@ -54,12 +54,12 @@ func CreateUserToDatabaseUsersTableAndResponseJsonOfUserHandler(databasePtr *sql
 	return func(context *gin.Context) {
 		user, getStatus := getUserFromContext(context)
 		if !util.IsStatusOK(getStatus) {
-			context.String(getStatus.HttpStatusCode, getStatus.ErrorMessage)
+			context.JSON(getStatus.HttpStatusCode, gin.H{util.JsonError: getStatus.ErrorMessage})
 			return
 		}
 		insertStatus := insertUserToDatabaseUsersTable(user, databasePtr)
 		if !util.IsStatusOK(insertStatus) {
-			context.String(insertStatus.HttpStatusCode, insertStatus.ErrorMessage)
+			context.JSON(insertStatus.HttpStatusCode, gin.H{util.JsonError: insertStatus.ErrorMessage})
 			return
 		}
 		context.JSON(http.StatusOK, user)
@@ -101,7 +101,7 @@ func ResponseJsonOfUserFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.Ha
 		userName := context.Param(DUTU.UserNameColumnName)
 		user, status := getUserFromDatabaseUsersTable(userName, databasePtr)
 		if !util.IsStatusOK(status) {
-			context.String(status.HttpStatusCode, status.ErrorMessage)
+			context.JSON(status.HttpStatusCode, gin.H{util.JsonError: status.ErrorMessage})
 			return
 		}
 		context.JSON(http.StatusOK, user)
@@ -140,16 +140,16 @@ func UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUserHandler(database
 		userName := context.Param(DUTU.UserNameColumnName)
 		newPasswordUser, getStatus := getUserFromContext(context)
 		if !util.IsStatusOK(getStatus) {
-			context.String(getStatus.HttpStatusCode, getStatus.ErrorMessage)
+			context.JSON(getStatus.HttpStatusCode, gin.H{util.JsonError: getStatus.ErrorMessage})
 			return
 		}
 		if userName != newPasswordUser.UserName {
-			context.String(http.StatusBadRequest, "The user name given in the context parameter - "+userName+" - does not match the user name provided by the requested JSON object - "+newPasswordUser.UserName+".")
+			context.JSON(http.StatusBadRequest, gin.H{util.JsonError: "The user name given in the context parameter - " + userName + " - does not match the user name provided by the requested JSON object - " + newPasswordUser.UserName + "."})
 			return
 		}
 		updateStatus := updateUserPasswordToDatabaseUsersTable(newPasswordUser, databasePtr)
 		if !util.IsStatusOK(updateStatus) {
-			context.String(updateStatus.HttpStatusCode, updateStatus.ErrorMessage)
+			context.JSON(updateStatus.HttpStatusCode, gin.H{util.JsonError: updateStatus.ErrorMessage})
 			return
 		}
 		context.JSON(http.StatusOK, newPasswordUser)
@@ -183,7 +183,7 @@ func DeleteUserFromDatabaseUsersTableAndResponseJsonOfUserNameHandler(databasePt
 		userName := context.Param(DUTU.UserNameColumnName)
 		deleteStatus := deleteUserFromDatabaseUsersTable(userName, databasePtr)
 		if !util.IsStatusOK(deleteStatus) {
-			context.String(deleteStatus.HttpStatusCode, deleteStatus.ErrorMessage)
+			context.JSON(deleteStatus.HttpStatusCode, gin.H{util.JsonError: deleteStatus.ErrorMessage})
 			return
 		}
 		context.JSON(http.StatusOK, gin.H{DUTU.UserNameColumnName: userName})
