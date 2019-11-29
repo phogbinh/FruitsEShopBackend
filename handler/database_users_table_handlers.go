@@ -17,7 +17,7 @@ import (
 func ResponseJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		users, status := getAllUsersFromDatabaseUsersTable(databasePtr)
-		if status.HttpStatusCode != http.StatusOK {
+		if !util.IsStatusOK(status) {
 			context.String(status.HttpStatusCode, status.ErrorMessage)
 			return
 		}
@@ -56,12 +56,12 @@ func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
 func CreateUserToDatabaseUsersTableAndResponseJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		user, getStatus := getUserFromContext(context)
-		if getStatus.HttpStatusCode != http.StatusOK {
+		if !util.IsStatusOK(getStatus) {
 			context.String(getStatus.HttpStatusCode, getStatus.ErrorMessage)
 			return
 		}
 		insertStatus := insertUserToDatabaseUsersTable(user, databasePtr)
-		if insertStatus.HttpStatusCode != http.StatusOK {
+		if !util.IsStatusOK(insertStatus) {
 			context.String(insertStatus.HttpStatusCode, insertStatus.ErrorMessage)
 			return
 		}
@@ -82,7 +82,7 @@ func getUserFromContext(context *gin.Context) (User, Status) {
 
 func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
 	prepareStatementPtr, prepareStatus := prepareInsertUserToDatabaseUsersTable(user, databasePtr)
-	if prepareStatus.HttpStatusCode != http.StatusOK {
+	if !util.IsStatusOK(prepareStatus) {
 		return prepareStatus
 	}
 	_, executeError := prepareStatementPtr.Exec(user.UserName, user.Password)
@@ -109,7 +109,7 @@ func ResponseJsonOfUserFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.Ha
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
 		user, status := getUserFromDatabaseUsersTable(userName, databasePtr)
-		if status.HttpStatusCode != http.StatusOK {
+		if !util.IsStatusOK(status) {
 			context.String(status.HttpStatusCode, status.ErrorMessage)
 			return
 		}
@@ -120,12 +120,12 @@ func ResponseJsonOfUserFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.Ha
 func getUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, Status) {
 	var dumpUser User
 	queryRowsPtr, queryStatus := getUserQueryRowsPtrFromDatabaseUsersTable(userName, databasePtr)
-	if queryStatus.HttpStatusCode != http.StatusOK {
+	if !util.IsStatusOK(queryStatus) {
 		return dumpUser, queryStatus
 	}
 	defer queryRowsPtr.Close()
 	users, getStatus := getAllUsers(queryRowsPtr)
-	if getStatus.HttpStatusCode != http.StatusOK {
+	if !util.IsStatusOK(getStatus) {
 		return dumpUser, getStatus
 	}
 	if len(users) != 1 {
@@ -152,7 +152,7 @@ func UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUserHandler(database
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
 		newPasswordUser, getStatus := getUserFromContext(context)
-		if getStatus.HttpStatusCode != http.StatusOK {
+		if !util.IsStatusOK(getStatus) {
 			context.String(getStatus.HttpStatusCode, getStatus.ErrorMessage)
 			return
 		}
@@ -161,7 +161,7 @@ func UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUserHandler(database
 			return
 		}
 		updateStatus := updateUserPasswordToDatabaseUsersTable(newPasswordUser, databasePtr)
-		if updateStatus.HttpStatusCode != http.StatusOK {
+		if !util.IsStatusOK(updateStatus) {
 			context.String(updateStatus.HttpStatusCode, updateStatus.ErrorMessage)
 			return
 		}
@@ -171,7 +171,7 @@ func UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUserHandler(database
 
 func updateUserPasswordToDatabaseUsersTable(userOfNewPassword User, databasePtr *sql.DB) Status {
 	prepareStatementPtr, prepareStatus := prepareUpdateUserPasswordToDatabaseUsersTable(userOfNewPassword, databasePtr)
-	if prepareStatus.HttpStatusCode != http.StatusOK {
+	if !util.IsStatusOK(prepareStatus) {
 		return prepareStatus
 	}
 	_, executeError := prepareStatementPtr.Exec(userOfNewPassword.Password, userOfNewPassword.UserName)
@@ -199,7 +199,7 @@ func DeleteUserFromDatabaseUsersTableAndResponseJsonOfUserNameHandler(databasePt
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
 		deleteStatus := deleteUserFromDatabaseUsersTable(userName, databasePtr)
-		if deleteStatus.HttpStatusCode != http.StatusOK {
+		if !util.IsStatusOK(deleteStatus) {
 			context.String(deleteStatus.HttpStatusCode, deleteStatus.ErrorMessage)
 			return
 		}
@@ -209,7 +209,7 @@ func DeleteUserFromDatabaseUsersTableAndResponseJsonOfUserNameHandler(databasePt
 
 func deleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) Status {
 	prepareStatementPtr, prepareStatus := prepareDeleteUserFromDatabaseUsersTable(userName, databasePtr)
-	if prepareStatus.HttpStatusCode != http.StatusOK {
+	if !util.IsStatusOK(prepareStatus) {
 		return prepareStatus
 	}
 	_, executeError := prepareStatementPtr.Exec(userName)
