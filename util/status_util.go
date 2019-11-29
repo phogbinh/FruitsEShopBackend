@@ -27,6 +27,12 @@ func StatusBadRequest(functionInterface interface{}, err error) Status {
 		ErrorMessage:   GetErrorMessageHeaderContainingFunctionName(functionInterface) + err.Error()}
 }
 
+func getErrorStatus(httpStatusCode int, functionInterface interface{}, err error) Status {
+	return Status{
+		HttpStatusCode: httpStatusCode,
+		ErrorMessage:   GetErrorMessageHeaderContainingFunctionName(functionInterface) + err.Error()}
+}
+
 // IsStatusOK returns true if the given status is StatusOK.
 func IsStatusOK(status Status) bool {
 	return status.HttpStatusCode == http.StatusOK
