@@ -106,6 +106,18 @@ func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
 		ErrorMessage:   noError}
 }
 
+func prepareInsertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) (*sql.Stmt, Status) {
+	prepareStatementPtr, prepareError := databasePtr.Prepare("INSERT INTO " + DUTU.TableName + " VALUES(?, ?)")
+	if prepareError != nil {
+		return nil, Status{
+			HttpStatusCode: http.StatusInternalServerError,
+			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(prepareInsertUserToDatabaseUsersTable) + prepareError.Error()}
+	}
+	return prepareStatementPtr, Status{
+		HttpStatusCode: http.StatusOK,
+		ErrorMessage:   noError}
+}
+
 // ResponseJsonOfUserFromDatabaseUsersTableHandler responses to the client the json of the user given in the context parameter from the database table 'users'.
 func ResponseJsonOfUserFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
