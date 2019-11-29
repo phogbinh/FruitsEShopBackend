@@ -20,6 +20,13 @@ func StatusInternalServerError(functionInterface interface{}, err error) Status 
 		ErrorMessage:   GetErrorMessageHeaderContainingFunctionName(functionInterface) + err.Error()}
 }
 
+// StatusBadRequest returns an http.StatusBadRequest associated with the error message consisting of the function name and the given error.
+func StatusBadRequest(functionInterface interface{}, err error) Status {
+	return Status{
+		HttpStatusCode: http.StatusBadRequest,
+		ErrorMessage:   GetErrorMessageHeaderContainingFunctionName(functionInterface) + err.Error()}
+}
+
 // IsStatusOK returns true if the given status is StatusOK.
 func IsStatusOK(status Status) bool {
 	return status.HttpStatusCode == http.StatusOK
