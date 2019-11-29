@@ -7,7 +7,7 @@ import (
 	DUTU "backend/database_users_table_util"
 	"backend/handler"
 	"backend/middleware"
-	"backend/symbolutil"
+	"backend/util"
 
 	"github.com/gin-gonic/gin"
 )
@@ -39,22 +39,22 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 func initializeRouterDatabaseUsersTableHandlers(router *gin.Engine, databasePtr *sql.DB) {
 	const userNamePath = ":" + DUTU.UserNameColumnName
 	router.GET(
-		symbolutil.RightSlash+DUTU.TableName,
+		util.RightSlash+DUTU.TableName,
 		handler.ResponseJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr))
 
 	router.POST(
-		symbolutil.RightSlash+DUTU.TableName,
+		util.RightSlash+DUTU.TableName,
 		handler.CreateUserToDatabaseUsersTableAndResponseJsonOfUserHandler(databasePtr))
 
 	router.GET(
-		symbolutil.RightSlash+DUTU.TableName+symbolutil.RightSlash+userNamePath,
+		util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
 		handler.ResponseJsonOfUserFromDatabaseUsersTableHandler(databasePtr))
 
 	router.PUT(
-		symbolutil.RightSlash+DUTU.TableName+symbolutil.RightSlash+userNamePath,
+		util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
 		handler.UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUserHandler(databasePtr))
 
 	router.DELETE(
-		symbolutil.RightSlash+DUTU.TableName+symbolutil.RightSlash+userNamePath,
+		util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
 		handler.DeleteUserFromDatabaseUsersTableAndResponseJsonOfUserNameHandler(databasePtr))
 }

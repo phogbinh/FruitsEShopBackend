@@ -7,7 +7,7 @@ import (
 
 	DUTU "backend/database_users_table_util"
 	. "backend/model"
-	"backend/symbolutil"
+	"backend/util"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -17,17 +17,17 @@ const (
 	noError                                               = ""
 	errorText                                             = "Error "
 	errorDatabaseTableText                                = " the database table '" + DUTU.TableName + "'"
-	errorSelectGetAllUsersFromDatabaseUsersTable          = errorText + "selecting all users from" + errorDatabaseTableText + symbolutil.ColonSpace
-	errorScanGetAllUsersFromDatabaseUsersTableRowsPointer = errorText + "scanning all users from" + errorDatabaseTableText + "'s rows pointer" + symbolutil.ColonSpace
-	errorGetUserFromContext                               = errorText + "getting user from context" + symbolutil.ColonSpace
-	errorPrepareInsertUserToDatabaseUsersTable            = errorText + "preparing to insert user to" + errorDatabaseTableText + symbolutil.ColonSpace
-	errorInsertUserToDatabaseUsersTable                   = errorText + "inserting user to" + errorDatabaseTableText + symbolutil.ColonSpace
-	errorSelectGetUserFromDatabaseUsersTable              = errorText + "selecting an user from" + errorDatabaseTableText + symbolutil.ColonSpace
-	errorGetManyUsersGetUserFromDatabaseUsersTable        = errorText + "want to get one but got none or many users from" + errorDatabaseTableText + symbolutil.ColonSpace
-	errorPrepareUpdateUserPasswordToDatabaseUsersTable    = errorText + "preparing to update user password to" + errorDatabaseTableText + symbolutil.ColonSpace
-	errorUpdateUserPasswordToDatabaseUsersTable           = errorText + "updating user password to" + errorDatabaseTableText + symbolutil.ColonSpace
-	errorPrepareDeleteUserFromDatabaseUsersTable          = errorText + "preparing to delete user to" + errorDatabaseTableText + symbolutil.ColonSpace
-	errorDeleteUserFromDatabaseUsersTable                 = errorText + "deleting user to" + errorDatabaseTableText + symbolutil.ColonSpace
+	errorSelectGetAllUsersFromDatabaseUsersTable          = errorText + "selecting all users from" + errorDatabaseTableText + util.ColonSpace
+	errorScanGetAllUsersFromDatabaseUsersTableRowsPointer = errorText + "scanning all users from" + errorDatabaseTableText + "'s rows pointer" + util.ColonSpace
+	errorGetUserFromContext                               = errorText + "getting user from context" + util.ColonSpace
+	errorPrepareInsertUserToDatabaseUsersTable            = errorText + "preparing to insert user to" + errorDatabaseTableText + util.ColonSpace
+	errorInsertUserToDatabaseUsersTable                   = errorText + "inserting user to" + errorDatabaseTableText + util.ColonSpace
+	errorSelectGetUserFromDatabaseUsersTable              = errorText + "selecting an user from" + errorDatabaseTableText + util.ColonSpace
+	errorGetManyUsersGetUserFromDatabaseUsersTable        = errorText + "want to get one but got none or many users from" + errorDatabaseTableText + util.ColonSpace
+	errorPrepareUpdateUserPasswordToDatabaseUsersTable    = errorText + "preparing to update user password to" + errorDatabaseTableText + util.ColonSpace
+	errorUpdateUserPasswordToDatabaseUsersTable           = errorText + "updating user password to" + errorDatabaseTableText + util.ColonSpace
+	errorPrepareDeleteUserFromDatabaseUsersTable          = errorText + "preparing to delete user to" + errorDatabaseTableText + util.ColonSpace
+	errorDeleteUserFromDatabaseUsersTable                 = errorText + "deleting user to" + errorDatabaseTableText + util.ColonSpace
 )
 
 // ResponseJsonOfAllUsersFromDatabaseUsersTableHandler responses to the client the json of all users from the database table 'users'.

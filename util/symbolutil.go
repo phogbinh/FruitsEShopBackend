@@ -1,4 +1,4 @@
-package symbolutil
+package util
 
 const (
 	Colon              = ":"
