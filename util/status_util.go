@@ -12,3 +12,8 @@ func StatusOK() Status {
 		HttpStatusCode: http.StatusOK,
 		ErrorMessage:   ""}
 }
+
+// IsStatusOK returns true if the given status is StatusOK.
+func IsStatusOK(status Status) bool {
+	return status.HttpStatusCode == http.StatusOK
+}
