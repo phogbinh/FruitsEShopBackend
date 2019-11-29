@@ -89,11 +89,9 @@ func getUserFromContext(context *gin.Context) (User, Status) {
 }
 
 func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
-	prepareStatementPtr, prepareError := databasePtr.Prepare("INSERT INTO " + DUTU.TableName + " VALUES(?, ?)")
-	if prepareError != nil {
-		return Status{
-			HttpStatusCode: http.StatusInternalServerError,
-			ErrorMessage:   util.GetErrorMessageHeaderContainingFunctionName(insertUserToDatabaseUsersTable) + prepareError.Error()}
+	prepareStatementPtr, prepareStatus := prepareInsertUserToDatabaseUsersTable(user, databasePtr)
+	if prepareStatus.HttpStatusCode != http.StatusOK {
+		return prepareStatus
 	}
 	_, insertError := prepareStatementPtr.Exec(user.UserName, user.Password)
 	if insertError != nil {
