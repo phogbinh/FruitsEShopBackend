@@ -4,8 +4,8 @@ import "database/sql"
 
 const (
 	TableName          = "users"
-	UserNameColumnName = "username"
-	PasswordColumnName = "password"
+	UserNameColumnName = "UserName"
+	PasswordColumnName = "Password"
 )
 
 // CreateDatabaseUsersTableIfNotExists creates a table named 'users' for the given database pointer if the table has not already existed.
