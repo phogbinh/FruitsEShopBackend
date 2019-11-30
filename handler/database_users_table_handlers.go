@@ -89,7 +89,7 @@ func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
 	if !util.IsStatusOK(prepareStatus) {
 		return prepareStatus
 	}
-	_, executeError := prepareStatementPtr.Exec(user.UserName, user.Password)
+	_, executeError := prepareStatementPtr.Exec(user.Mail, user.Password, user.UserName, user.Nickname, user.Fname, user.Lname, user.Phone, user.Location, user.Money, user.Introduction)
 	if executeError != nil {
 		return util.StatusInternalServerError(insertUserToDatabaseUsersTable, executeError)
 	}
@@ -97,7 +97,7 @@ func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
 }
 
 func prepareInsertUserToDatabaseUsersTable(databasePtr *sql.DB) (*sql.Stmt, Status) {
-	prepareStatementPtr, prepareError := databasePtr.Prepare("INSERT INTO " + DUTU.TableName + " VALUES(?, ?)")
+	prepareStatementPtr, prepareError := databasePtr.Prepare("INSERT INTO " + DUTU.TableName + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	if prepareError != nil {
 		return nil, util.StatusInternalServerError(prepareInsertUserToDatabaseUsersTable, prepareError)
 	}
