@@ -3,9 +3,17 @@ package database_users_table_util
 import "database/sql"
 
 const (
-	TableName          = "users"
-	UserNameColumnName = "UserName"
-	PasswordColumnName = "Password"
+	TableName              = "users"
+	MailColumnName         = "Mail"
+	PasswordColumnName     = "Password"
+	UserNameColumnName     = "UserName"
+	NicknameColumnName     = "Nickname"
+	FnameColumnName        = "FName"
+	LnameColumnName        = "LName"
+	PhoneColumnName        = "Phone"
+	LocationColumnName     = "Location"
+	MoneyColumnName        = "Money"
+	IntroductionColumnName = "Introduction"
 )
 
 // CreateDatabaseUsersTableIfNotExists creates a table named 'users' for the given database pointer if the table has not already existed.
