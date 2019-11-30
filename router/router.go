@@ -38,13 +38,13 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 
 func initializeRouterDatabaseUsersTableHandlers(router *gin.Engine, databasePtr *sql.DB) {
 	const userNamePath = ":" + DUTU.UserNameColumnName
-	router.GET(
-		util.RightSlash+DUTU.TableName,
-		handler.RespondJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr))
-
 	router.POST(
 		util.RightSlash+DUTU.TableName,
 		handler.CreateUserToDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr))
+
+	router.GET(
+		util.RightSlash+DUTU.TableName,
+		handler.RespondJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr))
 
 	router.GET(
 		util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
