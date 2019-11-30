@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"log"
+	"os"
 
 	db "backend/database"
 	DUTU "backend/database_users_table_util"
@@ -12,7 +13,7 @@ import (
 )
 
 func getDatabaseHandler() *sql.DB {
-	databasePtr, openDatabaseError := sql.Open("mysql", "root:Thucchinh1312@@tcp(127.0.0.1:3306)/user_data")
+	databasePtr, openDatabaseError := sql.Open("mysql", os.Getenv("DATABASE_URL"))
 	if openDatabaseError != nil {
 		log.Fatalf("Error opening database: %q.", openDatabaseError)
 	}
