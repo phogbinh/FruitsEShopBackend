@@ -14,6 +14,10 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+type password struct {
+	Value string `json:"password" binding:"required"`
+}
+
 // ResponseJsonOfAllUsersFromDatabaseUsersTableHandler responses to the client the json of all users from the database table 'users'.
 func ResponseJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
@@ -138,22 +142,30 @@ func getUserQueryRowsPtrFromDatabaseUsersTable(userName string, databasePtr *sql
 func UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
-		newPasswordUser, getStatus := getUserFromContext(context)
+		userNewPassword, getStatus := getPasswordFromContext(context)
 		if !util.IsStatusOK(getStatus) {
 			context.JSON(getStatus.HttpStatusCode, gin.H{util.JsonError: getStatus.ErrorMessage})
 			return
 		}
-		if userName != newPasswordUser.UserName {
-			context.JSON(http.StatusBadRequest, gin.H{util.JsonError: "The user name given in the context parameter - " + userName + " - does not match the user name provided by the requested JSON object - " + newPasswordUser.UserName + "."})
-			return
-		}
-		updateStatus := updateUserPasswordToDatabaseUsersTable(newPasswordUser, databasePtr)
+		var user User
+		user.UserName = userName
+		user.Password = userNewPassword.Value
+		updateStatus := updateUserPasswordToDatabaseUsersTable(user, databasePtr)
 		if !util.IsStatusOK(updateStatus) {
 			context.JSON(updateStatus.HttpStatusCode, gin.H{util.JsonError: updateStatus.ErrorMessage})
 			return
 		}
-		context.JSON(http.StatusOK, newPasswordUser)
+		context.JSON(http.StatusOK, user)
 	}
+}
+
+func getPasswordFromContext(context *gin.Context) (password, Status) {
+	var pwd password
+	bindError := context.ShouldBindJSON(&pwd)
+	if bindError != nil {
+		return pwd, util.StatusBadRequest(getPasswordFromContext, bindError)
+	}
+	return pwd, util.StatusOK()
 }
 
 func updateUserPasswordToDatabaseUsersTable(userOfNewPassword User, databasePtr *sql.DB) Status {
