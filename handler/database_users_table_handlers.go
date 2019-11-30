@@ -66,7 +66,12 @@ func CreateUserToDatabaseUsersTableAndResponseJsonOfUserHandler(databasePtr *sql
 			context.JSON(insertStatus.HttpStatusCode, gin.H{util.JsonError: insertStatus.ErrorMessage})
 			return
 		}
-		context.JSON(http.StatusOK, user)
+		getUser, getStatus := getUserFromDatabaseUsersTable(user.UserName, databasePtr)
+		if !util.IsStatusOK(getStatus) {
+			context.JSON(getStatus.HttpStatusCode, gin.H{util.JsonError: getStatus.ErrorMessage})
+			return
+		}
+		context.JSON(http.StatusOK, getUser)
 	}
 }
 
@@ -155,7 +160,12 @@ func UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUserHandler(database
 			context.JSON(updateStatus.HttpStatusCode, gin.H{util.JsonError: updateStatus.ErrorMessage})
 			return
 		}
-		context.JSON(http.StatusOK, user)
+		getUser, getStatus := getUserFromDatabaseUsersTable(userName, databasePtr)
+		if !util.IsStatusOK(getStatus) {
+			context.JSON(getStatus.HttpStatusCode, gin.H{util.JsonError: getStatus.ErrorMessage})
+			return
+		}
+		context.JSON(http.StatusOK, getUser)
 	}
 }
 
@@ -198,7 +208,12 @@ func DeleteUserFromDatabaseUsersTableAndResponseJsonOfUserNameHandler(databasePt
 			context.JSON(deleteStatus.HttpStatusCode, gin.H{util.JsonError: deleteStatus.ErrorMessage})
 			return
 		}
-		context.JSON(http.StatusOK, gin.H{DUTU.UserNameColumnName: userName})
+		getUser, getStatus := getUserFromDatabaseUsersTable(userName, databasePtr)
+		if !util.IsStatusOK(getStatus) {
+			context.JSON(getStatus.HttpStatusCode, gin.H{util.JsonError: getStatus.ErrorMessage})
+			return
+		}
+		context.JSON(http.StatusOK, getUser)
 	}
 }
 
