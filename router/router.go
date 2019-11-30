@@ -40,21 +40,21 @@ func initializeRouterDatabaseUsersTableHandlers(router *gin.Engine, databasePtr 
 	const userNamePath = ":" + DUTU.UserNameColumnName
 	router.GET(
 		util.RightSlash+DUTU.TableName,
-		handler.ResponseJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr))
+		handler.RespondJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr))
 
 	router.POST(
 		util.RightSlash+DUTU.TableName,
-		handler.CreateUserToDatabaseUsersTableAndResponseJsonOfUserHandler(databasePtr))
+		handler.CreateUserToDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr))
 
 	router.GET(
 		util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
-		handler.ResponseJsonOfUserFromDatabaseUsersTableHandler(databasePtr))
+		handler.RespondJsonOfUserFromDatabaseUsersTableHandler(databasePtr))
 
 	router.PUT(
 		util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
-		handler.UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUserHandler(databasePtr))
+		handler.UpdateUserPasswordInDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr))
 
 	router.DELETE(
 		util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
-		handler.DeleteUserFromDatabaseUsersTableAndResponseJsonOfUserNameHandler(databasePtr))
+		handler.DeleteUserFromDatabaseUsersTableAndRespondJsonOfUserNameHandler(databasePtr))
 }
