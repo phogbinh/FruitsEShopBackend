@@ -18,39 +18,6 @@ type password struct {
 	Value string `json:"password" binding:"required"`
 }
 
-func RespondJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
-	return func(context *gin.Context) {
-		users, status := getAllUsersFromDatabaseUsersTable(databasePtr)
-		if !util.IsStatusOK(status) {
-			context.JSON(status.HttpStatusCode, gin.H{util.JsonError: status.ErrorMessage})
-			return
-		}
-		context.JSON(http.StatusOK, users)
-	}
-}
-
-func getAllUsersFromDatabaseUsersTable(databasePtr *sql.DB) ([]User, Status) {
-	queryRowsPtr, queryError := databasePtr.Query("SELECT * FROM " + DUTU.TableName)
-	if queryError != nil {
-		return nil, util.StatusInternalServerError(getAllUsersFromDatabaseUsersTable, queryError)
-	}
-	defer queryRowsPtr.Close()
-	return getAllUsers(queryRowsPtr)
-}
-
-func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
-	var users []User
-	for databaseUsersTableRowsPtr.Next() {
-		var user User
-		scanError := databaseUsersTableRowsPtr.Scan(&user.Mail, &user.Password, &user.UserName, &user.Nickname, &user.Fname, &user.Lname, &user.Phone, &user.Location, &user.Money, &user.Introduction)
-		if scanError != nil {
-			return nil, util.StatusInternalServerError(getAllUsers, scanError)
-		}
-		users = append(users, user)
-	}
-	return users, util.StatusOK()
-}
-
 func CreateUserToDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		user, getStatus := getUserFromContext(context)
@@ -99,6 +66,39 @@ func prepareInsertUserToDatabaseUsersTable(databasePtr *sql.DB) (*sql.Stmt, Stat
 		return nil, util.StatusInternalServerError(prepareInsertUserToDatabaseUsersTable, prepareError)
 	}
 	return prepareStatementPtr, util.StatusOK()
+}
+
+func RespondJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
+	return func(context *gin.Context) {
+		users, status := getAllUsersFromDatabaseUsersTable(databasePtr)
+		if !util.IsStatusOK(status) {
+			context.JSON(status.HttpStatusCode, gin.H{util.JsonError: status.ErrorMessage})
+			return
+		}
+		context.JSON(http.StatusOK, users)
+	}
+}
+
+func getAllUsersFromDatabaseUsersTable(databasePtr *sql.DB) ([]User, Status) {
+	queryRowsPtr, queryError := databasePtr.Query("SELECT * FROM " + DUTU.TableName)
+	if queryError != nil {
+		return nil, util.StatusInternalServerError(getAllUsersFromDatabaseUsersTable, queryError)
+	}
+	defer queryRowsPtr.Close()
+	return getAllUsers(queryRowsPtr)
+}
+
+func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
+	var users []User
+	for databaseUsersTableRowsPtr.Next() {
+		var user User
+		scanError := databaseUsersTableRowsPtr.Scan(&user.Mail, &user.Password, &user.UserName, &user.Nickname, &user.Fname, &user.Lname, &user.Phone, &user.Location, &user.Money, &user.Introduction)
+		if scanError != nil {
+			return nil, util.StatusInternalServerError(getAllUsers, scanError)
+		}
+		users = append(users, user)
+	}
+	return users, util.StatusOK()
 }
 
 func RespondJsonOfUserFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
