@@ -152,10 +152,7 @@ func UpdateUserPasswordInDatabaseUsersTableAndRespondJsonOfUserHandler(databaseP
 			context.JSON(getStatus.HttpStatusCode, gin.H{util.JsonError: getStatus.ErrorMessage})
 			return
 		}
-		var user User
-		user.UserName = userName
-		user.Password = userNewPassword.Value
-		updateStatus := updateUserPasswordToDatabaseUsersTable(user, databasePtr)
+		updateStatus := updateUserPasswordToDatabaseUsersTable(userName, userNewPassword.Value, databasePtr)
 		if !util.IsStatusOK(updateStatus) {
 			context.JSON(updateStatus.HttpStatusCode, gin.H{util.JsonError: updateStatus.ErrorMessage})
 			return
@@ -178,12 +175,12 @@ func getPasswordFromContext(context *gin.Context) (password, Status) {
 	return pwd, util.StatusOK()
 }
 
-func updateUserPasswordToDatabaseUsersTable(userOfNewPassword User, databasePtr *sql.DB) Status {
+func updateUserPasswordToDatabaseUsersTable(userName string, userNewPassword string, databasePtr *sql.DB) Status {
 	prepareStatementPtr, prepareStatus := prepareUpdateUserPasswordToDatabaseUsersTable(databasePtr)
 	if !util.IsStatusOK(prepareStatus) {
 		return prepareStatus
 	}
-	_, executeError := prepareStatementPtr.Exec(userOfNewPassword.Password, userOfNewPassword.UserName)
+	_, executeError := prepareStatementPtr.Exec(userNewPassword, userName)
 	if executeError != nil {
 		return util.StatusInternalServerError(updateUserPasswordToDatabaseUsersTable, executeError)
 	}
