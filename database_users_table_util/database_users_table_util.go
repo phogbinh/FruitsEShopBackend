@@ -16,7 +16,6 @@ const (
 	IntroductionColumnName = "Introduction"
 )
 
-// CreateDatabaseUsersTableIfNotExists creates a table named 'users' for the given database pointer if the table has not already existed.
 func CreateDatabaseUsersTableIfNotExists(databasePtr *sql.DB) error {
 	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS user_data.users" +
 		"(" +
