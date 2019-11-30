@@ -189,7 +189,7 @@ func prepareUpdateUserPasswordToDatabaseUsersTable(databasePtr *sql.DB) (*sql.St
 	return prepareStatementPtr, util.StatusOK()
 }
 
-func DeleteUserFromDatabaseUsersTableAndRespondJsonOfUserNameHandler(databasePtr *sql.DB) gin.HandlerFunc {
+func DeleteUserFromDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
 		deleteStatus := deleteUserFromDatabaseUsersTable(userName, databasePtr)

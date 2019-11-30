@@ -56,5 +56,5 @@ func initializeRouterDatabaseUsersTableHandlers(router *gin.Engine, databasePtr 
 
 	router.DELETE(
 		util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
-		handler.DeleteUserFromDatabaseUsersTableAndRespondJsonOfUserNameHandler(databasePtr))
+		handler.DeleteUserFromDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr))
 }
