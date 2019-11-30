@@ -42,7 +42,7 @@ func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
 	var users []User
 	for databaseUsersTableRowsPtr.Next() {
 		var user User
-		scanError := databaseUsersTableRowsPtr.Scan(&user.UserName, &user.Password)
+		scanError := databaseUsersTableRowsPtr.Scan(&user.Mail, &user.Password, &user.UserName, &user.Nickname, &user.Fname, &user.Lname, &user.Phone, &user.Location, &user.Money, &user.Introduction)
 		if scanError != nil {
 			return nil, util.StatusInternalServerError(getAllUsers, scanError)
 		}
