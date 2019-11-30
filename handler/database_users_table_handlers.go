@@ -18,8 +18,8 @@ type password struct {
 	Value string `json:"password" binding:"required"`
 }
 
-// ResponseJsonOfAllUsersFromDatabaseUsersTableHandler responses to the client the json of all users from the database table 'users'.
-func ResponseJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
+// RespondJsonOfAllUsersFromDatabaseUsersTableHandler responds to the client the json of all users from the database table 'users'.
+func RespondJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		users, status := getAllUsersFromDatabaseUsersTable(databasePtr)
 		if !util.IsStatusOK(status) {
@@ -52,9 +52,9 @@ func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
 	return users, util.StatusOK()
 }
 
-// CreateUserToDatabaseUsersTableAndResponseJsonOfUserHandler creates the user given in the context to the database table 'users'.
-// Also, it responses to the client the json of the given user.
-func CreateUserToDatabaseUsersTableAndResponseJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
+// CreateUserToDatabaseUsersTableAndRespondJsonOfUserHandler creates the user given in the context to the database table 'users'.
+// Also, it responds to the client the json of the given user.
+func CreateUserToDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		user, getStatus := getUserFromContext(context)
 		if !util.IsStatusOK(getStatus) {
@@ -104,8 +104,8 @@ func prepareInsertUserToDatabaseUsersTable(databasePtr *sql.DB) (*sql.Stmt, Stat
 	return prepareStatementPtr, util.StatusOK()
 }
 
-// ResponseJsonOfUserFromDatabaseUsersTableHandler responses to the client the json of the user given in the context parameter from the database table 'users'.
-func ResponseJsonOfUserFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
+// RespondJsonOfUserFromDatabaseUsersTableHandler responds to the client the json of the user given in the context parameter from the database table 'users'.
+func RespondJsonOfUserFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
 		user, status := getUserFromDatabaseUsersTable(userName, databasePtr)
@@ -142,9 +142,9 @@ func getUserQueryRowsPtrFromDatabaseUsersTable(userName string, databasePtr *sql
 	return queryRowsPtr, util.StatusOK()
 }
 
-// UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUserHandler updates the password of the user in the database table 'users' whose name is given in the context parameter and the requested JSON object.
-// Also, it responses to the client the json of the given user.
-func UpdateUserPasswordInDatabaseUsersTableAndResponseJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
+// UpdateUserPasswordInDatabaseUsersTableAndRespondJsonOfUserHandler updates the password of the user in the database table 'users' whose name is given in the context parameter and the requested JSON object.
+// Also, it responds to the client the json of the given user.
+func UpdateUserPasswordInDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
 		userNewPassword, getStatus := getPasswordFromContext(context)
@@ -198,9 +198,9 @@ func prepareUpdateUserPasswordToDatabaseUsersTable(databasePtr *sql.DB) (*sql.St
 	return prepareStatementPtr, util.StatusOK()
 }
 
-// DeleteUserFromDatabaseUsersTableAndResponseJsonOfUserNameHandler deletes the user whose name is given in the context parameter from the database table 'users'.
-// Also, it responses to the client the json of the given user name.
-func DeleteUserFromDatabaseUsersTableAndResponseJsonOfUserNameHandler(databasePtr *sql.DB) gin.HandlerFunc {
+// DeleteUserFromDatabaseUsersTableAndRespondJsonOfUserNameHandler deletes the user whose name is given in the context parameter from the database table 'users'.
+// Also, it responds to the client the json of the given user name.
+func DeleteUserFromDatabaseUsersTableAndRespondJsonOfUserNameHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
 		deleteStatus := deleteUserFromDatabaseUsersTable(userName, databasePtr)
