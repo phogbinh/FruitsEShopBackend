@@ -11,8 +11,15 @@ import (
 DeleteOrderItemToCartHandler is a function for gin to handle DeleteOrderItemToCart api
 */
 func DeleteOrderItemToCartHandler(c *gin.Context) {
-	productID, _ := strconv.Atoi(c.Query("p_id"))
-	cartID, _ := strconv.Atoi(c.Query("cart_id"))
+	productID, err := strconv.Atoi(c.Query("p_id"))
+	if err != nil {
+		c.Status(400)
+	}
+
+	cartID, err := strconv.Atoi(c.Query("cart_id"))
+	if err != nil {
+		c.Status(400)
+	}
 
 	code := database.DeleteOrderItemInCart(productID, cartID, database.SqlDb)
 
