@@ -26,6 +26,7 @@ type password struct {
 	Value string `json:"password" binding:"required"`
 }
 
+// CreateUserToDatabaseUsersTableAndRespondJsonOfUserHandler creates an user and responds the user's information.
 func CreateUserToDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		user, getStatus := getUserFromRequest(context)
@@ -60,6 +61,7 @@ func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
 	return queryDatabase(databasePtr, queryInsertUser, user.Mail, user.Password, user.UserName, user.Nickname, user.Fname, user.Lname, user.Phone, user.Location, user.Money, user.Introduction)
 }
 
+// RespondJsonOfAllUsersFromDatabaseUsersTableHandler responds all users' information.
 func RespondJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		users, status := getAllUsersFromDatabaseUsersTable(databasePtr)
@@ -93,6 +95,7 @@ func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
 	return users, util.StatusOK()
 }
 
+// RespondJsonOfUserFromDatabaseUsersTableHandler responds an user's information.
 func RespondJsonOfUserFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
@@ -130,6 +133,7 @@ func getUsersFromDatabaseUsersTable(userName string, databasePtr *sql.DB) ([]Use
 	return users, util.StatusOK()
 }
 
+// UpdateUserPasswordInDatabaseUsersTableAndRespondJsonOfUserHandler updates an user's password and responds the user's information.
 func UpdateUserPasswordInDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
@@ -165,6 +169,7 @@ func updateUserPasswordToDatabaseUsersTable(userName string, userNewPassword str
 	return queryDatabase(databasePtr, queryUpdateUserPassword, userNewPassword, userName)
 }
 
+// DeleteUserFromDatabaseUsersTableAndRespondJsonOfUserHandler deletes an user.
 func DeleteUserFromDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
