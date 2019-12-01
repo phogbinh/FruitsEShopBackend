@@ -26,7 +26,7 @@ type password struct {
 
 func CreateUserToDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
-		user, getStatus := getUserFromContext(context)
+		user, getStatus := getUserFromRequest(context)
 		if !util.IsStatusOK(getStatus) {
 			context.JSON(getStatus.HttpStatusCode, gin.H{util.JsonError: getStatus.ErrorMessage})
 			return
@@ -45,11 +45,11 @@ func CreateUserToDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.
 	}
 }
 
-func getUserFromContext(context *gin.Context) (User, Status) {
+func getUserFromRequest(context *gin.Context) (User, Status) {
 	var user User
 	bindError := context.ShouldBindJSON(&user)
 	if bindError != nil {
-		return user, util.StatusBadRequest(getUserFromContext, bindError)
+		return user, util.StatusBadRequest(getUserFromRequest, bindError)
 	}
 	return user, util.StatusOK()
 }
