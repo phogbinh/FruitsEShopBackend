@@ -49,23 +49,15 @@ func getUserFromContext(context *gin.Context) (User, Status) {
 }
 
 func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
-	prepareStatementPtr, prepareStatus := prepareInsertUserToDatabaseUsersTable(databasePtr)
-	if !util.IsStatusOK(prepareStatus) {
-		return prepareStatus
+	prepareStatementPtr, prepareError := databasePtr.Prepare("INSERT INTO " + DUTU.TableName + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	if prepareError != nil {
+		return util.StatusInternalServerError(insertUserToDatabaseUsersTable, prepareError)
 	}
 	_, executeError := prepareStatementPtr.Exec(user.Mail, user.Password, user.UserName, user.Nickname, user.Fname, user.Lname, user.Phone, user.Location, user.Money, user.Introduction)
 	if executeError != nil {
 		return util.StatusInternalServerError(insertUserToDatabaseUsersTable, executeError)
 	}
 	return util.StatusOK()
-}
-
-func prepareInsertUserToDatabaseUsersTable(databasePtr *sql.DB) (*sql.Stmt, Status) {
-	prepareStatementPtr, prepareError := databasePtr.Prepare("INSERT INTO " + DUTU.TableName + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-	if prepareError != nil {
-		return nil, util.StatusInternalServerError(prepareInsertUserToDatabaseUsersTable, prepareError)
-	}
-	return prepareStatementPtr, util.StatusOK()
 }
 
 func RespondJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
@@ -170,23 +162,15 @@ func getPasswordFromContext(context *gin.Context) (password, Status) {
 }
 
 func updateUserPasswordToDatabaseUsersTable(userName string, userNewPassword string, databasePtr *sql.DB) Status {
-	prepareStatementPtr, prepareStatus := prepareUpdateUserPasswordToDatabaseUsersTable(databasePtr)
-	if !util.IsStatusOK(prepareStatus) {
-		return prepareStatus
+	prepareStatementPtr, prepareError := databasePtr.Prepare("UPDATE " + DUTU.TableName + " SET " + DUTU.PasswordColumnName + " = ? WHERE " + DUTU.UserNameColumnName + " = ?")
+	if prepareError != nil {
+		return util.StatusInternalServerError(updateUserPasswordToDatabaseUsersTable, prepareError)
 	}
 	_, executeError := prepareStatementPtr.Exec(userNewPassword, userName)
 	if executeError != nil {
 		return util.StatusInternalServerError(updateUserPasswordToDatabaseUsersTable, executeError)
 	}
 	return util.StatusOK()
-}
-
-func prepareUpdateUserPasswordToDatabaseUsersTable(databasePtr *sql.DB) (*sql.Stmt, Status) {
-	prepareStatementPtr, prepareError := databasePtr.Prepare("UPDATE " + DUTU.TableName + " SET " + DUTU.PasswordColumnName + " = ? WHERE " + DUTU.UserNameColumnName + " = ?")
-	if prepareError != nil {
-		return nil, util.StatusInternalServerError(prepareUpdateUserPasswordToDatabaseUsersTable, prepareError)
-	}
-	return prepareStatementPtr, util.StatusOK()
 }
 
 func DeleteUserFromDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
@@ -207,21 +191,13 @@ func DeleteUserFromDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sq
 }
 
 func deleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) Status {
-	prepareStatementPtr, prepareStatus := prepareDeleteUserFromDatabaseUsersTable(databasePtr)
-	if !util.IsStatusOK(prepareStatus) {
-		return prepareStatus
+	prepareStatementPtr, prepareError := databasePtr.Prepare("DELETE FROM " + DUTU.TableName + " WHERE " + DUTU.UserNameColumnName + " = ?")
+	if prepareError != nil {
+		return util.StatusInternalServerError(deleteUserFromDatabaseUsersTable, prepareError)
 	}
 	_, executeError := prepareStatementPtr.Exec(userName)
 	if executeError != nil {
 		return util.StatusInternalServerError(deleteUserFromDatabaseUsersTable, executeError)
 	}
 	return util.StatusOK()
-}
-
-func prepareDeleteUserFromDatabaseUsersTable(databasePtr *sql.DB) (*sql.Stmt, Status) {
-	prepareStatementPtr, prepareError := databasePtr.Prepare("DELETE FROM " + DUTU.TableName + " WHERE " + DUTU.UserNameColumnName + " = ?")
-	if prepareError != nil {
-		return nil, util.StatusInternalServerError(prepareDeleteUserFromDatabaseUsersTable, prepareError)
-	}
-	return prepareStatementPtr, util.StatusOK()
 }
