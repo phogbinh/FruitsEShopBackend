@@ -173,12 +173,16 @@ func DeleteUserFromDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sq
 			context.JSON(deleteStatus.HttpStatusCode, gin.H{util.JsonError: deleteStatus.ErrorMessage})
 			return
 		}
-		getUser, getStatus := getUserFromDatabaseUsersTable(userName, databasePtr)
+		isExistingUser, getStatus := isExistingUserInDatabaseUsersTable(userName, databasePtr)
 		if !util.IsStatusOK(getStatus) {
 			context.JSON(getStatus.HttpStatusCode, gin.H{util.JsonError: getStatus.ErrorMessage})
 			return
 		}
-		context.JSON(http.StatusOK, getUser)
+		if isExistingUser {
+			context.JSON(http.StatusInternalServerError, gin.H{util.JsonError: "User still exists."})
+			return
+		}
+		context.Status(http.StatusOK)
 	}
 }
 

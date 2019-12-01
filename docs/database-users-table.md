@@ -144,15 +144,9 @@ An JSON object containing the requested user's information fetched from the data
 #### Description
 Delete an user from the database table `users`.
 #### Response
-An JSON object containing the requested user's information fetched from the database.
+N/A.
 #### Example
 `curl -X DELETE localhost:8080/users/bill`
-#### Expected response format
-```json
-{
-    "error": "Error occurred at function [backend/handler.getUserFromDatabaseUsersTable]: Query 1 user but got 0 user(s) instead."
-}
-```
 #### Error response format
 ```json
 {
