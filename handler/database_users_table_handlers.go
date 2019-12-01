@@ -203,7 +203,7 @@ func queryDatabase(databasePtr *sql.DB, query string, executeArguments ...interf
 	if prepareError != nil {
 		return util.StatusInternalServerError(queryDatabase, prepareError)
 	}
-	_, executeError := prepareStatementPtr.Exec(executeArguments)
+	_, executeError := prepareStatementPtr.Exec(executeArguments...)
 	if executeError != nil {
 		return util.StatusInternalServerError(queryDatabase, executeError)
 	}
