@@ -12,7 +12,7 @@ var SqlDb *sql.DB
 // Initialize sql server
 func Init() {
 	var err error
-	// databaseEnv := os.Getenv("Path")
+
 	SqlDb, err = sql.Open("mysql", "root:freddy3601@tcp(127.0.0.1:3306)/user_db")
 	if err != nil {
 		log.Fatal(err.Error())
