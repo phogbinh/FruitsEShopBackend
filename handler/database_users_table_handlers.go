@@ -107,9 +107,9 @@ func RespondJsonOfUserFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.Han
 
 func getUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, Status) {
 	var dumpUser User
-	queryRowsPtr, queryStatus := getUserQueryRowsPtrFromDatabaseUsersTable(userName, databasePtr)
-	if !util.IsStatusOK(queryStatus) {
-		return dumpUser, queryStatus
+	queryRowsPtr, queryError := databasePtr.Query(queryGetUser, userName)
+	if queryError != nil {
+		return dumpUser, util.StatusInternalServerError(getUserFromDatabaseUsersTable, queryError)
 	}
 	defer queryRowsPtr.Close()
 	users, getStatus := getAllUsers(queryRowsPtr)
@@ -120,14 +120,6 @@ func getUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, 
 		return dumpUser, util.StatusInternalServerError(getUserFromDatabaseUsersTable, errors.New("Query 1 user but got "+strconv.Itoa(len(users))+" user(s) instead."))
 	}
 	return users[0], util.StatusOK()
-}
-
-func getUserQueryRowsPtrFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (*sql.Rows, Status) {
-	queryRowsPtr, queryError := databasePtr.Query(queryGetUser, userName)
-	if queryError != nil {
-		return nil, util.StatusInternalServerError(getUserQueryRowsPtrFromDatabaseUsersTable, queryError)
-	}
-	return queryRowsPtr, util.StatusOK()
 }
 
 func UpdateUserPasswordInDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
