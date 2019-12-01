@@ -201,3 +201,15 @@ func deleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) Stat
 	}
 	return util.StatusOK()
 }
+
+func queryDatabase(databasePtr *sql.DB, query string, executeArguments ...interface{}) Status {
+	prepareStatementPtr, prepareError := databasePtr.Prepare(query)
+	if prepareError != nil {
+		return util.StatusInternalServerError(queryDatabase, prepareError)
+	}
+	_, executeError := prepareStatementPtr.Exec(executeArguments)
+	if executeError != nil {
+		return util.StatusInternalServerError(queryDatabase, executeError)
+	}
+	return util.StatusOK()
+}
