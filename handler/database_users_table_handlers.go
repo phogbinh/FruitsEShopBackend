@@ -169,8 +169,8 @@ func updateUserPasswordToDatabaseUsersTable(userName string, userNewPassword str
 	return queryDatabase(databasePtr, queryUpdateUserPassword, userNewPassword, userName)
 }
 
-// DeleteUserFromDatabaseUsersTableAndRespondJsonOfUserHandler deletes an user.
-func DeleteUserFromDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
+// DeleteUserFromDatabaseUsersTable deletes an user.
+func DeleteUserFromDatabaseUsersTable(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
 		deleteStatus := deleteUserFromDatabaseUsersTable(userName, databasePtr)
