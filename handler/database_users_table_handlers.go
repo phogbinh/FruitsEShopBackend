@@ -14,6 +14,12 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+const (
+	queryInsertUser         = "INSERT INTO " + DUTU.TableName + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	queryUpdateUserPassword = "UPDATE " + DUTU.TableName + " SET " + DUTU.PasswordColumnName + " = ? WHERE " + DUTU.UserNameColumnName + " = ?"
+	queryDeleteUser         = "DELETE FROM " + DUTU.TableName + " WHERE " + DUTU.UserNameColumnName + " = ?"
+)
+
 type password struct {
 	Value string `json:"password" binding:"required"`
 }
@@ -49,7 +55,7 @@ func getUserFromContext(context *gin.Context) (User, Status) {
 }
 
 func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
-	prepareStatementPtr, prepareError := databasePtr.Prepare("INSERT INTO " + DUTU.TableName + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	prepareStatementPtr, prepareError := databasePtr.Prepare(queryInsertUser)
 	if prepareError != nil {
 		return util.StatusInternalServerError(insertUserToDatabaseUsersTable, prepareError)
 	}
@@ -162,7 +168,7 @@ func getPasswordFromContext(context *gin.Context) (password, Status) {
 }
 
 func updateUserPasswordToDatabaseUsersTable(userName string, userNewPassword string, databasePtr *sql.DB) Status {
-	prepareStatementPtr, prepareError := databasePtr.Prepare("UPDATE " + DUTU.TableName + " SET " + DUTU.PasswordColumnName + " = ? WHERE " + DUTU.UserNameColumnName + " = ?")
+	prepareStatementPtr, prepareError := databasePtr.Prepare(queryUpdateUserPassword)
 	if prepareError != nil {
 		return util.StatusInternalServerError(updateUserPasswordToDatabaseUsersTable, prepareError)
 	}
@@ -191,7 +197,7 @@ func DeleteUserFromDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sq
 }
 
 func deleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) Status {
-	prepareStatementPtr, prepareError := databasePtr.Prepare("DELETE FROM " + DUTU.TableName + " WHERE " + DUTU.UserNameColumnName + " = ?")
+	prepareStatementPtr, prepareError := databasePtr.Prepare(queryDeleteUser)
 	if prepareError != nil {
 		return util.StatusInternalServerError(deleteUserFromDatabaseUsersTable, prepareError)
 	}
