@@ -107,12 +107,7 @@ func RespondJsonOfUserFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.Han
 
 func getUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, Status) {
 	var dumpUser User
-	queryRowsPtr, queryError := databasePtr.Query(queryGetUser, userName)
-	if queryError != nil {
-		return dumpUser, util.StatusInternalServerError(getUserFromDatabaseUsersTable, queryError)
-	}
-	defer queryRowsPtr.Close()
-	users, getStatus := getAllUsers(queryRowsPtr)
+	users, getStatus := getUsersFromDatabaseUsersTable(userName, databasePtr)
 	if !util.IsStatusOK(getStatus) {
 		return dumpUser, getStatus
 	}
