@@ -4,7 +4,7 @@
 #### Description
 Create an user to the database table `users`.
 #### Response
-An JSON object containing the requested user's information fetched from the database.
+An JSON object containing the newly created user's information fetched from the database.
 #### Example
 ##### Create user `bill`
 `curl -X POST -d "{ \"mail\": \"bill@gmail.com\", \"password\": \"1111\", \"userName\": \"bill\", \"nickname\": \"kyo\", \"fname\": \"Phong Binh\", \"lname\": \"Tran\", \"phone\": \"0987654321\", \"location\": \"Taipei, Taiwan\", \"money\": \"1000.00\", \"introduction\": \"Programming geek.\" }" localhost:8080/users`
@@ -86,7 +86,7 @@ An JSON object containing all users' information fetched from the database.
 #### Description
 Get an user from the database table `users`.
 #### Response
-An JSON object containing the user's information fetched from the database.
+An JSON object containing the requested user's information fetched from the database.
 #### Example
 `curl -X GET localhost:8080/users/bill`
 #### Expected response format
@@ -115,7 +115,7 @@ An JSON object containing the user's information fetched from the database.
 #### Description
 Update an user password in the database table `users`.
 #### Response
-An JSON object containing the requested user's information fetched from the database.
+An JSON object containing the updated user's information fetched from the database.
 #### Example
 `curl -X PUT -d "{ \"password\": \"666\" }" localhost:8080/users/bill`
 #### Expected response format
