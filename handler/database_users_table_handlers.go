@@ -133,7 +133,7 @@ func getUserQueryRowsPtrFromDatabaseUsersTable(userName string, databasePtr *sql
 func UpdateUserPasswordInDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
-		userNewPassword, getStatus := getPasswordFromContext(context)
+		userNewPassword, getStatus := getPasswordFromRequest(context)
 		if !util.IsStatusOK(getStatus) {
 			context.JSON(getStatus.HttpStatusCode, gin.H{util.JsonError: getStatus.ErrorMessage})
 			return
@@ -152,11 +152,11 @@ func UpdateUserPasswordInDatabaseUsersTableAndRespondJsonOfUserHandler(databaseP
 	}
 }
 
-func getPasswordFromContext(context *gin.Context) (password, Status) {
+func getPasswordFromRequest(context *gin.Context) (password, Status) {
 	var pwd password
 	bindError := context.ShouldBindJSON(&pwd)
 	if bindError != nil {
-		return pwd, util.StatusBadRequest(getPasswordFromContext, bindError)
+		return pwd, util.StatusBadRequest(getPasswordFromRequest, bindError)
 	}
 	return pwd, util.StatusOK()
 }
