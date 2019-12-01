@@ -16,6 +16,8 @@ import (
 
 const (
 	queryInsertUser         = "INSERT INTO " + DUTU.TableName + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	queryGetAllUsers        = "SELECT * FROM " + DUTU.TableName
+	queryGetUser            = "SELECT * FROM " + DUTU.TableName + " WHERE " + DUTU.UserNameColumnName + " = ?"
 	queryUpdateUserPassword = "UPDATE " + DUTU.TableName + " SET " + DUTU.PasswordColumnName + " = ? WHERE " + DUTU.UserNameColumnName + " = ?"
 	queryDeleteUser         = "DELETE FROM " + DUTU.TableName + " WHERE " + DUTU.UserNameColumnName + " = ?"
 )
@@ -70,7 +72,7 @@ func RespondJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin
 }
 
 func getAllUsersFromDatabaseUsersTable(databasePtr *sql.DB) ([]User, Status) {
-	queryRowsPtr, queryError := databasePtr.Query("SELECT * FROM " + DUTU.TableName)
+	queryRowsPtr, queryError := databasePtr.Query(queryGetAllUsers)
 	if queryError != nil {
 		return nil, util.StatusInternalServerError(getAllUsersFromDatabaseUsersTable, queryError)
 	}
@@ -121,7 +123,7 @@ func getUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, 
 }
 
 func getUserQueryRowsPtrFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (*sql.Rows, Status) {
-	queryRowsPtr, queryError := databasePtr.Query("SELECT * FROM "+DUTU.TableName+" WHERE "+DUTU.UserNameColumnName+" = ?", userName)
+	queryRowsPtr, queryError := databasePtr.Query(queryGetUser, userName)
 	if queryError != nil {
 		return nil, util.StatusInternalServerError(getUserQueryRowsPtrFromDatabaseUsersTable, queryError)
 	}
