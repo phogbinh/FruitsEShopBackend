@@ -122,6 +122,19 @@ func getUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, 
 	return users[0], util.StatusOK()
 }
 
+func getUsersFromDatabaseUsersTable(userName string, databasePtr *sql.DB) ([]User, Status) {
+	queryRowsPtr, queryError := databasePtr.Query(queryGetUser, userName)
+	if queryError != nil {
+		return nil, util.StatusInternalServerError(getUsersFromDatabaseUsersTable, queryError)
+	}
+	defer queryRowsPtr.Close()
+	users, getStatus := getAllUsers(queryRowsPtr)
+	if !util.IsStatusOK(getStatus) {
+		return nil, getStatus
+	}
+	return users, util.StatusOK()
+}
+
 func UpdateUserPasswordInDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
