@@ -1,4 +1,4 @@
-# Database 'users' Table
+# Database `users` Table
 ## cURL API
 ### Create an user
 #### Description
