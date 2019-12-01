@@ -55,15 +55,7 @@ func getUserFromContext(context *gin.Context) (User, Status) {
 }
 
 func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
-	prepareStatementPtr, prepareError := databasePtr.Prepare(queryInsertUser)
-	if prepareError != nil {
-		return util.StatusInternalServerError(insertUserToDatabaseUsersTable, prepareError)
-	}
-	_, executeError := prepareStatementPtr.Exec(user.Mail, user.Password, user.UserName, user.Nickname, user.Fname, user.Lname, user.Phone, user.Location, user.Money, user.Introduction)
-	if executeError != nil {
-		return util.StatusInternalServerError(insertUserToDatabaseUsersTable, executeError)
-	}
-	return util.StatusOK()
+	return queryDatabase(databasePtr, queryInsertUser, user.Mail, user.Password, user.UserName, user.Nickname, user.Fname, user.Lname, user.Phone, user.Location, user.Money, user.Introduction)
 }
 
 func RespondJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
@@ -168,15 +160,7 @@ func getPasswordFromContext(context *gin.Context) (password, Status) {
 }
 
 func updateUserPasswordToDatabaseUsersTable(userName string, userNewPassword string, databasePtr *sql.DB) Status {
-	prepareStatementPtr, prepareError := databasePtr.Prepare(queryUpdateUserPassword)
-	if prepareError != nil {
-		return util.StatusInternalServerError(updateUserPasswordToDatabaseUsersTable, prepareError)
-	}
-	_, executeError := prepareStatementPtr.Exec(userNewPassword, userName)
-	if executeError != nil {
-		return util.StatusInternalServerError(updateUserPasswordToDatabaseUsersTable, executeError)
-	}
-	return util.StatusOK()
+	return queryDatabase(databasePtr, queryUpdateUserPassword, userNewPassword, userName)
 }
 
 func DeleteUserFromDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
@@ -197,15 +181,7 @@ func DeleteUserFromDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sq
 }
 
 func deleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) Status {
-	prepareStatementPtr, prepareError := databasePtr.Prepare(queryDeleteUser)
-	if prepareError != nil {
-		return util.StatusInternalServerError(deleteUserFromDatabaseUsersTable, prepareError)
-	}
-	_, executeError := prepareStatementPtr.Exec(userName)
-	if executeError != nil {
-		return util.StatusInternalServerError(deleteUserFromDatabaseUsersTable, executeError)
-	}
-	return util.StatusOK()
+	return queryDatabase(databasePtr, queryDeleteUser, userName)
 }
 
 func queryDatabase(databasePtr *sql.DB, query string, executeArguments ...interface{}) Status {
