@@ -186,6 +186,14 @@ func deleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) Stat
 	return queryDatabase(databasePtr, queryDeleteUser, userName)
 }
 
+func isExistingUserInDatabaseUsersTable(userName string, databasePtr *sql.DB) (bool, Status) {
+	users, getStatus := getUsersFromDatabaseUsersTable(userName, databasePtr)
+	if !util.IsStatusOK(getStatus) {
+		return false, getStatus
+	}
+	return len(users) > 0, util.StatusOK()
+}
+
 func queryDatabase(databasePtr *sql.DB, query string, executeArguments ...interface{}) Status {
 	prepareStatementPtr, prepareError := databasePtr.Prepare(query)
 	if prepareError != nil {
