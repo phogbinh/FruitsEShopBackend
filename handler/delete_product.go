@@ -10,7 +10,7 @@ import (
 /*
 DeleteProductHandler is a function for gin to handle DeleteProduct api
 */
-func ModifyProductHandler(c *gin.Context) {
+func DeleteProductHandler(c *gin.Context) {
 	productID, _ := strconv.Atoi(c.Query("p_id"))
 
 	status := database.DeleteProduct(productID)

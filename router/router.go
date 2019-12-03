@@ -19,6 +19,9 @@ func Register(router *gin.Engine) {
 
 	router.POST("/login", handler.LoginHandler)
 	router.POST("/signup", handler.SignUpHandler)
+	router.POST("/addoproduct", handler.AddProductHandler)
+	router.DELETE("/deleteproduct", handler.DeleteProductHandler)
+	router.GET("/modifyproduct", handler.GetOrderItemsInCartHandler)
 
 	auth := router.Group("/auth")
 	auth.Use(authMiddleware.MiddlewareFunc())
