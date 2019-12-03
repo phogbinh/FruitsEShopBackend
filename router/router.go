@@ -43,6 +43,9 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 
 	router.POST("/login", handler.LoginHandler(databasePtr))
 	router.POST("/sign-up", handler.SignUpHandler(databasePtr))
+	router.POST("/addoproduct", handler.AddProductHandler)
+	router.DELETE("/deleteproduct", handler.DeleteProductHandler)
+	router.GET("/modifyproduct", handler.GetOrderItemsInCartHandler)
 
 	auth := router.Group("/auth")
 

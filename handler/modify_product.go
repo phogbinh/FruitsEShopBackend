@@ -8,11 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type test struct {
-	attr1     string
-	attr2     int
-}
-
 /*
 ModifyProductHandler is a function for gin to handle ModifyProduct api
 */
