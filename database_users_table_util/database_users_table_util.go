@@ -27,7 +27,7 @@ func CreateDatabaseUsersTableIfNotExists(databasePtr *sql.DB) error {
 		FnameColumnName + "			VARCHAR(15)		NOT NULL," +
 		LnameColumnName + "			VARCHAR(15)		NOT NULL," +
 		PhoneColumnName + "			VARCHAR(30)				," +
-		LocationColumnName + "		VARCHAR(30)				," +
+		LocationColumnName + "		VARCHAR(255)			," +
 		MoneyColumnName + "			DECIMAL(30, 2)			," +
 		IntroductionColumnName + "	VARCHAR(255)			," +
 		"PRIMARY KEY(" + UserNameColumnName + ")," +
