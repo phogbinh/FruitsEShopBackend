@@ -24,7 +24,6 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 	if err != nil {
 		log.Panicln(err)
 	}
-
 	router.POST("/addorderitemtocart", handler.AddOrderItemToCartHandler)
 	router.DELETE("/deleteorderitemincart", handler.DeleteOrderItemToCartHandler)
 	router.GET("/getorderitemsincart", handler.GetOrderItemsInCartHandler)
@@ -32,7 +31,6 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 	router.POST("/login", handler.LoginHandler(databasePtr))
 	router.POST("/sign-up", handler.SignUpHandler(databasePtr))
 	initializeRouterManageUserHandlers(router, databasePtr)
-
 	auth := router.Group("/auth")
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
@@ -46,14 +44,11 @@ func initializeRouterManageUserHandlers(router *gin.Engine, databasePtr *sql.DB)
 	router.GET(
 		util.RightSlash+DUTU.TableName,
 		handler.RespondJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr))
-
 	router.GET(
 		util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
 		handler.RespondJsonOfUserByUserNameFromDatabaseUsersTableHandler(databasePtr))
-
 	router.GET("/user",
 		handler.RespondJsonOfUserByMailFromDatabaseUsersTableHandler(databasePtr))
-
 	router.DELETE(
 		util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
 		handler.DeleteUserFromDatabaseUsersTable(databasePtr))
