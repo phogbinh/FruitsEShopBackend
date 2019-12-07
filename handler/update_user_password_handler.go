@@ -16,8 +16,8 @@ type password struct {
 	Value string `json:"password" binding:"required"`
 }
 
-// UpdateUserPasswordInDatabaseUsersTableAndRespondJsonOfUserHandler updates an user's password and responds the user's information.
-func UpdateUserPasswordInDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
+// UpdateUserPasswordHandler updates an user's password and responds the user's information.
+func UpdateUserPasswordHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
 		userNewPassword, getStatus := getPasswordFromRequest(context)
