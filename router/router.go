@@ -48,7 +48,7 @@ func initializeRouterDatabaseUsersTableHandlers(router *gin.Engine, databasePtr 
 
 	router.GET(
 		util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
-		handler.RespondJsonOfUserFromDatabaseUsersTableHandler(databasePtr))
+		handler.RespondJsonOfUserByUserNameFromDatabaseUsersTableHandler(databasePtr))
 
 	router.GET(util.RightSlash+"user",
 		handler.RespondJsonOfUserByMailFromDatabaseUsersTableHandler(databasePtr))

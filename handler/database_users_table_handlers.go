@@ -96,8 +96,8 @@ func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
 	return users, util.StatusOK()
 }
 
-// RespondJsonOfUserFromDatabaseUsersTableHandler responds an user's information.
-func RespondJsonOfUserFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
+// RespondJsonOfUserByUserNameFromDatabaseUsersTableHandler responds an user's information.
+func RespondJsonOfUserByUserNameFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
 		user, status := getUserByKeyColumnFromDatabaseUsersTable(queryGetUserByUserName, userName, databasePtr)
