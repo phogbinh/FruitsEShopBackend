@@ -228,3 +228,8 @@ func queryDatabase(databasePtr *sql.DB, query string, executeArguments ...interf
 	}
 	return util.StatusOK()
 }
+
+// GetUserByMailFromDatabaseUsersTable returns an user's information by the given mail.
+func GetUserByMailFromDatabaseUsersTable(mail string, databasePtr *sql.DB) (User, Status) {
+	return getUserByKeyColumnFromDatabaseUsersTable(queryGetUserByMail, mail, databasePtr)
+}
