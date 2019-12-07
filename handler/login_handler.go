@@ -20,6 +20,7 @@ func LoginHandler(databasePtr *sql.DB) gin.HandlerFunc {
 		if err != nil {
 			log.Printf("JWT Error:" + err.Error())
 			context.Status(500)
+			return
 		}
 
 		mail := context.PostForm(DUTU.MailColumnName)
