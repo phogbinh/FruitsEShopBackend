@@ -21,11 +21,11 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 		log.Panicln(err)
 	}
 
-	router.POST("/login", handler.LoginHandler)
 	router.POST("/addorderitemtocart", handler.AddOrderItemToCartHandler)
 	router.DELETE("/deleteorderitemincart", handler.DeleteOrderItemToCartHandler)
 	router.GET("/getorderitemsincart", handler.GetOrderItemsInCartHandler)
 	router.PUT("/modifyorderitemquantity", handler.ModifyOrderItemQuantityHandler)
+	router.POST("/login", handler.LoginHandler(databasePtr))
 	initializeRouterDatabaseUsersTableHandlers(router, databasePtr)
 
 	auth := router.Group("/auth")
