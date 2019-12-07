@@ -22,7 +22,6 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 	}
 
 	router.POST("/login", handler.LoginHandler)
-	router.POST("/signup", handler.SignUpHandler)
 	router.POST("/addorderitemtocart", handler.AddOrderItemToCartHandler)
 	router.DELETE("/deleteorderitemincart", handler.DeleteOrderItemToCartHandler)
 	router.GET("/getorderitemsincart", handler.GetOrderItemsInCartHandler)
