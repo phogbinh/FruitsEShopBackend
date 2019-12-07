@@ -2,7 +2,6 @@ package handler
 
 import (
 	"database/sql"
-	"log"
 	"net/http"
 
 	DUTU "backend/database_users_table_util"
@@ -20,8 +19,7 @@ func LoginHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		authMiddleware, err := middleware.NewAuthMiddleware()
 		if err != nil {
-			log.Printf("JWT Error:" + err.Error())
-			context.Status(http.StatusInternalServerError)
+			context.JSON(http.StatusInternalServerError, gin.H{util.JsonError: "JWT Error:" + err.Error()})
 			return
 		}
 		login, getLoginStatus := getLoginFromRequest(context)
@@ -35,7 +33,7 @@ func LoginHandler(databasePtr *sql.DB) gin.HandlerFunc {
 			return
 		}
 		if user.Password != login.Password {
-			context.Status(http.StatusBadRequest)
+			context.JSON(http.StatusBadRequest, gin.H{util.JsonError: "Incorrect password."})
 			return
 		}
 		context.Status(http.StatusOK)
