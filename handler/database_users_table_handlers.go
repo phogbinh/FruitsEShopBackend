@@ -40,7 +40,7 @@ func CreateUserToDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.
 			context.JSON(insertStatus.HttpStatusCode, gin.H{util.JsonError: insertStatus.ErrorMessage})
 			return
 		}
-		getUser, getStatus := getUserFromDatabaseUsersTable(user.UserName, databasePtr)
+		getUser, getStatus := getUserByKeyColumnFromDatabaseUsersTable(queryGetUser, user.UserName, databasePtr)
 		if !util.IsStatusOK(getStatus) {
 			context.JSON(getStatus.HttpStatusCode, gin.H{util.JsonError: getStatus.ErrorMessage})
 			return
@@ -100,50 +100,26 @@ func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
 func RespondJsonOfUserFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
-		user, status := getUserFromDatabaseUsersTable(userName, databasePtr)
+		user, status := getUserByKeyColumnFromDatabaseUsersTable(queryGetUser, userName, databasePtr)
 		if !util.IsStatusOK(status) {
 			context.JSON(status.HttpStatusCode, gin.H{util.JsonError: status.ErrorMessage})
 			return
 		}
 		context.JSON(http.StatusOK, user)
 	}
-}
-
-func getUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, Status) {
-	var dumpUser User
-	users, getStatus := getUsersByKeyColumnFromDatabaseUsersTable(queryGetUser, userName, databasePtr)
-	if !util.IsStatusOK(getStatus) {
-		return dumpUser, getStatus
-	}
-	if len(users) != 1 {
-		return dumpUser, util.StatusInternalServerError(getUserFromDatabaseUsersTable, errors.New("Query 1 user but got "+strconv.Itoa(len(users))+" user(s) instead."))
-	}
-	return users[0], util.StatusOK()
 }
 
 // RespondJsonOfUserByMailFromDatabaseUsersTableHandler responds an user's information by the given mail.
 func RespondJsonOfUserByMailFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		mail := context.Query(DUTU.MailColumnName)
-		user, status := getUserByMailFromDatabaseUsersTable(mail, databasePtr)
+		user, status := getUserByKeyColumnFromDatabaseUsersTable(queryGetUserByMail, mail, databasePtr)
 		if !util.IsStatusOK(status) {
 			context.JSON(status.HttpStatusCode, gin.H{util.JsonError: status.ErrorMessage})
 			return
 		}
 		context.JSON(http.StatusOK, user)
 	}
-}
-
-func getUserByMailFromDatabaseUsersTable(mail string, databasePtr *sql.DB) (User, Status) {
-	var dumpUser User
-	users, getStatus := getUsersByKeyColumnFromDatabaseUsersTable(queryGetUserByMail, mail, databasePtr)
-	if !util.IsStatusOK(getStatus) {
-		return dumpUser, getStatus
-	}
-	if len(users) != 1 {
-		return dumpUser, util.StatusInternalServerError(getUserByMailFromDatabaseUsersTable, errors.New("Query 1 user but got "+strconv.Itoa(len(users))+" user(s) instead."))
-	}
-	return users[0], util.StatusOK()
 }
 
 func getUserByKeyColumnFromDatabaseUsersTable(queryGetUserByKeyColumn string, keyColumnValue string, databasePtr *sql.DB) (User, Status) {
@@ -185,7 +161,7 @@ func UpdateUserPasswordInDatabaseUsersTableAndRespondJsonOfUserHandler(databaseP
 			context.JSON(updateStatus.HttpStatusCode, gin.H{util.JsonError: updateStatus.ErrorMessage})
 			return
 		}
-		getUser, getStatus := getUserFromDatabaseUsersTable(userName, databasePtr)
+		getUser, getStatus := getUserByKeyColumnFromDatabaseUsersTable(queryGetUser, userName, databasePtr)
 		if !util.IsStatusOK(getStatus) {
 			context.JSON(getStatus.HttpStatusCode, gin.H{util.JsonError: getStatus.ErrorMessage})
 			return
