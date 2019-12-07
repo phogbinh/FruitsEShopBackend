@@ -43,7 +43,7 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 
 func initializeRouterDatabaseUsersTableHandlers(router *gin.Engine, databasePtr *sql.DB) {
 	router.POST(
-		util.RightSlash+DUTU.TableName,
+		"/sign-up",
 		handler.SignUpHandler(databasePtr))
 
 	router.GET(
