@@ -122,16 +122,7 @@ func getUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, 
 }
 
 func getUsersFromDatabaseUsersTable(userName string, databasePtr *sql.DB) ([]User, Status) {
-	queryRowsPtr, queryError := databasePtr.Query(queryGetUser, userName)
-	if queryError != nil {
-		return nil, util.StatusInternalServerError(getUsersFromDatabaseUsersTable, queryError)
-	}
-	defer queryRowsPtr.Close()
-	users, getStatus := getAllUsers(queryRowsPtr)
-	if !util.IsStatusOK(getStatus) {
-		return nil, getStatus
-	}
-	return users, util.StatusOK()
+	return getUsersByKeyColumnFromDatabaseUsersTable(queryGetUser, userName, databasePtr)
 }
 
 // RespondJsonOfUserByMailFromDatabaseUsersTableHandler responds an user's information by the given mail.
@@ -160,16 +151,7 @@ func getUserByMailFromDatabaseUsersTable(mail string, databasePtr *sql.DB) (User
 }
 
 func getUsersByMailFromDatabaseUsersTable(mail string, databasePtr *sql.DB) ([]User, Status) {
-	queryRowsPtr, queryError := databasePtr.Query(queryGetUserByMail, mail)
-	if queryError != nil {
-		return nil, util.StatusInternalServerError(getUsersByMailFromDatabaseUsersTable, queryError)
-	}
-	defer queryRowsPtr.Close()
-	users, getStatus := getAllUsers(queryRowsPtr)
-	if !util.IsStatusOK(getStatus) {
-		return nil, getStatus
-	}
-	return users, util.StatusOK()
+	return getUsersByKeyColumnFromDatabaseUsersTable(queryGetUserByMail, mail, databasePtr)
 }
 
 func getUsersByKeyColumnFromDatabaseUsersTable(queryGetUserByKeyColumn string, keyColumnValue string, databasePtr *sql.DB) ([]User, Status) {
