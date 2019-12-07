@@ -7,6 +7,7 @@ import (
 
 	DUTU "backend/database_users_table_util"
 	"backend/middleware"
+	. "backend/model"
 	"backend/util"
 
 	"github.com/gin-gonic/gin"
@@ -37,4 +38,13 @@ func LoginHandler(databasePtr *sql.DB) gin.HandlerFunc {
 		context.Status(http.StatusOK)
 		authMiddleware.LoginHandler(context)
 	}
+}
+
+func getLoginFromRequest(context *gin.Context) (Login, Status) {
+	var login Login
+	bindError := context.ShouldBindJSON(&login)
+	if bindError != nil {
+		return login, util.StatusBadRequest(getLoginFromRequest, bindError)
+	}
+	return login, util.StatusOK()
 }
