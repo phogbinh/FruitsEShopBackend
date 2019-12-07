@@ -35,7 +35,9 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 	auth := router.Group("/auth")
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
-		// TODO: authed api will be here
+		auth.PUT(
+			util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
+			handler.UpdateUserPasswordHandler(databasePtr))
 	}
 }
 
@@ -54,10 +56,6 @@ func initializeRouterDatabaseUsersTableHandlers(router *gin.Engine, databasePtr 
 
 	router.GET(util.RightSlash+"user",
 		handler.RespondJsonOfUserByMailFromDatabaseUsersTableHandler(databasePtr))
-
-	router.PUT(
-		util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
-		handler.UpdateUserPasswordHandler(databasePtr))
 
 	router.DELETE(
 		util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
