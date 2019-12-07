@@ -3,14 +3,12 @@ package middleware
 import (
 	"time"
 
+	. "backend/model"
+
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 )
-
-type login struct {
-	Mail     string `form:"mail" json:"mail" binding:"required"`
-	Password string `form:"password" json:"password" binding:"required"`
-}
 
 /*
 NewAuthMiddleware handles jwt middleware
@@ -22,7 +20,7 @@ func NewAuthMiddleware() (*jwt.GinJWTMiddleware, error) {
 		Timeout:    time.Hour * 24 * 30,
 		MaxRefresh: time.Hour,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
-			if v, ok := data.(*login); ok {
+			if v, ok := data.(*Login); ok {
 				return jwt.MapClaims{
 					"mail":     v.Mail,
 					"password": v.Password,
@@ -33,24 +31,23 @@ func NewAuthMiddleware() (*jwt.GinJWTMiddleware, error) {
 		IdentityHandler: func(c *gin.Context) interface{} {
 			claims := jwt.ExtractClaims(c)
 
-			return &login{
+			return &Login{
 				Mail:     claims["mail"].(string),
 				Password: claims["password"].(string),
 			}
 		},
-		Authenticator: func(c *gin.Context) (interface{}, error) {
-			var loginVals login
-			if err := c.ShouldBind(&loginVals); err != nil {
+		Authenticator: func(context *gin.Context) (interface{}, error) {
+			var login Login
+			// Since unlike ShouldBindWith, ShouldBindBodyWith puts back data into context after reading, it is used here so that context data can be re-used twice by the call of authMiddleware.LoginHandler, which checks whether Authenticator is null and then calls the function.
+			if err := context.ShouldBindBodyWith(&login, binding.JSON); err != nil {
 				return "", jwt.ErrMissingLoginValues
 			}
-
-			mail := loginVals.Mail
-			password := loginVals.Password
-
-			return &login{Mail: mail, Password: password}, nil
+			mail := login.Mail
+			password := login.Password
+			return &Login{Mail: mail, Password: password}, nil
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
-			if _, ok := data.(*login); ok {
+			if _, ok := data.(*Login); ok {
 				return true
 			}
 

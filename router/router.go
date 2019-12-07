@@ -1,32 +1,55 @@
 package router
 
 import (
-	"backend/handler"
-	"backend/middleware"
+	"database/sql"
 	"log"
 
+	DUTU "backend/database_users_table_util"
+	"backend/handler"
+	"backend/middleware"
+	"backend/util"
+
 	"github.com/gin-gonic/gin"
+)
+
+const (
+	userNamePath = ":" + DUTU.UserNameColumnName
 )
 
 /*
 Register is a place to register rotes
 */
-func Register(router *gin.Engine) {
+func Register(router *gin.Engine, databasePtr *sql.DB) {
 	authMiddleware, err := middleware.NewAuthMiddleware()
 	if err != nil {
 		log.Panicln(err)
 	}
-
-	router.POST("/login", handler.LoginHandler)
-	router.POST("/signup", handler.SignUpHandler)
 	router.POST("/addorderitemtocart", handler.AddOrderItemToCartHandler)
 	router.DELETE("/deleteorderitemincart", handler.DeleteOrderItemToCartHandler)
 	router.GET("/getorderitemsincart", handler.GetOrderItemsInCartHandler)
 	router.PUT("/modifyorderitemquantity", handler.ModifyOrderItemQuantityHandler)
-
+	initializeRouterManageUserHandlers(router, databasePtr)
+	router.POST("/login", handler.LoginHandler(databasePtr))
+	router.POST("/sign-up", handler.SignUpHandler(databasePtr))
 	auth := router.Group("/auth")
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
-		// TODO: authed api will be here
+		auth.PUT(
+			util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
+			handler.UpdateUserPasswordHandler(databasePtr))
 	}
+}
+
+func initializeRouterManageUserHandlers(router *gin.Engine, databasePtr *sql.DB) {
+	router.GET(
+		util.RightSlash+DUTU.TableName,
+		handler.RespondJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr))
+	router.GET(
+		util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
+		handler.RespondJsonOfUserByUserNameFromDatabaseUsersTableHandler(databasePtr))
+	router.GET("/user",
+		handler.RespondJsonOfUserByMailFromDatabaseUsersTableHandler(databasePtr))
+	router.DELETE(
+		util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
+		handler.DeleteUserFromDatabaseUsersTable(databasePtr))
 }
