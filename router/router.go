@@ -51,7 +51,7 @@ func initializeRouterManageUserHandlers(router *gin.Engine, databasePtr *sql.DB)
 		util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
 		handler.RespondJsonOfUserByUserNameFromDatabaseUsersTableHandler(databasePtr))
 
-	router.GET(util.RightSlash+"user",
+	router.GET("/user",
 		handler.RespondJsonOfUserByMailFromDatabaseUsersTableHandler(databasePtr))
 
 	router.DELETE(
