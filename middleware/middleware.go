@@ -40,10 +40,8 @@ func NewAuthMiddleware() (*jwt.GinJWTMiddleware, error) {
 			if err := context.ShouldBind(&login); err != nil {
 				return "", jwt.ErrMissingLoginValues
 			}
-
 			mail := login.Mail
 			password := login.Password
-
 			return &Login{Mail: mail, Password: password}, nil
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
