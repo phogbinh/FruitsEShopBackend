@@ -7,6 +7,7 @@ import (
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 )
 
 /*
@@ -37,7 +38,8 @@ func NewAuthMiddleware() (*jwt.GinJWTMiddleware, error) {
 		},
 		Authenticator: func(context *gin.Context) (interface{}, error) {
 			var login Login
-			if err := context.ShouldBind(&login); err != nil {
+			// Since unlike ShouldBindWith, ShouldBindBodyWith puts back data into context after reading, it is used here so that context data can be re-used twice by the call of authMiddleware.LoginHandler, which checks whether Authenticator is null and then calls the function.
+			if err := context.ShouldBindBodyWith(&login, binding.JSON); err != nil {
 				return "", jwt.ErrMissingLoginValues
 			}
 			mail := login.Mail
