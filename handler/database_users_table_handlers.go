@@ -40,7 +40,7 @@ func CreateUserToDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.
 			context.JSON(insertStatus.HttpStatusCode, gin.H{util.JsonError: insertStatus.ErrorMessage})
 			return
 		}
-		getUser, getStatus := getUserByKeyColumnFromDatabaseUsersTable(queryGetUserByUserName, user.UserName, databasePtr)
+		getUser, getStatus := GetUserByUserName(user.UserName, databasePtr)
 		if !util.IsStatusOK(getStatus) {
 			context.JSON(getStatus.HttpStatusCode, gin.H{util.JsonError: getStatus.ErrorMessage})
 			return
@@ -102,7 +102,7 @@ func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
 func RespondJsonOfUserByUserNameFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
-		user, status := getUserByKeyColumnFromDatabaseUsersTable(queryGetUserByUserName, userName, databasePtr)
+		user, status := GetUserByUserName(userName, databasePtr)
 		if !util.IsStatusOK(status) {
 			context.JSON(status.HttpStatusCode, gin.H{util.JsonError: status.ErrorMessage})
 			return
@@ -115,7 +115,7 @@ func RespondJsonOfUserByUserNameFromDatabaseUsersTableHandler(databasePtr *sql.D
 func RespondJsonOfUserByMailFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		mail := context.Query(DUTU.MailColumnName)
-		user, status := getUserByKeyColumnFromDatabaseUsersTable(queryGetUserByMail, mail, databasePtr)
+		user, status := GetUserByMail(mail, databasePtr)
 		if !util.IsStatusOK(status) {
 			context.JSON(status.HttpStatusCode, gin.H{util.JsonError: status.ErrorMessage})
 			return
@@ -163,7 +163,7 @@ func UpdateUserPasswordInDatabaseUsersTableAndRespondJsonOfUserHandler(databaseP
 			context.JSON(updateStatus.HttpStatusCode, gin.H{util.JsonError: updateStatus.ErrorMessage})
 			return
 		}
-		getUser, getStatus := getUserByKeyColumnFromDatabaseUsersTable(queryGetUserByUserName, userName, databasePtr)
+		getUser, getStatus := GetUserByUserName(userName, databasePtr)
 		if !util.IsStatusOK(getStatus) {
 			context.JSON(getStatus.HttpStatusCode, gin.H{util.JsonError: getStatus.ErrorMessage})
 			return
