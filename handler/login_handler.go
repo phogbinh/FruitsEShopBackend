@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"net/http"
 
 	DUTU "backend/database_users_table_util"
 	"backend/middleware"
@@ -19,7 +20,7 @@ func LoginHandler(databasePtr *sql.DB) gin.HandlerFunc {
 		authMiddleware, err := middleware.NewAuthMiddleware()
 		if err != nil {
 			log.Printf("JWT Error:" + err.Error())
-			context.Status(500)
+			context.Status(http.StatusInternalServerError)
 			return
 		}
 
@@ -28,7 +29,7 @@ func LoginHandler(databasePtr *sql.DB) gin.HandlerFunc {
 
 		fmt.Printf("mail is" + mail + "password is" + password)
 
-		context.Status(201)
+		context.Status(http.StatusOK)
 
 		authMiddleware.LoginHandler(context)
 	}
