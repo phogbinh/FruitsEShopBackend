@@ -50,6 +50,9 @@ func initializeRouterDatabaseUsersTableHandlers(router *gin.Engine, databasePtr 
 		util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
 		handler.RespondJsonOfUserFromDatabaseUsersTableHandler(databasePtr))
 
+	router.GET(util.RightSlash+"user",
+		handler.RespondJsonOfUserByMailFromDatabaseUsersTableHandler(databasePtr))
+
 	router.PUT(
 		util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
 		handler.UpdateUserPasswordInDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr))

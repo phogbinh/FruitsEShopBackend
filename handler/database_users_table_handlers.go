@@ -18,6 +18,7 @@ const (
 	queryInsertUser         = "INSERT INTO " + DUTU.TableName + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 	queryGetAllUsers        = "SELECT * FROM " + DUTU.TableName
 	queryGetUser            = "SELECT * FROM " + DUTU.TableName + " WHERE " + DUTU.UserNameColumnName + " = ?"
+	queryGetUserByMail      = "SELECT * FROM " + DUTU.TableName + " WHERE " + DUTU.MailColumnName + " = ?"
 	queryUpdateUserPassword = "UPDATE " + DUTU.TableName + " SET " + DUTU.PasswordColumnName + " = ? WHERE " + DUTU.UserNameColumnName + " = ?"
 	queryDeleteUser         = "DELETE FROM " + DUTU.TableName + " WHERE " + DUTU.UserNameColumnName + " = ?"
 )
@@ -124,6 +125,44 @@ func getUsersFromDatabaseUsersTable(userName string, databasePtr *sql.DB) ([]Use
 	queryRowsPtr, queryError := databasePtr.Query(queryGetUser, userName)
 	if queryError != nil {
 		return nil, util.StatusInternalServerError(getUsersFromDatabaseUsersTable, queryError)
+	}
+	defer queryRowsPtr.Close()
+	users, getStatus := getAllUsers(queryRowsPtr)
+	if !util.IsStatusOK(getStatus) {
+		return nil, getStatus
+	}
+	return users, util.StatusOK()
+}
+
+// RespondJsonOfUserByMailFromDatabaseUsersTableHandler responds an user's information by the given mail.
+func RespondJsonOfUserByMailFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
+	return func(context *gin.Context) {
+		mail := context.Query(DUTU.MailColumnName)
+		user, status := getUserByMailFromDatabaseUsersTable(mail, databasePtr)
+		if !util.IsStatusOK(status) {
+			context.JSON(status.HttpStatusCode, gin.H{util.JsonError: status.ErrorMessage})
+			return
+		}
+		context.JSON(http.StatusOK, user)
+	}
+}
+
+func getUserByMailFromDatabaseUsersTable(mail string, databasePtr *sql.DB) (User, Status) {
+	var dumpUser User
+	users, getStatus := getUsersByMailFromDatabaseUsersTable(mail, databasePtr)
+	if !util.IsStatusOK(getStatus) {
+		return dumpUser, getStatus
+	}
+	if len(users) != 1 {
+		return dumpUser, util.StatusInternalServerError(getUserByMailFromDatabaseUsersTable, errors.New("Query 1 user but got "+strconv.Itoa(len(users))+" user(s) instead."))
+	}
+	return users[0], util.StatusOK()
+}
+
+func getUsersByMailFromDatabaseUsersTable(mail string, databasePtr *sql.DB) ([]User, Status) {
+	queryRowsPtr, queryError := databasePtr.Query(queryGetUserByMail, mail)
+	if queryError != nil {
+		return nil, util.StatusInternalServerError(getUsersByMailFromDatabaseUsersTable, queryError)
 	}
 	defer queryRowsPtr.Close()
 	users, getStatus := getAllUsers(queryRowsPtr)
