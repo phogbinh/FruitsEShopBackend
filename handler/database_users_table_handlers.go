@@ -111,7 +111,7 @@ func RespondJsonOfUserFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.Han
 
 func getUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, Status) {
 	var dumpUser User
-	users, getStatus := getUsersFromDatabaseUsersTable(userName, databasePtr)
+	users, getStatus := getUsersByKeyColumnFromDatabaseUsersTable(queryGetUser, userName, databasePtr)
 	if !util.IsStatusOK(getStatus) {
 		return dumpUser, getStatus
 	}
@@ -119,10 +119,6 @@ func getUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, 
 		return dumpUser, util.StatusInternalServerError(getUserFromDatabaseUsersTable, errors.New("Query 1 user but got "+strconv.Itoa(len(users))+" user(s) instead."))
 	}
 	return users[0], util.StatusOK()
-}
-
-func getUsersFromDatabaseUsersTable(userName string, databasePtr *sql.DB) ([]User, Status) {
-	return getUsersByKeyColumnFromDatabaseUsersTable(queryGetUser, userName, databasePtr)
 }
 
 // RespondJsonOfUserByMailFromDatabaseUsersTableHandler responds an user's information by the given mail.
@@ -140,7 +136,7 @@ func RespondJsonOfUserByMailFromDatabaseUsersTableHandler(databasePtr *sql.DB) g
 
 func getUserByMailFromDatabaseUsersTable(mail string, databasePtr *sql.DB) (User, Status) {
 	var dumpUser User
-	users, getStatus := getUsersByMailFromDatabaseUsersTable(mail, databasePtr)
+	users, getStatus := getUsersByKeyColumnFromDatabaseUsersTable(queryGetUserByMail, mail, databasePtr)
 	if !util.IsStatusOK(getStatus) {
 		return dumpUser, getStatus
 	}
@@ -148,10 +144,6 @@ func getUserByMailFromDatabaseUsersTable(mail string, databasePtr *sql.DB) (User
 		return dumpUser, util.StatusInternalServerError(getUserByMailFromDatabaseUsersTable, errors.New("Query 1 user but got "+strconv.Itoa(len(users))+" user(s) instead."))
 	}
 	return users[0], util.StatusOK()
-}
-
-func getUsersByMailFromDatabaseUsersTable(mail string, databasePtr *sql.DB) ([]User, Status) {
-	return getUsersByKeyColumnFromDatabaseUsersTable(queryGetUserByMail, mail, databasePtr)
 }
 
 func getUsersByKeyColumnFromDatabaseUsersTable(queryGetUserByKeyColumn string, keyColumnValue string, databasePtr *sql.DB) ([]User, Status) {
@@ -230,7 +222,7 @@ func deleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) Stat
 }
 
 func isExistingUserInDatabaseUsersTable(userName string, databasePtr *sql.DB) (bool, Status) {
-	users, getStatus := getUsersFromDatabaseUsersTable(userName, databasePtr)
+	users, getStatus := getUsersByKeyColumnFromDatabaseUsersTable(queryGetUser, userName, databasePtr)
 	if !util.IsStatusOK(getStatus) {
 		return false, getStatus
 	}
