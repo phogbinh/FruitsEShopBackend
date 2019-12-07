@@ -146,6 +146,18 @@ func getUserByMailFromDatabaseUsersTable(mail string, databasePtr *sql.DB) (User
 	return users[0], util.StatusOK()
 }
 
+func getUserByKeyColumnFromDatabaseUsersTable(queryGetUserByKeyColumn string, keyColumnValue string, databasePtr *sql.DB) (User, Status) {
+	var dumpUser User
+	users, getStatus := getUsersByKeyColumnFromDatabaseUsersTable(queryGetUserByKeyColumn, keyColumnValue, databasePtr)
+	if !util.IsStatusOK(getStatus) {
+		return dumpUser, getStatus
+	}
+	if len(users) != 1 {
+		return dumpUser, util.StatusInternalServerError(getUserByKeyColumnFromDatabaseUsersTable, errors.New("Query 1 user but got "+strconv.Itoa(len(users))+" user(s) instead."))
+	}
+	return users[0], util.StatusOK()
+}
+
 func getUsersByKeyColumnFromDatabaseUsersTable(queryGetUserByKeyColumn string, keyColumnValue string, databasePtr *sql.DB) ([]User, Status) {
 	queryRowsPtr, queryError := databasePtr.Query(queryGetUserByKeyColumn, keyColumnValue)
 	if queryError != nil {
