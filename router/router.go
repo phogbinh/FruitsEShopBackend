@@ -28,9 +28,9 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 	router.DELETE("/deleteorderitemincart", handler.DeleteOrderItemToCartHandler)
 	router.GET("/getorderitemsincart", handler.GetOrderItemsInCartHandler)
 	router.PUT("/modifyorderitemquantity", handler.ModifyOrderItemQuantityHandler)
+	initializeRouterManageUserHandlers(router, databasePtr)
 	router.POST("/login", handler.LoginHandler(databasePtr))
 	router.POST("/sign-up", handler.SignUpHandler(databasePtr))
-	initializeRouterManageUserHandlers(router, databasePtr)
 	auth := router.Group("/auth")
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
