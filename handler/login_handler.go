@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	DUTU "backend/database_users_table_util"
 	"backend/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -21,8 +22,8 @@ func LoginHandler(databasePtr *sql.DB) gin.HandlerFunc {
 			c.Status(500)
 		}
 
-		mail := c.PostForm("mail")
-		password := c.PostForm("password")
+		mail := c.PostForm(DUTU.MailColumnName)
+		password := c.PostForm(DUTU.PasswordColumnName)
 
 		fmt.Printf("mail is" + mail + "password is" + password)
 
