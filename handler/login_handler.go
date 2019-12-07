@@ -29,9 +29,9 @@ func LoginHandler(databasePtr *sql.DB) gin.HandlerFunc {
 			context.JSON(getLoginStatus.HttpStatusCode, gin.H{util.JsonError: getLoginStatus.ErrorMessage})
 			return
 		}
-		user, status := DUTU.GetUserByMail(login.Mail, databasePtr)
-		if !util.IsStatusOK(status) {
-			context.JSON(status.HttpStatusCode, gin.H{util.JsonError: status.ErrorMessage})
+		user, getUserStatus := DUTU.GetUserByMail(login.Mail, databasePtr)
+		if !util.IsStatusOK(getUserStatus) {
+			context.JSON(getUserStatus.HttpStatusCode, gin.H{util.JsonError: getUserStatus.ErrorMessage})
 			return
 		}
 		if user.Password != login.Password {
