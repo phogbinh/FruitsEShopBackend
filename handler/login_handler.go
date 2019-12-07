@@ -15,20 +15,20 @@ import (
 LoginHandler is a function for gin to handle login api
 */
 func LoginHandler(databasePtr *sql.DB) gin.HandlerFunc {
-	return func(c *gin.Context) {
+	return func(context *gin.Context) {
 		authMiddleware, err := middleware.NewAuthMiddleware()
 		if err != nil {
 			log.Printf("JWT Error:" + err.Error())
-			c.Status(500)
+			context.Status(500)
 		}
 
-		mail := c.PostForm(DUTU.MailColumnName)
-		password := c.PostForm(DUTU.PasswordColumnName)
+		mail := context.PostForm(DUTU.MailColumnName)
+		password := context.PostForm(DUTU.PasswordColumnName)
 
 		fmt.Printf("mail is" + mail + "password is" + password)
 
-		c.Status(201)
+		context.Status(201)
 
-		authMiddleware.LoginHandler(c)
+		authMiddleware.LoginHandler(context)
 	}
 }
