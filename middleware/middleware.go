@@ -35,14 +35,14 @@ func NewAuthMiddleware() (*jwt.GinJWTMiddleware, error) {
 				Password: claims["password"].(string),
 			}
 		},
-		Authenticator: func(c *gin.Context) (interface{}, error) {
-			var loginVals Login
-			if err := c.ShouldBind(&loginVals); err != nil {
+		Authenticator: func(context *gin.Context) (interface{}, error) {
+			var login Login
+			if err := context.ShouldBind(&login); err != nil {
 				return "", jwt.ErrMissingLoginValues
 			}
 
-			mail := loginVals.Mail
-			password := loginVals.Password
+			mail := login.Mail
+			password := login.Password
 
 			return &Login{Mail: mail, Password: password}, nil
 		},
