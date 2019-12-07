@@ -12,6 +12,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	authorizationPath = "auth"
+)
+
 /*
 Register is a place to register rotes
 */
@@ -28,7 +32,7 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 	router.POST("/login", handler.LoginHandler(databasePtr))
 	initializeRouterDatabaseUsersTableHandlers(router, databasePtr)
 
-	auth := router.Group("/auth")
+	auth := router.Group(util.RightSlash + authorizationPath)
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
 		// TODO: authed api will be here
