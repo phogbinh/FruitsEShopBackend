@@ -30,6 +30,7 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 	router.GET("/getorderitemsincart", handler.GetOrderItemsInCartHandler)
 	router.PUT("/modifyorderitemquantity", handler.ModifyOrderItemQuantityHandler)
 	router.POST("/login", handler.LoginHandler(databasePtr))
+	router.POST("/sign-up", handler.SignUpHandler(databasePtr))
 	initializeRouterDatabaseUsersTableHandlers(router, databasePtr)
 
 	auth := router.Group("/auth")
@@ -42,10 +43,6 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 }
 
 func initializeRouterDatabaseUsersTableHandlers(router *gin.Engine, databasePtr *sql.DB) {
-	router.POST(
-		"/sign-up",
-		handler.SignUpHandler(databasePtr))
-
 	router.GET(
 		util.RightSlash+DUTU.TableName,
 		handler.RespondJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr))
