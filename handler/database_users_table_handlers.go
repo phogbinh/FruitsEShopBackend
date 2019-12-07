@@ -35,7 +35,7 @@ func CreateUserToDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.
 			context.JSON(getStatus.HttpStatusCode, gin.H{util.JsonError: getStatus.ErrorMessage})
 			return
 		}
-		insertStatus := insertUserToDatabaseUsersTable(user, databasePtr)
+		insertStatus := InsertUser(user, databasePtr)
 		if !util.IsStatusOK(insertStatus) {
 			context.JSON(insertStatus.HttpStatusCode, gin.H{util.JsonError: insertStatus.ErrorMessage})
 			return
@@ -58,14 +58,15 @@ func getUserFromRequest(context *gin.Context) (User, Status) {
 	return user, util.StatusOK()
 }
 
-func insertUserToDatabaseUsersTable(user User, databasePtr *sql.DB) Status {
+// InsertUser inserts the given user to the database `users` table.
+func InsertUser(user User, databasePtr *sql.DB) Status {
 	return queryDatabase(databasePtr, queryInsertUser, user.Mail, user.Password, user.UserName, user.Nickname, user.Fname, user.Lname, user.Phone, user.Location, user.Money, user.Introduction)
 }
 
 // RespondJsonOfAllUsersFromDatabaseUsersTableHandler responds all users' information.
 func RespondJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
-		users, status := getAllUsersFromDatabaseUsersTable(databasePtr)
+		users, status := GetAllUsers(databasePtr)
 		if !util.IsStatusOK(status) {
 			context.JSON(status.HttpStatusCode, gin.H{util.JsonError: status.ErrorMessage})
 			return
@@ -74,10 +75,11 @@ func RespondJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr *sql.DB) gin
 	}
 }
 
-func getAllUsersFromDatabaseUsersTable(databasePtr *sql.DB) ([]User, Status) {
+// GetAllUsers returns all users' information.
+func GetAllUsers(databasePtr *sql.DB) ([]User, Status) {
 	queryRowsPtr, queryError := databasePtr.Query(queryGetAllUsers)
 	if queryError != nil {
-		return nil, util.StatusInternalServerError(getAllUsersFromDatabaseUsersTable, queryError)
+		return nil, util.StatusInternalServerError(GetAllUsers, queryError)
 	}
 	defer queryRowsPtr.Close()
 	return getAllUsers(queryRowsPtr)
@@ -156,7 +158,7 @@ func UpdateUserPasswordInDatabaseUsersTableAndRespondJsonOfUserHandler(databaseP
 			context.JSON(getStatus.HttpStatusCode, gin.H{util.JsonError: getStatus.ErrorMessage})
 			return
 		}
-		updateStatus := updateUserPasswordToDatabaseUsersTable(userName, userNewPassword.Value, databasePtr)
+		updateStatus := UpdateUserPassword(userName, userNewPassword.Value, databasePtr)
 		if !util.IsStatusOK(updateStatus) {
 			context.JSON(updateStatus.HttpStatusCode, gin.H{util.JsonError: updateStatus.ErrorMessage})
 			return
@@ -179,7 +181,8 @@ func getPasswordFromRequest(context *gin.Context) (password, Status) {
 	return pwd, util.StatusOK()
 }
 
-func updateUserPasswordToDatabaseUsersTable(userName string, userNewPassword string, databasePtr *sql.DB) Status {
+// UpdateUserPassword updates the given user's password to the database `users` table.
+func UpdateUserPassword(userName string, userNewPassword string, databasePtr *sql.DB) Status {
 	return queryDatabase(databasePtr, queryUpdateUserPassword, userNewPassword, userName)
 }
 
@@ -187,12 +190,12 @@ func updateUserPasswordToDatabaseUsersTable(userName string, userNewPassword str
 func DeleteUserFromDatabaseUsersTable(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		userName := context.Param(DUTU.UserNameColumnName)
-		deleteStatus := deleteUserFromDatabaseUsersTable(userName, databasePtr)
+		deleteStatus := DeleteUser(userName, databasePtr)
 		if !util.IsStatusOK(deleteStatus) {
 			context.JSON(deleteStatus.HttpStatusCode, gin.H{util.JsonError: deleteStatus.ErrorMessage})
 			return
 		}
-		isExistingUser, getStatus := isExistingUserInDatabaseUsersTable(userName, databasePtr)
+		isExistingUser, getStatus := IsExistingUser(userName, databasePtr)
 		if !util.IsStatusOK(getStatus) {
 			context.JSON(getStatus.HttpStatusCode, gin.H{util.JsonError: getStatus.ErrorMessage})
 			return
@@ -205,11 +208,13 @@ func DeleteUserFromDatabaseUsersTable(databasePtr *sql.DB) gin.HandlerFunc {
 	}
 }
 
-func deleteUserFromDatabaseUsersTable(userName string, databasePtr *sql.DB) Status {
+// DeleteUser deletes the given user from the database `users` table.
+func DeleteUser(userName string, databasePtr *sql.DB) Status {
 	return queryDatabase(databasePtr, queryDeleteUser, userName)
 }
 
-func isExistingUserInDatabaseUsersTable(userName string, databasePtr *sql.DB) (bool, Status) {
+// IsExistingUser determines whether the given user is in the database `users` table.
+func IsExistingUser(userName string, databasePtr *sql.DB) (bool, Status) {
 	users, getStatus := getUsersByKeyColumnFromDatabaseUsersTable(queryGetUserByUserName, userName, databasePtr)
 	if !util.IsStatusOK(getStatus) {
 		return false, getStatus
