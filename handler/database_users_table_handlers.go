@@ -233,3 +233,8 @@ func queryDatabase(databasePtr *sql.DB, query string, executeArguments ...interf
 func GetUserByMailFromDatabaseUsersTable(mail string, databasePtr *sql.DB) (User, Status) {
 	return getUserByKeyColumnFromDatabaseUsersTable(queryGetUserByMail, mail, databasePtr)
 }
+
+// GetUserByUserNameFromDatabaseUsersTable returns an user's information by the given user name.
+func GetUserByUserNameFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, Status) {
+	return getUserByKeyColumnFromDatabaseUsersTable(queryGetUserByUserName, userName, databasePtr)
+}
