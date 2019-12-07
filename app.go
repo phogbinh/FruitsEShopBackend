@@ -23,7 +23,7 @@ func getDatabaseHandler() *sql.DB {
 func run() {
 	databasePtr := getDatabaseHandler()
 	defer databasePtr.Close()
-	createDatabaseUsersTableError := DUTU.CreateDatabaseUsersTableIfNotExists(databasePtr)
+	createDatabaseUsersTableError := DUTU.CreateTableIfNotExists(databasePtr)
 	if createDatabaseUsersTableError != nil {
 		log.Fatalf("Error creating database table: %q.", createDatabaseUsersTableError)
 	}

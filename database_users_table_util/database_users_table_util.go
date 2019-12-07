@@ -32,8 +32,8 @@ const (
 	queryDeleteUser         = "DELETE FROM " + TableName + " WHERE " + UserNameColumnName + " = ?"
 )
 
-// CreateDatabaseUsersTableIfNotExists creates table `users`.
-func CreateDatabaseUsersTableIfNotExists(databasePtr *sql.DB) error {
+// CreateTableIfNotExists creates table `users`.
+func CreateTableIfNotExists(databasePtr *sql.DB) error {
 	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS user_data.users" +
 		"(" +
 		MailColumnName + "			VARCHAR(320)	NOT NULL," +
@@ -81,22 +81,22 @@ func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
 	return users, util.StatusOK()
 }
 
-func getUserByKeyColumnFromDatabaseUsersTable(queryGetUserByKeyColumn string, keyColumnValue string, databasePtr *sql.DB) (User, Status) {
+func getUserByKeyColumn(queryGetUserByKeyColumn string, keyColumnValue string, databasePtr *sql.DB) (User, Status) {
 	var dumpUser User
-	users, getStatus := getUsersByKeyColumnFromDatabaseUsersTable(queryGetUserByKeyColumn, keyColumnValue, databasePtr)
+	users, getStatus := getUsersByKeyColumn(queryGetUserByKeyColumn, keyColumnValue, databasePtr)
 	if !util.IsStatusOK(getStatus) {
 		return dumpUser, getStatus
 	}
 	if len(users) != 1 {
-		return dumpUser, util.StatusInternalServerError(getUserByKeyColumnFromDatabaseUsersTable, errors.New("Query 1 user but got "+strconv.Itoa(len(users))+" user(s) instead."))
+		return dumpUser, util.StatusInternalServerError(getUserByKeyColumn, errors.New("Query 1 user but got "+strconv.Itoa(len(users))+" user(s) instead."))
 	}
 	return users[0], util.StatusOK()
 }
 
-func getUsersByKeyColumnFromDatabaseUsersTable(queryGetUserByKeyColumn string, keyColumnValue string, databasePtr *sql.DB) ([]User, Status) {
+func getUsersByKeyColumn(queryGetUserByKeyColumn string, keyColumnValue string, databasePtr *sql.DB) ([]User, Status) {
 	queryRowsPtr, queryError := databasePtr.Query(queryGetUserByKeyColumn, keyColumnValue)
 	if queryError != nil {
-		return nil, util.StatusInternalServerError(getUsersByKeyColumnFromDatabaseUsersTable, queryError)
+		return nil, util.StatusInternalServerError(getUsersByKeyColumn, queryError)
 	}
 	defer queryRowsPtr.Close()
 	users, getStatus := getAllUsers(queryRowsPtr)
@@ -118,7 +118,7 @@ func DeleteUser(userName string, databasePtr *sql.DB) Status {
 
 // IsExistingUser determines whether the given user is in the database `users` table.
 func IsExistingUser(userName string, databasePtr *sql.DB) (bool, Status) {
-	users, getStatus := getUsersByKeyColumnFromDatabaseUsersTable(queryGetUserByUserName, userName, databasePtr)
+	users, getStatus := getUsersByKeyColumn(queryGetUserByUserName, userName, databasePtr)
 	if !util.IsStatusOK(getStatus) {
 		return false, getStatus
 	}
@@ -139,10 +139,10 @@ func queryDatabase(databasePtr *sql.DB, query string, executeArguments ...interf
 
 // GetUserByMail returns an user's information by the given mail.
 func GetUserByMail(mail string, databasePtr *sql.DB) (User, Status) {
-	return getUserByKeyColumnFromDatabaseUsersTable(queryGetUserByMail, mail, databasePtr)
+	return getUserByKeyColumn(queryGetUserByMail, mail, databasePtr)
 }
 
 // GetUserByUserName returns an user's information by the given user name.
 func GetUserByUserName(userName string, databasePtr *sql.DB) (User, Status) {
-	return getUserByKeyColumnFromDatabaseUsersTable(queryGetUserByUserName, userName, databasePtr)
+	return getUserByKeyColumn(queryGetUserByUserName, userName, databasePtr)
 }
