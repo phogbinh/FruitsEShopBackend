@@ -39,7 +39,7 @@ func initializeRouterDatabaseUsersTableHandlers(router *gin.Engine, databasePtr 
 	const userNamePath = ":" + DUTU.UserNameColumnName
 	router.POST(
 		util.RightSlash+DUTU.TableName,
-		handler.CreateUserToDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr))
+		handler.SignUpHandler(databasePtr))
 
 	router.GET(
 		util.RightSlash+DUTU.TableName,

@@ -12,8 +12,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-// CreateUserToDatabaseUsersTableAndRespondJsonOfUserHandler creates an user and responds the user's information.
-func CreateUserToDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
+// SignUpHandler creates an user and responds the user's information.
+func SignUpHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		user, getStatus := getUserFromRequest(context)
 		if !util.IsStatusOK(getStatus) {
