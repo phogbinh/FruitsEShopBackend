@@ -10,6 +10,7 @@ import (
 	"backend/util"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 )
 
 /*
@@ -43,7 +44,7 @@ func LoginHandler(databasePtr *sql.DB) gin.HandlerFunc {
 
 func getLoginFromRequest(context *gin.Context) (Login, Status) {
 	var login Login
-	bindError := context.ShouldBindJSON(&login)
+	bindError := context.ShouldBindBodyWith(&login, binding.JSON) // Since unlike ShouldBindWith, ShouldBindBodyWith puts back data into context after reading, it is used here so that context data can be passed down to authMiddleware.LoginHandler(context) for data fetching.
 	if bindError != nil {
 		return login, util.StatusBadRequest(getLoginFromRequest, bindError)
 	}
