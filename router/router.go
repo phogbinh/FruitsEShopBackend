@@ -14,6 +14,7 @@ import (
 
 const (
 	authorizationPath = "auth"
+	userNamePath      = ":" + DUTU.UserNameColumnName
 )
 
 /*
@@ -40,7 +41,6 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 }
 
 func initializeRouterDatabaseUsersTableHandlers(router *gin.Engine, databasePtr *sql.DB) {
-	const userNamePath = ":" + DUTU.UserNameColumnName
 	router.POST(
 		util.RightSlash+DUTU.TableName,
 		handler.SignUpHandler(databasePtr))
