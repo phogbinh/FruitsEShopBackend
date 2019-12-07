@@ -172,6 +172,19 @@ func getUsersByMailFromDatabaseUsersTable(mail string, databasePtr *sql.DB) ([]U
 	return users, util.StatusOK()
 }
 
+func getUsersByKeyColumnFromDatabaseUsersTable(queryGetUserByKeyColumn string, keyColumnValue string, databasePtr *sql.DB) ([]User, Status) {
+	queryRowsPtr, queryError := databasePtr.Query(queryGetUserByKeyColumn, keyColumnValue)
+	if queryError != nil {
+		return nil, util.StatusInternalServerError(getUsersByKeyColumnFromDatabaseUsersTable, queryError)
+	}
+	defer queryRowsPtr.Close()
+	users, getStatus := getAllUsers(queryRowsPtr)
+	if !util.IsStatusOK(getStatus) {
+		return nil, getStatus
+	}
+	return users, util.StatusOK()
+}
+
 // UpdateUserPasswordInDatabaseUsersTableAndRespondJsonOfUserHandler updates an user's password and responds the user's information.
 func UpdateUserPasswordInDatabaseUsersTableAndRespondJsonOfUserHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
