@@ -3,14 +3,11 @@ package middleware
 import (
 	"time"
 
+	. "backend/model"
+
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 )
-
-type login struct {
-	Mail     string `form:"mail" json:"mail" binding:"required"`
-	Password string `form:"password" json:"password" binding:"required"`
-}
 
 /*
 NewAuthMiddleware handles jwt middleware
@@ -22,7 +19,7 @@ func NewAuthMiddleware() (*jwt.GinJWTMiddleware, error) {
 		Timeout:    time.Hour * 24 * 30,
 		MaxRefresh: time.Hour,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
-			if v, ok := data.(*login); ok {
+			if v, ok := data.(*Login); ok {
 				return jwt.MapClaims{
 					"mail":     v.Mail,
 					"password": v.Password,
@@ -33,13 +30,13 @@ func NewAuthMiddleware() (*jwt.GinJWTMiddleware, error) {
 		IdentityHandler: func(c *gin.Context) interface{} {
 			claims := jwt.ExtractClaims(c)
 
-			return &login{
+			return &Login{
 				Mail:     claims["mail"].(string),
 				Password: claims["password"].(string),
 			}
 		},
 		Authenticator: func(c *gin.Context) (interface{}, error) {
-			var loginVals login
+			var loginVals Login
 			if err := c.ShouldBind(&loginVals); err != nil {
 				return "", jwt.ErrMissingLoginValues
 			}
@@ -47,10 +44,10 @@ func NewAuthMiddleware() (*jwt.GinJWTMiddleware, error) {
 			mail := loginVals.Mail
 			password := loginVals.Password
 
-			return &login{Mail: mail, Password: password}, nil
+			return &Login{Mail: mail, Password: password}, nil
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
-			if _, ok := data.(*login); ok {
+			if _, ok := data.(*Login); ok {
 				return true
 			}
 
