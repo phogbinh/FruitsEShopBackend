@@ -234,12 +234,12 @@ func queryDatabase(databasePtr *sql.DB, query string, executeArguments ...interf
 	return util.StatusOK()
 }
 
-// GetUserByMailFromDatabaseUsersTable returns an user's information by the given mail.
-func GetUserByMailFromDatabaseUsersTable(mail string, databasePtr *sql.DB) (User, Status) {
+// GetUserByMail returns an user's information by the given mail.
+func GetUserByMail(mail string, databasePtr *sql.DB) (User, Status) {
 	return getUserByKeyColumnFromDatabaseUsersTable(queryGetUserByMail, mail, databasePtr)
 }
 
-// GetUserByUserNameFromDatabaseUsersTable returns an user's information by the given user name.
-func GetUserByUserNameFromDatabaseUsersTable(userName string, databasePtr *sql.DB) (User, Status) {
+// GetUserByUserName returns an user's information by the given user name.
+func GetUserByUserName(userName string, databasePtr *sql.DB) (User, Status) {
 	return getUserByKeyColumnFromDatabaseUsersTable(queryGetUserByUserName, userName, databasePtr)
 }
