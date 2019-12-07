@@ -81,31 +81,6 @@ func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
 	return users, util.StatusOK()
 }
 
-func getUserByKeyColumn(queryGetUserByKeyColumn string, keyColumnValue string, databasePtr *sql.DB) (User, Status) {
-	var dumpUser User
-	users, getStatus := getUsersByKeyColumn(queryGetUserByKeyColumn, keyColumnValue, databasePtr)
-	if !util.IsStatusOK(getStatus) {
-		return dumpUser, getStatus
-	}
-	if len(users) != 1 {
-		return dumpUser, util.StatusInternalServerError(getUserByKeyColumn, errors.New("Query 1 user but got "+strconv.Itoa(len(users))+" user(s) instead."))
-	}
-	return users[0], util.StatusOK()
-}
-
-func getUsersByKeyColumn(queryGetUserByKeyColumn string, keyColumnValue string, databasePtr *sql.DB) ([]User, Status) {
-	queryRowsPtr, queryError := databasePtr.Query(queryGetUserByKeyColumn, keyColumnValue)
-	if queryError != nil {
-		return nil, util.StatusInternalServerError(getUsersByKeyColumn, queryError)
-	}
-	defer queryRowsPtr.Close()
-	users, getStatus := getAllUsers(queryRowsPtr)
-	if !util.IsStatusOK(getStatus) {
-		return nil, getStatus
-	}
-	return users, util.StatusOK()
-}
-
 // UpdateUserPassword updates the given user's password to the database `users` table.
 func UpdateUserPassword(userName string, userNewPassword string, databasePtr *sql.DB) Status {
 	return queryDatabase(databasePtr, queryUpdateUserPassword, userNewPassword, userName)
@@ -145,4 +120,29 @@ func GetUserByMail(mail string, databasePtr *sql.DB) (User, Status) {
 // GetUserByUserName returns an user's information by the given user name.
 func GetUserByUserName(userName string, databasePtr *sql.DB) (User, Status) {
 	return getUserByKeyColumn(queryGetUserByUserName, userName, databasePtr)
+}
+
+func getUserByKeyColumn(queryGetUserByKeyColumn string, keyColumnValue string, databasePtr *sql.DB) (User, Status) {
+	var dumpUser User
+	users, getStatus := getUsersByKeyColumn(queryGetUserByKeyColumn, keyColumnValue, databasePtr)
+	if !util.IsStatusOK(getStatus) {
+		return dumpUser, getStatus
+	}
+	if len(users) != 1 {
+		return dumpUser, util.StatusInternalServerError(getUserByKeyColumn, errors.New("Query 1 user but got "+strconv.Itoa(len(users))+" user(s) instead."))
+	}
+	return users[0], util.StatusOK()
+}
+
+func getUsersByKeyColumn(queryGetUserByKeyColumn string, keyColumnValue string, databasePtr *sql.DB) ([]User, Status) {
+	queryRowsPtr, queryError := databasePtr.Query(queryGetUserByKeyColumn, keyColumnValue)
+	if queryError != nil {
+		return nil, util.StatusInternalServerError(getUsersByKeyColumn, queryError)
+	}
+	defer queryRowsPtr.Close()
+	users, getStatus := getAllUsers(queryRowsPtr)
+	if !util.IsStatusOK(getStatus) {
+		return nil, getStatus
+	}
+	return users, util.StatusOK()
 }
