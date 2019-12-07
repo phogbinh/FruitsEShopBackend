@@ -13,8 +13,7 @@ import (
 )
 
 const (
-	authorizationPath = "auth"
-	userNamePath      = ":" + DUTU.UserNameColumnName
+	userNamePath = ":" + DUTU.UserNameColumnName
 )
 
 /*
@@ -33,7 +32,7 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 	router.POST("/login", handler.LoginHandler(databasePtr))
 	initializeRouterDatabaseUsersTableHandlers(router, databasePtr)
 
-	auth := router.Group(util.RightSlash + authorizationPath)
+	auth := router.Group("/auth")
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
 		// TODO: authed api will be here
