@@ -141,8 +141,8 @@ A JSON object containing the authentication information, consisting of a JWT tok
 ```json
 {
     "code": "200",
-    "expire": "2020-01-06T23:41:51+08:00",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzgzMjUzMTEsIm1haWwiOiJiaWxsQGdtYWlsLmNvbSIsIm9yaWdfaWF0IjoxNTc1NzMzMzExLCJwYXNzd29yZCI6IjY2NiJ9.hlVWdw4U2Puj8VUr2W_1PlY_FFu-S5DjIZqJPYDav0Y"
+    "expire": "<token expiry date>",
+    "token": "<token>"
 }
 ```
 #### Error response format
