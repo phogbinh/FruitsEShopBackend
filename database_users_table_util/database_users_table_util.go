@@ -25,7 +25,7 @@ const (
 )
 
 const (
-	queryInsertUser         = "INSERT INTO " + TableName + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	queryInsertUser         = "INSERT INTO " + TableName + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 	queryGetAllUsers        = "SELECT * FROM " + TableName
 	queryGetUserByUserName  = "SELECT * FROM " + TableName + " WHERE " + UserNameColumnName + " = ?"
 	queryGetUserByMail      = "SELECT * FROM " + TableName + " WHERE " + MailColumnName + " = ?"
@@ -57,7 +57,7 @@ func CreateTableIfNotExists(databasePtr *sql.DB) error {
 
 // InsertUser inserts the given user to the database `users` table.
 func InsertUser(user User, databasePtr *sql.DB) Status {
-	return queryDatabase(databasePtr, queryInsertUser, user.Mail, user.Password, user.UserName, user.Nickname, user.Fname, user.Lname, user.Phone, user.Location, user.Money, user.Introduction)
+	return queryDatabase(databasePtr, queryInsertUser, user.Mail, user.Password, user.UserName, user.Nickname, user.Fname, user.Lname, user.Phone, user.Location, user.Money, user.Introduction, user.StaffFlag)
 }
 
 // GetAllUsers returns all users' information.

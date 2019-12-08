@@ -11,5 +11,5 @@ type User struct {
 	Location     string `json:"location"		binding:"required"`
 	Money        string `json:"money"			binding:"required"`
 	Introduction string `json:"introduction"	binding:"required"`
-	StaffFlag    string `json:"staffFlag"`
+	StaffFlag    string `json:"staffFlag"		binding:"required"`
 }

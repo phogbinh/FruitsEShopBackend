@@ -22,7 +22,8 @@ A JSON object containing all users' information fetched from the database.
         "phone": "0111222333",
         "location": "Texas, US",
         "money": "1000000.90",
-        "introduction": "Girl."
+        "introduction": "Girl.",
+        "staffFlag": "1"
     },
     {
         "mail": "bill@gmail.com",
@@ -34,7 +35,8 @@ A JSON object containing all users' information fetched from the database.
         "phone": "0987654321",
         "location": "Taipei, Taiwan",
         "money": "1000.00",
-        "introduction": "Programming geek."
+        "introduction": "Programming geek.",
+        "staffFlag": "0"
     },
     ...
 ]
@@ -67,7 +69,8 @@ A JSON object containing the requested user's information fetched from the datab
     "phone": "0987654321",
     "location": "Taipei, Taiwan",
     "money": "1000.00",
-    "introduction": "Programming geek."
+    "introduction": "Programming geek.",
+    "staffFlag": "0"
 }
 ```
 #### Error response format
@@ -98,7 +101,8 @@ A JSON object containing the requested user's information fetched from the datab
     "phone": "0987654321",
     "location": "Taipei, Taiwan",
     "money": "1000.00",
-    "introduction": "Programming geek."
+    "introduction": "Programming geek.",
+    "staffFlag": "0"
 }
 ```
 #### Error response format
@@ -164,15 +168,15 @@ N/A.
 A JSON object containing the newly created user's information fetched from the database.
 #### Example
 ##### Create user `bill`
-`curl -X POST -d "{ \"mail\": \"bill@gmail.com\", \"password\": \"1111\", \"userName\": \"bill\", \"nickname\": \"kyo\", \"fname\": \"Phong Binh\", \"lname\": \"Tran\", \"phone\": \"0987654321\", \"location\": \"Taipei, Taiwan\", \"money\": \"1000.00\", \"introduction\": \"Programming geek.\" }" localhost:8080/sign-up`
+`curl -X POST -d "{ \"mail\": \"bill@gmail.com\", \"password\": \"1111\", \"userName\": \"bill\", \"nickname\": \"kyo\", \"fname\": \"Phong Binh\", \"lname\": \"Tran\", \"phone\": \"0987654321\", \"location\": \"Taipei, Taiwan\", \"money\": \"1000.00\", \"introduction\": \"Programming geek.\", \"staffFlag\": \"0\" }" localhost:8080/sign-up`
 ##### Create user `anna`
-`curl -X POST -d "{ \"mail\": \"anna@hotmail.com\", \"password\": \"A@mmX\", \"userName\": \"anna\", \"nickname\": \"annychan\", \"fname\": \"Anna\", \"lname\": \"Carter\", \"phone\": \"0111222333\", \"location\": \"Texas, US\", \"money\": \"1000000.90\", \"introduction\": \"Girl.\" }" localhost:8080/sign-up`
+`curl -X POST -d "{ \"mail\": \"anna@hotmail.com\", \"password\": \"A@mmX\", \"userName\": \"anna\", \"nickname\": \"annychan\", \"fname\": \"Anna\", \"lname\": \"Carter\", \"phone\": \"0111222333\", \"location\": \"Texas, US\", \"money\": \"1000000.90\", \"introduction\": \"Girl.\", \"staffFlag\": \"1\" }" localhost:8080/sign-up`
 ##### Create user `mathew`
-`curl -X POST -d "{ \"mail\": \"mathew@yahoo.com\", \"password\": \"MostHandsomePersonInTheWorld\", \"userName\": \"mathew\", \"nickname\": \"mat\", \"fname\": \"Mathew\", \"lname\": \"Brown\", \"phone\": \"0920655185\", \"location\": \"Houston, US\", \"money\": \"888.88\", \"introduction\": \"Bruh.\" }" localhost:8080/sign-up`
+`curl -X POST -d "{ \"mail\": \"mathew@yahoo.com\", \"password\": \"MostHandsomePersonInTheWorld\", \"userName\": \"mathew\", \"nickname\": \"mat\", \"fname\": \"Mathew\", \"lname\": \"Brown\", \"phone\": \"0920655185\", \"location\": \"Houston, US\", \"money\": \"888.88\", \"introduction\": \"Bruh.\", \"staffFlag\": \"0\" }" localhost:8080/sign-up`
 ##### Create user `john`
-`curl -X POST -d "{ \"mail\": \"john@gmail.com\", \"password\": \"JohnnyNeverDies\", \"userName\": \"john\", \"nickname\": \"johnny\", \"fname\": \"John\", \"lname\": \"Butler\", \"phone\": \"0999666999\", \"location\": \"California, US\", \"money\": \"10.01\", \"introduction\": \"Poor.\" }" localhost:8080/sign-up`
+`curl -X POST -d "{ \"mail\": \"john@gmail.com\", \"password\": \"JohnnyNeverDies\", \"userName\": \"john\", \"nickname\": \"johnny\", \"fname\": \"John\", \"lname\": \"Butler\", \"phone\": \"0999666999\", \"location\": \"California, US\", \"money\": \"10.01\", \"introduction\": \"Poor.\", \"staffFlag\": \"0\" }" localhost:8080/sign-up`
 ##### Create user `duke`
-`curl -X POST -d "{ \"mail\": \"duke@hotmail.com\", \"password\": \"Mr.Duke\", \"userName\": \"duke\", \"nickname\": \"duker\", \"fname\": \"Duke\", \"lname\": \"Bennett\", \"phone\": \"0888222555\", \"location\": \"London, UK\", \"money\": \"99999999.99\", \"introduction\": \"I am rich.\" }" localhost:8080/sign-up`
+`curl -X POST -d "{ \"mail\": \"duke@hotmail.com\", \"password\": \"Mr.Duke\", \"userName\": \"duke\", \"nickname\": \"duker\", \"fname\": \"Duke\", \"lname\": \"Bennett\", \"phone\": \"0888222555\", \"location\": \"London, UK\", \"money\": \"99999999.99\", \"introduction\": \"I am rich.\", \"staffFlag\": \"0\" }" localhost:8080/sign-up`
 #### Expected response format
 ```json
 {
@@ -185,7 +189,8 @@ A JSON object containing the newly created user's information fetched from the d
     "phone": "0987654321",
     "location": "Taipei, Taiwan",
     "money": "1000.00",
-    "introduction": "Programming geek."
+    "introduction": "Programming geek.",
+    "staffFlag": "0"
 }
 ```
 #### Error response format
@@ -216,7 +221,8 @@ A JSON object containing the updated user's information fetched from the databas
     "phone": "0987654321",
     "location": "Taipei, Taiwan",
     "money": "1000.00",
-    "introduction": "Programming geek."
+    "introduction": "Programming geek.",
+    "staffFlag": "0"
 }
 ```
 #### Error response format
