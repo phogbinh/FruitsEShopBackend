@@ -18,7 +18,10 @@ before start contribute this project please make sure that you are familiar with
 * [Go Modules](https://github.com/golang/go/wiki/Modules): Go Package Manager
 * [gvm](https://github.com/moovweb/gvm): Go Version Manager
 * [naming](https://golang.org/doc/effective_go.html#names): better to understand the naming convention 
+* [Database `users` table](https://github.com/NTUT-database/backend/blob/master/docs/database-users-table.md): The documentation for calling the database `users` table API using cURL (Contributed by [phogbinh](https://github.com/phogbinh)).
 
 ## Contributors
 
 * [jamfly](https://github.com/jamfly)
+* [phogbinh](https://github.com/phogbinh)
+* [gougon](https://github.com/gougon)
