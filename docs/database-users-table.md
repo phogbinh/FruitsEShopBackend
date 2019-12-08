@@ -1,4 +1,4 @@
-# Database `users` Table
+# Database `users` table
 ## cURL API
 ### Get all users
 #### Description
