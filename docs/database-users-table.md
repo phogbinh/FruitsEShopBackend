@@ -231,3 +231,35 @@ A JSON object containing the updated user's information fetched from the databas
     "error": "error message."
 }
 ```
+
+### Register staff
+#### Description
+Set an user's staff flag to `true` in the database table `users`.
+#### Authorization
+Required.
+#### Response
+A JSON object containing the updated user's information fetched from the database.
+#### Example
+`curl -X PUT -H "Authorization: Bearer <token>" localhost:8080/auth/users/bill/register-staff`
+#### Expected response format
+```json
+{
+    "mail": "bill@gmail.com",
+    "password": "666",
+    "userName": "bill",
+    "nickname": "kyo",
+    "fname": "Phong Binh",
+    "lname": "Tran",
+    "phone": "0987654321",
+    "location": "Taipei, Taiwan",
+    "money": "1000.00",
+    "introduction": "Programming geek.",
+    "staffFlag": "1"
+}
+```
+#### Error response format
+```json
+{
+    "error": "error message."
+}
+```
