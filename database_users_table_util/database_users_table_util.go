@@ -21,6 +21,7 @@ const (
 	LocationColumnName     = "Location"
 	MoneyColumnName        = "Money"
 	IntroductionColumnName = "Introduction"
+	StaffFlagColumnName    = "StaffFlag"
 )
 
 const (
@@ -46,6 +47,7 @@ func CreateTableIfNotExists(databasePtr *sql.DB) error {
 		LocationColumnName + "		VARCHAR(255)			," +
 		MoneyColumnName + "			DECIMAL(30, 2)			," +
 		IntroductionColumnName + "	VARCHAR(255)			," +
+		StaffFlagColumnName + "		BOOLEAN			NOT NULL," +
 		"PRIMARY KEY(" + UserNameColumnName + ")," +
 		"UNIQUE(" + MailColumnName + ")," +
 		"UNIQUE(" + NicknameColumnName + ")" +
