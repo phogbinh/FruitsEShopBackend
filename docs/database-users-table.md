@@ -48,9 +48,9 @@ A JSON object containing all users' information fetched from the database.
 }
 ```
 
-### Get an user by user name
+### Get a user by user name
 #### Description
-Get an user by user name from the database table `users`.
+Get a user by user name from the database table `users`.
 #### Authorization
 N/A.
 #### Response
@@ -80,9 +80,9 @@ A JSON object containing the requested user's information fetched from the datab
 }
 ```
 
-### Get an user by mail
+### Get a user by mail
 #### Description
-Get an user by mail from the database table `users`.
+Get a user by mail from the database table `users`.
 #### Authorization
 N/A.
 #### Response
@@ -112,9 +112,9 @@ A JSON object containing the requested user's information fetched from the datab
 }
 ```
 
-### Delete an user
+### Delete a user
 #### Description
-Delete an user from the database table `users`.
+Delete a user from the database table `users`.
 #### Authorization
 N/A.
 #### Response
@@ -130,7 +130,7 @@ N/A.
 
 ### Login
 #### Description
-Authenticate an user login mail and password with that fetched from the database table `users`.
+Authenticate a user login mail and password with that fetched from the database table `users`.
 #### Authorization
 N/A.
 #### Response
@@ -161,7 +161,7 @@ or
 
 ### Sign up
 #### Description
-Create an user to the database table `users`.
+Create a user to the database table `users`.
 #### Authorization
 N/A.
 #### Response
@@ -202,7 +202,7 @@ A JSON object containing the newly created user's information fetched from the d
 
 ### Update user password
 #### Description
-Update an user password in the database table `users`.
+Update a user password in the database table `users`.
 #### Authorization
 Required.
 #### Response
@@ -234,7 +234,7 @@ A JSON object containing the updated user's information fetched from the databas
 
 ### Register staff
 #### Description
-Set an user's staff flag to `true` in the database table `users`.
+Set a user's staff flag to `true` in the database table `users`.
 #### Authorization
 Required.
 #### Response
