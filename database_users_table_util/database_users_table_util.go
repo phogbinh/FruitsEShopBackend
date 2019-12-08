@@ -21,15 +21,17 @@ const (
 	LocationColumnName     = "Location"
 	MoneyColumnName        = "Money"
 	IntroductionColumnName = "Introduction"
+	StaffFlagColumnName    = "StaffFlag"
 )
 
 const (
-	queryInsertUser         = "INSERT INTO " + TableName + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	queryGetAllUsers        = "SELECT * FROM " + TableName
-	queryGetUserByUserName  = "SELECT * FROM " + TableName + " WHERE " + UserNameColumnName + " = ?"
-	queryGetUserByMail      = "SELECT * FROM " + TableName + " WHERE " + MailColumnName + " = ?"
-	queryUpdateUserPassword = "UPDATE " + TableName + " SET " + PasswordColumnName + " = ? WHERE " + UserNameColumnName + " = ?"
-	queryDeleteUser         = "DELETE FROM " + TableName + " WHERE " + UserNameColumnName + " = ?"
+	queryInsertUser          = "INSERT INTO " + TableName + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	queryGetAllUsers         = "SELECT * FROM " + TableName
+	queryGetUserByUserName   = "SELECT * FROM " + TableName + " WHERE " + UserNameColumnName + " = ?"
+	queryGetUserByMail       = "SELECT * FROM " + TableName + " WHERE " + MailColumnName + " = ?"
+	queryUpdateUserPassword  = "UPDATE " + TableName + " SET " + PasswordColumnName + " = ? WHERE " + UserNameColumnName + " = ?"
+	queryUpdateUserStaffFlag = "UPDATE " + TableName + " SET " + StaffFlagColumnName + " = ? WHERE " + UserNameColumnName + " = ?"
+	queryDeleteUser          = "DELETE FROM " + TableName + " WHERE " + UserNameColumnName + " = ?"
 )
 
 // CreateTableIfNotExists creates table `users`.
@@ -46,6 +48,7 @@ func CreateTableIfNotExists(databasePtr *sql.DB) error {
 		LocationColumnName + "		VARCHAR(255)			," +
 		MoneyColumnName + "			DECIMAL(30, 2)			," +
 		IntroductionColumnName + "	VARCHAR(255)			," +
+		StaffFlagColumnName + "		BOOLEAN			NOT NULL," +
 		"PRIMARY KEY(" + UserNameColumnName + ")," +
 		"UNIQUE(" + MailColumnName + ")," +
 		"UNIQUE(" + NicknameColumnName + ")" +
@@ -55,7 +58,7 @@ func CreateTableIfNotExists(databasePtr *sql.DB) error {
 
 // InsertUser inserts the given user to the database `users` table.
 func InsertUser(user User, databasePtr *sql.DB) Status {
-	return queryDatabase(databasePtr, queryInsertUser, user.Mail, user.Password, user.UserName, user.Nickname, user.Fname, user.Lname, user.Phone, user.Location, user.Money, user.Introduction)
+	return queryDatabase(databasePtr, queryInsertUser, user.Mail, user.Password, user.UserName, user.Nickname, user.Fname, user.Lname, user.Phone, user.Location, user.Money, user.Introduction, user.StaffFlag)
 }
 
 // GetAllUsers returns all users' information.
@@ -72,7 +75,7 @@ func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
 	var users []User
 	for databaseUsersTableRowsPtr.Next() {
 		var user User
-		scanError := databaseUsersTableRowsPtr.Scan(&user.Mail, &user.Password, &user.UserName, &user.Nickname, &user.Fname, &user.Lname, &user.Phone, &user.Location, &user.Money, &user.Introduction)
+		scanError := databaseUsersTableRowsPtr.Scan(&user.Mail, &user.Password, &user.UserName, &user.Nickname, &user.Fname, &user.Lname, &user.Phone, &user.Location, &user.Money, &user.Introduction, &user.StaffFlag)
 		if scanError != nil {
 			return nil, util.StatusInternalServerError(getAllUsers, scanError)
 		}
@@ -84,6 +87,11 @@ func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
 // UpdateUserPassword updates the given user's password to the database `users` table.
 func UpdateUserPassword(userName string, userNewPassword string, databasePtr *sql.DB) Status {
 	return queryDatabase(databasePtr, queryUpdateUserPassword, userNewPassword, userName)
+}
+
+// UpdateUserStaffFlag updates the given user's staff flag to the database `users` table.
+func UpdateUserStaffFlag(userName string, userNewStaffFlag string, databasePtr *sql.DB) Status {
+	return queryDatabase(databasePtr, queryUpdateUserStaffFlag, userNewStaffFlag, userName)
 }
 
 // DeleteUser deletes the given user from the database `users` table.

@@ -37,6 +37,10 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 		auth.PUT(
 			util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath,
 			handler.UpdateUserPasswordHandler(databasePtr))
+
+		auth.PUT(
+			util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath+"/register-staff",
+			handler.RegisterStaffHandler(databasePtr))
 	}
 }
 
