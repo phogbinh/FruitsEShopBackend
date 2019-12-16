@@ -36,7 +36,7 @@ const (
 
 // CreateTableIfNotExists creates table `users`.
 func CreateTableIfNotExists(databasePtr *sql.DB) error {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS users" +
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + TableName +
 		"(" +
 		MailColumnName + "			VARCHAR(320)	NOT NULL," +
 		PasswordColumnName + "		VARCHAR(30)		NOT NULL," +
