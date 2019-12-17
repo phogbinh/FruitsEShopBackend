@@ -1,6 +1,7 @@
 package database
 
 import (
+	"backend/database_users_table_util"
 	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -27,184 +28,184 @@ func CreateDatabases(databasePtr *sql.DB) {
 
 // ----------------------------Entity table----------------------------
 func createDatabaseAdminTableIfNotExists(databasePtr *sql.DB) {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS admin (\n" +
-		"	username		VARCHAR(16) 	NOT NULL,\n" +
-		"	password		VARCHAR(16)		NOT NULL,\n" +
-		"	nickname		VARCHAR(15) 	NOT NULL DEFAULT 'user',\n" +
-		"	email 			VARCHAR(36) 	NOT NULL,\n" +
-		"	PRIMARY KEY (username),\n" +
-		"	UNIQUE (email));")
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + AdminTableName + " (\n" +
+		AdminUserNameColumnName + " VARCHAR(16) 	NOT NULL,\n" +
+		AdminPasswordColumnName + " VARCHAR(16)		NOT NULL,\n" +
+		AdminNicknameColumnName + "	VARCHAR(15) 	NOT NULL DEFAULT 'user',\n" +
+		AdminEmailColumnName + "	VARCHAR(36) 	NOT NULL,\n" +
+		"PRIMARY KEY (" + AdminUserNameColumnName + "),\n" +
+		"UNIQUE (" + AdminEmailColumnName + "));")
 	panicCreateTableError(createTableError)
 }
 
 func createDatabaseProductTableIfNotExists(databasePtr *sql.DB) {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS product (\n" +
-		"	p_id			INTEGER 		NOT NULL,\n" +
-		"	s_username		VARCHAR(16) 	NOT NULL,\n" +
-		"	description 	VARCHAR(255) 	DEFAULT 'No description',\n" +
-		"	p_name			VARCHAR(255)	NOT NULL,\n" +
-		"	category		VARCHAR(255)	DEFAULT 'None',\n" +
-		"	source			VARCHAR(255)	DEFAULT 'None',\n" +
-		"	price			INTEGER	 		NOT NULL,\n" +
-		"	inventory		INTEGER			NOT NULL,\n" +
-		"	sold_quantity	INTEGER			NOT NULL,\n" +
-		"	onsale_date 	DATE			NOT NULL,\n" +
-		"	PRIMARY KEY (p_id),\n" +
-		"	FOREIGN KEY (s_username) REFERENCES users (username),\n" +
-		"	CONSTRAINT p_id_non_negative			CHECK (p_id >= 0),\n" +
-		"	CONSTRAINT price_non_negative 			CHECK (price >= 0),\n" +
-		"	CONSTRAINT inventory_non_negative 		CHECK (inventory >= 0),\n" +
-		"	CONSTRAINT sold_quantity_non_negative	CHECK (sold_quantity >= 0));")
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + ProductTableName + " (\n" +
+		ProductIdColumnName + " 			INTEGER 		NOT NULL,\n" +
+		ProductStaffUserNameColumnName + " 	VARCHAR(16) 	NOT NULL,\n" +
+		ProductDescriptionColumnName + "	VARCHAR(255) 	DEFAULT 'No description',\n" +
+		ProductNameColumnName + "			VARCHAR(255)	NOT NULL,\n" +
+		ProductCategoryColumnName + "		VARCHAR(255)	DEFAULT 'None',\n" +
+		ProductSourceColumnName + "			VARCHAR(255)	DEFAULT 'None',\n" +
+		ProductPriceColumnName + "			INTEGER	 		NOT NULL,\n" +
+		ProductInventoryColumnName + "		INTEGER			NOT NULL,\n" +
+		ProductSoldQuantityColumnName + "	INTEGER			NOT NULL,\n" +
+		ProductOnSaleDataColumnName + "		DATE			NOT NULL,\n" +
+		"PRIMARY KEY (" + ProductIdColumnName + "),\n" +
+		"FOREIGN KEY (" + ProductStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + " (" + database_users_table_util.UserNameColumnName + "),\n" +
+		"CONSTRAINT p_id_non_negative			CHECK (" + ProductIdColumnName + " >= 0),\n" +
+		"CONSTRAINT price_non_negative 			CHECK (" + ProductPriceColumnName + " >= 0),\n" +
+		"CONSTRAINT inventory_non_negative 		CHECK (" + ProductInventoryColumnName + " >= 0),\n" +
+		"CONSTRAINT sold_quantity_non_negative	CHECK (" + ProductSoldQuantityColumnName + " >= 0));")
 	panicCreateTableError(createTableError)
 }
 
 func createDatabaseQATableIfNotExitsts(databasePtr *sql.DB) {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS qa (\n" +
-		"	p_id			INTEGER			NOT NULL,\n" +
-		"	s_username		VARCHAR(16)		NOT NULL,\n" +
-		"	c_username		VARCHAR(16)		NOT NULL,\n" +
-		"	question		VARCHAR(100)	DEFAULT(''),\n" +
-		"	answer			VARCHAR(100)	DEFAULT(''),\n" +
-		"	ask_date		DATE			NOT NULL,\n" +
-		"	ask_time		TIME			NOT NULL,\n" +
-		"	ans_date		DATE,\n" +
-		"	ans_time		TIME,\n" +
-		"	PRIMARY KEY(p_id),\n" +
-		"	FOREIGN KEY(p_id) REFERENCES product(p_id),\n" +
-		"	FOREIGN KEY(s_username) REFERENCES users(username),\n" +
-		"	FOREIGN KEY(c_username)	REFERENCES users(username),\n" +
-		"	CONSTRAINT qa_check_date_interval		CHECK (ask_date < ans_date));")
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + QA_TableName + " (\n" +
+		QA_ProductIdColumnName + "			INTEGER			NOT NULL,\n" +
+		QA_StaffUserNameColumnName + "		VARCHAR(16)		NOT NULL,\n" +
+		QA_CustomerUserNameColumnName + "	VARCHAR(16)		NOT NULL,\n" +
+		QA_QuestionColumnname + "			VARCHAR(100)	DEFAULT(''),\n" +
+		QA_AnswerColumnName + "				VARCHAR(100)	DEFAULT(''),\n" +
+		QA_AskDateColumnName + "			DATE			NOT NULL,\n" +
+		QA_AskTimeColumnName + "			TIME			NOT NULL,\n" +
+		QA_AnsDateColumnName + "			DATE,\n" +
+		QA_AnsTimeColumnName + "			TIME,\n" +
+		"PRIMARY KEY(" + QA_ProductIdColumnName + "),\n" +
+		"FOREIGN KEY(" + QA_ProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + "),\n" +
+		"FOREIGN KEY(" + QA_StaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
+		"FOREIGN KEY(" + QA_CustomerUserNameColumnName + ")	REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
+		"CONSTRAINT qa_check_date_interval		CHECK (" + QA_AskDateColumnName + " < " + QA_AnsDateColumnName + "));")
 	panicCreateTableError(createTableError)
 }
 
 func createDatabaseCartTableIfNotExists(databasePtr *sql.DB) {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS cart (\n" +
-		"	cart_id			INTEGER			NOT NULL,\n" +
-		"	PRIMARY KEY(cart_id),\n" +
-		"	CONSTRAINT cart_id_non_negative 		CHECK (cart_id >= 0));")
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + CartTableName + " (\n" +
+		CartIdColumnName + "	INTEGER			NOT NULL,\n" +
+		"PRIMARY KEY(" + CartIdColumnName + "),\n" +
+		"CONSTRAINT cart_id_non_negative 	CHECK (" + CartIdColumnName + " >= 0));")
 	panicCreateTableError(createTableError)
 }
 
 func createDatabaseActivityTableIfNotExists(databasePtr *sql.DB) {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS activity (\n" +
-		"	a_id			INTEGER			NOT NULL,\n" +
-		"	name			VARCHAR(255)	NOT NULL,\n" +
-		"	start_date		DATE			NOT NULL,\n" +
-		"	end_date		DATE			NOT NULL,\n" +
-		"	lowest_discount	FLOAT(2)		NOT NULL,\n" +
-		"	PRIMARY KEY(a_id),\n" +
-		"	CONSTRAINT activity_check_date_interval	CHECK (start_date < end_date),\n" +
-		"	CONSTRAINT activity_discount_digit		CHECK (lowest_discount < 10));")
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + ActivityTableName + " (\n" +
+		ActivityIdColumnName + "				INTEGER			NOT NULL,\n" +
+		ActivityNameColumnName + "				VARCHAR(255)	NOT NULL,\n" +
+		ActivityStartDateColumnName + "			DATE			NOT NULL,\n" +
+		ActivityEndDateColumnName + "			DATE			NOT NULL,\n" +
+		ActivityLowestDiscountColumnName + "	FLOAT(2)		NOT NULL,\n" +
+		"PRIMARY KEY(" + ActivityIdColumnName + "),\n" +
+		"CONSTRAINT activity_check_date_interval	CHECK (" + ActivityStartDateColumnName + " < " + ActivityEndDateColumnName + "),\n" +
+		"CONSTRAINT activity_discount_digit		CHECK (" + ActivityLowestDiscountColumnName + " < 10));")
 	panicCreateTableError(createTableError)
 }
 
 // ----------------------------Association table----------------------------
 func createDatabaseAddToCartTableIfNotExists(databasePtr *sql.DB) {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS add_to_cart (\n" +
-		"	cart_id			INTEGER			NOT NULL,\n" +
-		"	p_id			INTEGER			NOT NULL,\n" +
-		"	quantity		INTEGER			NOT NULL,\n" +
-		"	PRIMARY KEY(cart_id, p_id),\n" +
-		"	FOREIGN KEY(cart_id) REFERENCES cart(cart_id),\n" +
-		"	FOREIGN KEY(p_id) REFERENCES product(p_id));")
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + AddToCartTableName + " (\n" +
+		AddToCartCartIdColumnName + "	INTEGER			NOT NULL,\n" +
+		AddToCartProductIdColumnName + "INTEGER			NOT NULL,\n" +
+		AddToCartQuantityColumnName + "	INTEGER			NOT NULL,\n" +
+		"PRIMARY KEY(" + AddToCartCartIdColumnName + ", " + AddToCartProductIdColumnName + "),\n" +
+		"FOREIGN KEY(" + AddToCartCartIdColumnName + ") REFERENCES " + CartTableName + "(" + CartIdColumnName + "),\n" +
+		"FOREIGN KEY(" + AddToCartProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + "));")
 	panicCreateTableError(createTableError)
 }
 
 func createDatabaseBuyTableIfNotExists(databasePtr *sql.DB) {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS buy (\n" +
-		"	c_username		VARCHAR(16)		NOT NULL,\n" +
-		"	cart_id			INTEGER			NOT NULL,\n" +
-		"	buy_date		DATE			NOT NULL,\n" +
-		"	PRIMARY KEY(c_username, cart_id),\n" +
-		"	FOREIGN KEY(c_username) REFERENCES users(username),\n" +
-		"	FOREIGN KEY(cart_id) REFERENCES cart(cart_id));")
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + BuyTableName + " (\n" +
+		BuyCustomerUserNameColumnName + "	VARCHAR(16)		NOT NULL,\n" +
+		BuyCartIdColumnName + "				INTEGER			NOT NULL,\n" +
+		BuyBuyDateColumnName + "			DATE			NOT NULL,\n" +
+		"PRIMARY KEY(" + BuyCustomerUserNameColumnName + ", " + BuyCartIdColumnName + "),\n" +
+		"FOREIGN KEY(" + BuyCustomerUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
+		"FOREIGN KEY(" + BuyCartIdColumnName + ") REFERENCES " + CartTableName + "(" + CartIdColumnName + "));")
 	panicCreateTableError(createTableError)
 }
 
 func createDatabaseCEvaluateTableIfNotExists(databasePtr *sql.DB) {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS c_evaluate (\n" +
-		"	c_username		VARCHAR(16)		NOT NULL,\n" +
-		"	s_username		VARCHAR(16)		NOT NULL,\n" +
-		"	feedback		TEXT			NOT NULL,\n" +
-		"	PRIMARY KEY(c_username, s_username),\n" +
-		"	FOREIGN KEY(c_username) REFERENCES users(username),\n" +
-		"	FOREIGN KEY(s_username) REFERENCES users(username));")
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + CustomerEvaluateTableName + " (\n" +
+		CustomerEvaluateCustomerUserNameColumnName + "	VARCHAR(16)		NOT NULL,\n" +
+		CustomerEvaluateStaffUserNameColumnName + "		VARCHAR(16)		NOT NULL,\n" +
+		CustomerEvaluateFeedbackColumnName + "			TEXT			NOT NULL,\n" +
+		"PRIMARY KEY(" + CustomerEvaluateCustomerUserNameColumnName + ", " + CustomerEvaluateStaffUserNameColumnName + "),\n" +
+		"FOREIGN KEY(" + CustomerEvaluateCustomerUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
+		"FOREIGN KEY(" + CustomerEvaluateStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ");")
 	panicCreateTableError(createTableError)
 }
 
 func createDatabaseSEvaluateTableIfNotExists(databasePtr *sql.DB) {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS s_evaluate (\n" +
-		"	s_username		VARCHAR(16)		NOT NULL,\n" +
-		"	c_username		VARCHAR(16)		NOT NULL,\n" +
-		"	feedback		TEXT			NOT NULL,\n" +
-		"	PRIMARY KEY(s_username, c_username),\n" +
-		"	FOREIGN KEY(s_username) REFERENCES users(username),\n" +
-		"	FOREIGN KEY(c_username) REFERENCES users(username));")
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + StaffEvaluateTableName + " (\n" +
+		StaffEvaluateCustomerUserNameColumnName + "	VARCHAR(16)		NOT NULL,\n" +
+		StaffEvaluateStaffUserNameColumnName + "	VARCHAR(16)		NOT NULL,\n" +
+		StaffEvaluateFeedbackColumnName + "			TEXT			NOT NULL,\n" +
+		"PRIMARY KEY(" + StaffEvaluateCustomerUserNameColumnName + ", " + StaffEvaluateStaffUserNameColumnName + "),\n" +
+		"FOREIGN KEY(" + StaffEvaluateCustomerUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
+		"FOREIGN KEY(" + StaffEvaluateStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ");")
 	panicCreateTableError(createTableError)
 }
 
 func createDatabasePEvaluateTableIfNotExists(databasePtr *sql.DB) {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS p_evaluate (\n" +
-		"	p_id			INTEGER			NOT NULL,\n" +
-		"	c_username		VARCHAR(16)		NOT NULL,\n" +
-		"	feedback		TEXT			NOT NULL,\n" +
-		"	PRIMARY KEY(p_id, c_username),\n" +
-		"	FOREIGN KEY(p_id) REFERENCES product(p_id),\n" +
-		"	FOREIGN KEY(c_username) REFERENCES users(username));")
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + ProductEvaluateTableName + " (\n" +
+		ProductEvaluateProductIdColumnName + "			INTEGER			NOT NULL,\n" +
+		ProductEvaluateCustomerUserNameColumnName + "	VARCHAR(16)		NOT NULL,\n" +
+		ProductEvaluateFeedbackColumnName + "			TEXT			NOT NULL,\n" +
+		"PRIMARY KEY(" + ProductEvaluateProductIdColumnName + ", " + ProductEvaluateCustomerUserNameColumnName + "),\n" +
+		"FOREIGN KEY(" + ProductEvaluateProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + "),\n" +
+		"FOREIGN KEY(" + ProductEvaluateCustomerUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ");")
 	panicCreateTableError(createTableError)
 }
 
 func createDatabaseManageTableIfNotExists(databasePtr *sql.DB) {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS manage (\n" +
-		"	a_username		VARCHAR(16)		NOT NULL,\n" +
-		"	username		VARCHAR(16)		NOT NULL,\n" +
-		"	PRIMARY KEY(a_username, username),\n" +
-		"	FOREIGN KEY(a_username) REFERENCES admin(username),\n" +
-		"	FOREIGN KEY(username) REFERENCES users(username));")
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + ManageTableName + " (\n" +
+		ManageAdminUserNameColumnName + "	VARCHAR(16)		NOT NULL,\n" +
+		ManageUserNameColumnName + "		VARCHAR(16)		NOT NULL,\n" +
+		"PRIMARY KEY(" + ManageAdminUserNameColumnName + ", " + ManageUserNameColumnName + "),\n" +
+		"FOREIGN KEY(" + ManageAdminUserNameColumnName + ") REFERENCES " + AdminTableName + "(" + AdminUserNameColumnName + "),\n" +
+		"FOREIGN KEY(" + ManageUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ");")
 	panicCreateTableError(createTableError)
 }
 
 func createDatabaseHoldTableIfNotExists(databasePtr *sql.DB) {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS hold (\n" +
-		"	a_username		VARCHAR(16)		NOT NULL,\n" +
-		"	a_id			INTEGER			NOT NULL,\n" +
-		"	PRIMARY KEY(a_username, a_id),\n" +
-		"	FOREIGN KEY(a_username) REFERENCES admin(username),\n" +
-		"	FOREIGN KEY(a_id) REFERENCES activity(a_id));")
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + HoldTableName + " (\n" +
+		HoldAdminUserNameColumnName + "	VARCHAR(16)		NOT NULL,\n" +
+		HoldActivityIdColumnName + "	INTEGER			NOT NULL,\n" +
+		"PRIMARY KEY(" + HoldAdminUserNameColumnName + ", " + HoldActivityIdColumnName + "),\n" +
+		"FOREIGN KEY(" + HoldAdminUserNameColumnName + ") REFERENCES " + AdminTableName + "(" + AdminUserNameColumnName + "),\n" +
+		"FOREIGN KEY(" + HoldActivityIdColumnName + ") REFERENCES " + ActivityTableName + "(" + ActivityIdColumnName + "));")
 	panicCreateTableError(createTableError)
 }
 
 func createDatabaseSJoinTableIfNotExists(databasePtr *sql.DB) {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS s_join (\n" +
-		"	s_username		VARCHAR(16)		NOT NULL,\n" +
-		"	a_id			INTEGER			NOT NULL,\n" +
-		"	PRIMARY KEY(s_username, a_id),\n" +
-		"	FOREIGN KEY(s_username) REFERENCES users(username),\n" +
-		"	FOREIGN KEY(a_id) REFERENCES activity(a_id));")
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + StaffJoinActivityTableName + " (\n" +
+		StaffJoinActivityStaffUserNameColumnName + "VARCHAR(16)		NOT NULL,\n" +
+		StaffJoinActivityActivityIdColumnName + "	INTEGER			NOT NULL,\n" +
+		"PRIMARY KEY(" + StaffJoinActivityStaffUserNameColumnName + ", " + StaffJoinActivityActivityIdColumnName + "),\n" +
+		"FOREIGN KEY(" + StaffJoinActivityStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
+		"FOREIGN KEY(" + StaffJoinActivityActivityIdColumnName + ") REFERENCES " + ActivityTableName + "(" + ActivityIdColumnName + "));")
 	panicCreateTableError(createTableError)
 }
 
 // Have the constraint that discount < activity.lowest_discount, but hard to describe in MySQL
 func createDatabasePJoinTableIfNotExists(databasePtr *sql.DB) {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS p_join (\n" +
-		"	p_id			INTEGER			NOT NULL,\n" +
-		"	a_id			INTEGER			NOT NULL,\n" +
-		"	quantity		INTEGER			NOT NULL,\n" +
-		"	discount		FLOAT(2)		NOT NULL,\n" +
-		"	PRIMARY KEY(p_id, a_id),\n" +
-		"	FOREIGN KEY(p_id) REFERENCES product(p_id),\n" +
-		"	FOREIGN KEY(a_id) REFERENCES activity(a_id),\n" +
-		"	CONSTRAINT pjoin_discount_digit			CHECK (discount < 10));")
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + ProductJoinActivityTableName + " (\n" +
+		ProductJoinActivityProductIdColumnName + "	INTEGER			NOT NULL,\n" +
+		ProductJoinActivityActivityIdColumnName + "	INTEGER			NOT NULL,\n" +
+		ProductJoinActivityQuantityColumnName + "	INTEGER			NOT NULL,\n" +
+		ProductJoinActivityDiscountColumnName + "	FLOAT(2)		NOT NULL,\n" +
+		"PRIMARY KEY(" + ProductJoinActivityProductIdColumnName + ", " + ProductJoinActivityActivityIdColumnName + "),\n" +
+		"FOREIGN KEY(" + ProductJoinActivityProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + "),\n" +
+		"FOREIGN KEY(" + ProductJoinActivityActivityIdColumnName + ") REFERENCES " + ActivityTableName + "(" + ActivityIdColumnName + "),\n" +
+		"CONSTRAINT pjoin_discount_digit			CHECK (" + ProductJoinActivityDiscountColumnName + " < 10));")
 	panicCreateTableError(createTableError)
 }
 
 func createDatabaseTakeOffTableIfNotExists(databasePtr *sql.DB) {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS take_off (\n" +
-		"	a_username		VARCHAR(16)		NOT NULL,\n" +
-		"	p_id			INTEGER			NOT NULL,\n" +
-		"	PRIMARY KEY(a_username, p_id),\n" +
-		"	FOREIGN KEY(a_username) REFERENCES admin(username),\n" +
-		"	FOREIGN KEY(p_id) REFERENCES product(p_id));")
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + TakeOffTableName + " (\n" +
+		TakeOffAdminUserNameColumnName + "	VARCHAR(16)		NOT NULL,\n" +
+		TakeOffProductIdColumnName + "		INTEGER			NOT NULL,\n" +
+		"PRIMARY KEY(" + TakeOffAdminUserNameColumnName + ", " + TakeOffProductIdColumnName + "),\n" +
+		"FOREIGN KEY(" + TakeOffAdminUserNameColumnName + ") REFERENCES " + AdminTableName + "(" + AdminUserNameColumnName + "),\n" +
+		"FOREIGN KEY(" + TakeOffProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + "));")
 	panicCreateTableError(createTableError)
 }
 
