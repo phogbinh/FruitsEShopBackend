@@ -26,18 +26,7 @@ const (
 )
 
 const (
-	queryInsertUser          = "INSERT INTO " + TableName + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	queryGetAllUsers         = "SELECT * FROM " + TableName
-	queryGetUserByUserName   = "SELECT * FROM " + TableName + " WHERE " + UserNameColumnName + " = ?"
-	queryGetUserByMail       = "SELECT * FROM " + TableName + " WHERE " + MailColumnName + " = ?"
-	queryUpdateUserPassword  = "UPDATE " + TableName + " SET " + PasswordColumnName + " = ? WHERE " + UserNameColumnName + " = ?"
-	queryUpdateUserStaffFlag = "UPDATE " + TableName + " SET " + StaffFlagColumnName + " = ? WHERE " + UserNameColumnName + " = ?"
-	queryDeleteUser          = "DELETE FROM " + TableName + " WHERE " + UserNameColumnName + " = ?"
-)
-
-// CreateTableIfNotExists creates table `users`.
-func CreateTableIfNotExists(databasePtr *sql.DB) error {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + TableName +
+	queryCreateTable = "CREATE TABLE IF NOT EXISTS " + TableName +
 		"(" +
 		MailColumnName + "			VARCHAR(320)	NOT NULL," +
 		PasswordColumnName + "		VARCHAR(30)		NOT NULL," +
@@ -53,7 +42,19 @@ func CreateTableIfNotExists(databasePtr *sql.DB) error {
 		"PRIMARY KEY(" + UserNameColumnName + ")," +
 		"UNIQUE(" + MailColumnName + ")," +
 		"UNIQUE(" + NicknameColumnName + ")" +
-		");")
+		");"
+	queryInsertUser          = "INSERT INTO " + TableName + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	queryGetAllUsers         = "SELECT * FROM " + TableName
+	queryGetUserByUserName   = "SELECT * FROM " + TableName + " WHERE " + UserNameColumnName + " = ?"
+	queryGetUserByMail       = "SELECT * FROM " + TableName + " WHERE " + MailColumnName + " = ?"
+	queryUpdateUserPassword  = "UPDATE " + TableName + " SET " + PasswordColumnName + " = ? WHERE " + UserNameColumnName + " = ?"
+	queryUpdateUserStaffFlag = "UPDATE " + TableName + " SET " + StaffFlagColumnName + " = ? WHERE " + UserNameColumnName + " = ?"
+	queryDeleteUser          = "DELETE FROM " + TableName + " WHERE " + UserNameColumnName + " = ?"
+)
+
+// CreateTableIfNotExists creates table `users`.
+func CreateTableIfNotExists(databasePtr *sql.DB) error {
+	_, createTableError := databasePtr.Exec(queryCreateTable)
 	return createTableError
 }
 
