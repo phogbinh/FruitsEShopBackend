@@ -58,7 +58,7 @@ func CreateTableIfNotExists(databasePtr *sql.DB) error {
 
 // InsertUser inserts the given user to the database `users` table.
 func InsertUser(user User, databasePtr *sql.DB) Status {
-	return queryDatabase(databasePtr, queryInsertUser, user.Mail, user.Password, user.UserName, user.Nickname, user.Fname, user.Lname, user.Phone, user.Location, user.Money, user.Introduction, user.StaffFlag)
+	return PrepareThenExecuteQuery(databasePtr, queryInsertUser, user.Mail, user.Password, user.UserName, user.Nickname, user.Fname, user.Lname, user.Phone, user.Location, user.Money, user.Introduction, user.StaffFlag)
 }
 
 // GetAllUsers returns all users' information.
@@ -86,17 +86,17 @@ func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
 
 // UpdateUserPassword updates the given user's password to the database `users` table.
 func UpdateUserPassword(userName string, userNewPassword string, databasePtr *sql.DB) Status {
-	return queryDatabase(databasePtr, queryUpdateUserPassword, userNewPassword, userName)
+	return PrepareThenExecuteQuery(databasePtr, queryUpdateUserPassword, userNewPassword, userName)
 }
 
 // UpdateUserStaffFlag updates the given user's staff flag to the database `users` table.
 func UpdateUserStaffFlag(userName string, userNewStaffFlag string, databasePtr *sql.DB) Status {
-	return queryDatabase(databasePtr, queryUpdateUserStaffFlag, userNewStaffFlag, userName)
+	return PrepareThenExecuteQuery(databasePtr, queryUpdateUserStaffFlag, userNewStaffFlag, userName)
 }
 
 // DeleteUser deletes the given user from the database `users` table.
 func DeleteUser(userName string, databasePtr *sql.DB) Status {
-	return queryDatabase(databasePtr, queryDeleteUser, userName)
+	return PrepareThenExecuteQuery(databasePtr, queryDeleteUser, userName)
 }
 
 // IsExistingUser determines whether the given user is in the database `users` table.
@@ -108,14 +108,14 @@ func IsExistingUser(userName string, databasePtr *sql.DB) (bool, Status) {
 	return len(users) > 0, util.StatusOK()
 }
 
-func queryDatabase(databasePtr *sql.DB, query string, executeArguments ...interface{}) Status {
+func PrepareThenExecuteQuery(databasePtr *sql.DB, query string, executeArguments ...interface{}) Status {
 	prepareStatementPtr, prepareError := databasePtr.Prepare(query)
 	if prepareError != nil {
-		return util.StatusInternalServerError(queryDatabase, prepareError)
+		return util.StatusInternalServerError(PrepareThenExecuteQuery, prepareError)
 	}
 	_, executeError := prepareStatementPtr.Exec(executeArguments...)
 	if executeError != nil {
-		return util.StatusInternalServerError(queryDatabase, executeError)
+		return util.StatusInternalServerError(PrepareThenExecuteQuery, executeError)
 	}
 	return util.StatusOK()
 }
