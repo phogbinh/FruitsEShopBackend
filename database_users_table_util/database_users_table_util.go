@@ -108,6 +108,7 @@ func IsExistingUser(userName string, databasePtr *sql.DB) (bool, Status) {
 	return len(users) > 0, util.StatusOK()
 }
 
+// PrepareThenExecuteQuery prepares the query and executes it using the given execute arguments.
 func PrepareThenExecuteQuery(databasePtr *sql.DB, query string, executeArguments ...interface{}) Status {
 	prepareStatementPtr, prepareError := databasePtr.Prepare(query)
 	if prepareError != nil {
