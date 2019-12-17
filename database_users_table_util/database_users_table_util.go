@@ -54,8 +54,7 @@ const (
 
 // CreateTableIfNotExists creates table `users`.
 func CreateTableIfNotExists(databasePtr *sql.DB) error {
-	_, createTableError := databasePtr.Exec(queryCreateTable)
-	return createTableError
+	return database_util.CreateTableIfNotExists(databasePtr, queryCreateTable)
 }
 
 // InsertUser inserts the given user to the database `users` table.

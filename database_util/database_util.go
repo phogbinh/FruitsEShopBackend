@@ -7,6 +7,12 @@ import (
 	"backend/util"
 )
 
+// CreateTableIfNotExists creates a table using the given query if the table does not exist.
+func CreateTableIfNotExists(databasePtr *sql.DB, query string) error {
+	_, createTableError := databasePtr.Exec(query)
+	return createTableError
+}
+
 // PrepareThenExecuteQuery prepares the query and executes it using the given execute arguments.
 func PrepareThenExecuteQuery(databasePtr *sql.DB, query string, executeArguments ...interface{}) Status {
 	prepareStatementPtr, prepareError := databasePtr.Prepare(query)
