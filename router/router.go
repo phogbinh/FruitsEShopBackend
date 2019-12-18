@@ -24,14 +24,21 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 	if err != nil {
 		log.Panicln(err)
 	}
+
+	router.Use(middleware.NewCORSMiddleware())
+
 	router.POST("/addorderitemtocart", handler.AddOrderItemToCartHandler)
 	router.DELETE("/deleteorderitemincart", handler.DeleteOrderItemToCartHandler)
 	router.GET("/getorderitemsincart", handler.GetOrderItemsInCartHandler)
 	router.PUT("/modifyorderitemquantity", handler.ModifyOrderItemQuantityHandler)
+
 	initializeRouterManageUserHandlers(router, databasePtr)
+
 	router.POST("/login", handler.LoginHandler(databasePtr))
 	router.POST("/sign-up", handler.SignUpHandler(databasePtr))
+
 	auth := router.Group("/auth")
+
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
 		auth.PUT(
