@@ -14,8 +14,9 @@ func CreateDatabases(databasePtr *sql.DB) {
 	createDatabaseQATableIfNotExitsts(databasePtr)
 	createDatabaseCartTableIfNotExists(databasePtr)
 	createDatabaseActivityTableIfNotExists(databasePtr)
-	createDatabaseAddToCartTableIfNotExists(databasePtr)
-	createDatabaseBuyTableIfNotExists(databasePtr)
+	createDatabaseOrderItemTableIfNotExists(databasePtr)
+	createDatabaseCustomerOwnCartTableIfNotExists(databasePtr)
+	createDatabaseTradeTableIfNotExists(databasePtr)
 	createDatabaseCEvaluateTableIfNotExists(databasePtr)
 	createDatabaseSEvaluateTableIfNotExists(databasePtr)
 	createDatabasePEvaluateTableIfNotExists(databasePtr)
@@ -100,25 +101,36 @@ func createDatabaseActivityTableIfNotExists(databasePtr *sql.DB) {
 }
 
 // ----------------------------Association table----------------------------
-func createDatabaseAddToCartTableIfNotExists(databasePtr *sql.DB) {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + AddToCartTableName + " (\n" +
-		AddToCartCartIdColumnName + "	INTEGER			NOT NULL,\n" +
-		AddToCartProductIdColumnName + "INTEGER			NOT NULL,\n" +
-		AddToCartQuantityColumnName + "	INTEGER			NOT NULL,\n" +
-		"PRIMARY KEY(" + AddToCartCartIdColumnName + ", " + AddToCartProductIdColumnName + "),\n" +
-		"FOREIGN KEY(" + AddToCartCartIdColumnName + ") REFERENCES " + CartTableName + "(" + CartIdColumnName + "),\n" +
-		"FOREIGN KEY(" + AddToCartProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + "));")
+func createDatabaseOrderItemTableIfNotExists(databasePtr *sql.DB) {
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + OrderItemTableName + " (\n" +
+		OrderItemCartIdColumnName + "	INTEGER			NOT NULL,\n" +
+		OrderItemProductIdColumnName + "INTEGER			NOT NULL,\n" +
+		OrderItemQuantity + "			INTEGER			NOT NULL,\n" +
+		"PRIMARY KEY(" + OrderItemCartIdColumnName + ", " + OrderItemProductIdColumnName + "),\n" +
+		"FOREIGN KEY(" + OrderItemCartIdColumnName + ") REFERENCES " + CartTableName + "(" + CartIdColumnName + "),\n" +
+		"FOREIGN KEY(" + OrderItemProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + "));")
 	panicCreateTableError(createTableError)
 }
 
-func createDatabaseBuyTableIfNotExists(databasePtr *sql.DB) {
-	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + BuyTableName + " (\n" +
-		BuyCustomerUserNameColumnName + "	VARCHAR(16)		NOT NULL,\n" +
-		BuyCartIdColumnName + "				INTEGER			NOT NULL,\n" +
-		BuyBuyDateColumnName + "			DATE			NOT NULL,\n" +
-		"PRIMARY KEY(" + BuyCustomerUserNameColumnName + ", " + BuyCartIdColumnName + "),\n" +
-		"FOREIGN KEY(" + BuyCustomerUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
-		"FOREIGN KEY(" + BuyCartIdColumnName + ") REFERENCES " + CartTableName + "(" + CartIdColumnName + "));")
+func createDatabaseCustomerOwnCartTableIfNotExists(databasePtr *sql.DB) {
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + CustomerOwnCartTableName + " (\n" +
+		CustomerOwnCartCustomerIdColumnName + "	INTEGER		NOT NULL,\n" +
+		CustomerOwnCartCartIdColumnName + "		INTEGER		NOT NULL,\n" +
+		"PRIMARY KEY(" + CustomerOwnCartCustomerIdColumnName + ", " + CustomerOwnCartCartIdColumnName + "),\n" +
+		"FOREIGN KEY(" + CustomerOwnCartCustomerIdColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
+		"FOREIGN KEY(" + CustomerOwnCartCartIdColumnName + ") REFERENCES " + CartTableName + "(" + CartIdColumnName + "));")
+	panicCreateTableError(createTableError)
+}
+
+func createDatabaseTradeTableIfNotExists(databasePtr *sql.DB) {
+	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + TradeTableName + " (\n" +
+		TradeCartIdColumnName + "			INTEGER		NOT NULL,\n" +
+		TradeProductIdColumnName + "		INTEGER		NOT NULL,\n" +
+		TradeProductQuantityColumnName + "	INTEGER		NOT NULL,\n" +
+		TradeDateTimeColumnName + "			DATETIME	NOT NULL,\n" +
+		"PRIMARY KEY(" + TradeCartIdColumnName + ", " + TradeProductIdColumnName + "),\n" +
+		"FOREIGN KEY(" + TradeProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + "),\n" +
+		"FOREIGN KEY(" + TradeCartIdColumnName + ") REFERENCES " + CartTableName + "(" + CartIdColumnName + "));")
 	panicCreateTableError(createTableError)
 }
 

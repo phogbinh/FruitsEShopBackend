@@ -50,17 +50,24 @@ const (
 )
 
 const (
-	AddToCartTableName           = "add_to_cart"
-	AddToCartCartIdColumnName    = "CartId"
-	AddToCartProductIdColumnName = "ProductId"
-	AddToCartQuantityColumnName  = "Quantity"
+	OrderItemTableName           = "order_item"
+	OrderItemCartIdColumnName    = "CartId"
+	OrderItemProductIdColumnName = "ProductId"
+	OrderItemQuantity            = "Quantity"
 )
 
 const (
-	BuyTableName                  = "buy"
-	BuyCustomerUserNameColumnName = "CustomerUserName"
-	BuyCartIdColumnName           = "BuyCartId"
-	BuyBuyDateColumnName          = "BuyDate"
+	CustomerOwnCartTableName            = "customer_own_cart"
+	CustomerOwnCartCartIdColumnName     = "CartId"
+	CustomerOwnCartCustomerIdColumnName = "CustomerId"
+)
+
+const (
+	TradeTableName                 = "trade"
+	TradeCartIdColumnName          = "CartId"
+	TradeProductIdColumnName       = "ProductId"
+	TradeProductQuantityColumnName = "Quantity"
+	TradeDateTimeColumnName        = "DateTime"
 )
 
 const (
