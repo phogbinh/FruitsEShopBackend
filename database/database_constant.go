@@ -57,9 +57,9 @@ const (
 )
 
 const (
-	CustomerOwnCartTableName            = "customer_own_cart"
-	CustomerOwnCartCartIdColumnName     = "CartId"
-	CustomerOwnCartCustomerIdColumnName = "CustomerId"
+	CustomerOwnCartTableName                  = "customer_own_cart"
+	CustomerOwnCartCartIdColumnName           = "CartId"
+	CustomerOwnCartCustomerUserNameColumnName = "CustomerUserName"
 )
 
 const (
