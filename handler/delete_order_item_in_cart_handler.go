@@ -14,14 +14,14 @@ DeleteOrderItemToCartHandler is a function for gin to handle DeleteOrderItemToCa
 func DeleteOrderItemToCartHandler(c *gin.Context) {
 	var addToCart AddToCart
 
-	productID, err := strconv.Atoi(c.Query("p_id"))
+	productID, err := strconv.Atoi(c.Query(database.OrderItemProductIdColumnName))
 	if err != nil {
 		c.Status(400)
 	} else {
 		addToCart.ProductID = productID
 	}
 
-	cartID, err := strconv.Atoi(c.Query("cart_id"))
+	cartID, err := strconv.Atoi(c.Query(database.OrderItemCartIdColumnName))
 	if err != nil {
 		c.Status(400)
 	} else {

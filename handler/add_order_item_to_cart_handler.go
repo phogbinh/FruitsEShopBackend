@@ -18,24 +18,24 @@ func AddOrderItemToCartHandler(c *gin.Context) {
 	if err != nil {
 		c.Status(400)
 	} else {
-		addToCart.ProductID = productID
+		orderItem.ProductID = productID
 	}
 
 	cartID, err := strconv.Atoi(c.Query(database.OrderItemCartIdColumnName))
 	if err != nil {
 		c.Status(400)
 	} else {
-		addToCart.CartID = cartID
+		orderItem.CartID = cartID
 	}
 
 	quantity, err := strconv.Atoi(c.Query(database.OrderItemQuantity))
 	if err != nil {
 		c.Status(400)
 	} else {
-		addToCart.Quantity = quantity
+		orderItem.Quantity = quantity
 	}
 
-	code := database.AddOrderItemToCart(&addToCart, database.SqlDb)
+	code := database.AddOrderItemToCart(&orderItem, database.SqlDb)
 
 	c.Status(code)
 }

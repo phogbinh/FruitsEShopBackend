@@ -9,9 +9,9 @@ import (
 )
 
 // Add order product to cart
-func AddOrderItemToCart(addToCart *AddToCart, databasePtr *sql.DB) (code int) {
-	_, addError := databasePtr.Exec("INSERT	INTO add_to_cart (cart_id, p_id, quantity)\n"+
-		"	VALUES (?, ?, ?);", addToCart.CartID, addToCart.ProductID, addToCart.Quantity)
+func AddOrderItemToCart(orderItem *OrderItem, databasePtr *sql.DB) (code int) {
+	_, addError := databasePtr.Exec("INSERT	INTO "+OrderItemTableName+" ("+OrderItemCartIdColumnName+", "+OrderItemProductIdColumnName+", "+OrderItemQuantity+")\n"+
+		"	VALUES (?, ?, ?);", orderItem.CartID, orderItem.ProductID, orderItem.Quantity)
 
 	if addError != nil {
 		code = 417
@@ -22,10 +22,10 @@ func AddOrderItemToCart(addToCart *AddToCart, databasePtr *sql.DB) (code int) {
 }
 
 // Delete order item in cart
-func DeleteOrderItemInCart(addToCart *AddToCart, databasePtr *sql.DB) (code int) {
-	_, deleteError := databasePtr.Exec("DELETE FROM add_to_cart\n"+
-		"	WHERE 	p_id = ?\n"+
-		"	AND		cart_id = ?;", addToCart.ProductID, addToCart.CartID)
+func DeleteOrderItemInCart(orderItem *OrderItem, databasePtr *sql.DB) (code int) {
+	_, deleteError := databasePtr.Exec("DELETE FROM "+OrderItemTableName+"\n"+
+		"	WHERE 	"+OrderItemProductIdColumnName+" = ?\n"+
+		"	AND		"+OrderItemCartIdColumnName+" = ?;", orderItem.ProductID, orderItem.CartID)
 
 	if deleteError != nil {
 		code = 417
@@ -36,11 +36,12 @@ func DeleteOrderItemInCart(addToCart *AddToCart, databasePtr *sql.DB) (code int)
 }
 
 // Get all order items in cart
-func GetOrderItemsInCart(addToCart *AddToCart, databasePtr *sql.DB) (code int, jsonData string) {
-	rows, err := databasePtr.Query("SELECT	p_name, category, description, source, price, inventory\n"+
-		"	FROM	product, add_to_cart\n"+
-		"	WHERE	cart_id = ?\n"+
-		"	AND		add_to_cart.p_id = product.p_id", addToCart.CartID)
+func GetOrderItemsInCart(orderItem *OrderItem, databasePtr *sql.DB) (code int, jsonData string) {
+	rows, err := databasePtr.Query("SELECT	"+ProductNameColumnName+", "+ProductCategoryColumnName+", "+
+		ProductDescriptionColumnName+", "+ProductSourceColumnName+", "+ProductPriceColumnName+", "+ProductInventoryColumnName+"\n"+
+		"	FROM	"+ProductTableName+", "+OrderItemTableName+"\n"+
+		"	WHERE	"+OrderItemCartIdColumnName+" = ?\n"+
+		"	AND		"+OrderItemTableName+"."+OrderItemProductIdColumnName+" = "+ProductTableName+"."+ProductIdColumnName+";", orderItem.CartID)
 
 	if err != nil {
 		code, jsonData = setFailureDataForGetOrderItemsInCart()
@@ -113,11 +114,11 @@ func setFailureDataForGetOrderItemsInCart() (code int, jsonData string) {
 }
 
 // Modify order item quantity
-func ModifyOrderItemQuantity(addToCart *AddToCart, databasePtr *sql.DB) (code int) {
-	_, modifyError := databasePtr.Exec("UPDATE add_to_cart\n"+
-		"	SET		quantity = ?\n"+
-		"	WHERE	p_id = ?\n"+
-		"	AND		cart_id = ?;", addToCart.Quantity, addToCart.ProductID, addToCart.CartID)
+func ModifyOrderItemQuantity(addToCart *OrderItem, databasePtr *sql.DB) (code int) {
+	_, modifyError := databasePtr.Exec("UPDATE "+OrderItemTableName+"\n"+
+		"	SET		"+OrderItemQuantity+" = ?\n"+
+		"	WHERE	"+OrderItemProductIdColumnName+" = ?\n"+
+		"	AND		"+OrderItemCartIdColumnName+" = ?;", addToCart.Quantity, addToCart.ProductID, addToCart.CartID)
 
 	if modifyError != nil {
 		code = 403
