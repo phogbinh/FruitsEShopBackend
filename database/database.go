@@ -141,7 +141,7 @@ func createDatabaseCEvaluateTableIfNotExists(databasePtr *sql.DB) {
 		CustomerEvaluateFeedbackColumnName + "			TEXT			NOT NULL,\n" +
 		"PRIMARY KEY(" + CustomerEvaluateCustomerUserNameColumnName + ", " + CustomerEvaluateStaffUserNameColumnName + "),\n" +
 		"FOREIGN KEY(" + CustomerEvaluateCustomerUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
-		"FOREIGN KEY(" + CustomerEvaluateStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ");")
+		"FOREIGN KEY(" + CustomerEvaluateStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "));")
 	panicCreateTableError(createTableError)
 }
 
@@ -152,7 +152,7 @@ func createDatabaseSEvaluateTableIfNotExists(databasePtr *sql.DB) {
 		StaffEvaluateFeedbackColumnName + "			TEXT			NOT NULL,\n" +
 		"PRIMARY KEY(" + StaffEvaluateCustomerUserNameColumnName + ", " + StaffEvaluateStaffUserNameColumnName + "),\n" +
 		"FOREIGN KEY(" + StaffEvaluateCustomerUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
-		"FOREIGN KEY(" + StaffEvaluateStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ");")
+		"FOREIGN KEY(" + StaffEvaluateStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "));")
 	panicCreateTableError(createTableError)
 }
 
@@ -163,7 +163,7 @@ func createDatabasePEvaluateTableIfNotExists(databasePtr *sql.DB) {
 		ProductEvaluateFeedbackColumnName + "			TEXT			NOT NULL,\n" +
 		"PRIMARY KEY(" + ProductEvaluateProductIdColumnName + ", " + ProductEvaluateCustomerUserNameColumnName + "),\n" +
 		"FOREIGN KEY(" + ProductEvaluateProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + "),\n" +
-		"FOREIGN KEY(" + ProductEvaluateCustomerUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ");")
+		"FOREIGN KEY(" + ProductEvaluateCustomerUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "));")
 	panicCreateTableError(createTableError)
 }
 
@@ -173,7 +173,7 @@ func createDatabaseManageTableIfNotExists(databasePtr *sql.DB) {
 		ManageUserNameColumnName + "		VARCHAR(30)		NOT NULL,\n" +
 		"PRIMARY KEY(" + ManageAdminUserNameColumnName + ", " + ManageUserNameColumnName + "),\n" +
 		"FOREIGN KEY(" + ManageAdminUserNameColumnName + ") REFERENCES " + AdminTableName + "(" + AdminUserNameColumnName + "),\n" +
-		"FOREIGN KEY(" + ManageUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ");")
+		"FOREIGN KEY(" + ManageUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "));")
 	panicCreateTableError(createTableError)
 }
 
