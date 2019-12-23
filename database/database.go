@@ -103,9 +103,9 @@ func createDatabaseActivityTableIfNotExists(databasePtr *sql.DB) {
 // ----------------------------Association table----------------------------
 func createDatabaseOrderItemTableIfNotExists(databasePtr *sql.DB) {
 	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + OrderItemTableName + " (\n" +
-		OrderItemCartIdColumnName + "	INTEGER			NOT NULL,\n" +
-		OrderItemProductIdColumnName + "INTEGER			NOT NULL,\n" +
-		OrderItemQuantity + "			INTEGER			NOT NULL,\n" +
+		OrderItemCartIdColumnName + "		INTEGER			NOT NULL,\n" +
+		OrderItemProductIdColumnName + "	INTEGER			NOT NULL,\n" +
+		OrderItemQuantity + "				INTEGER			NOT NULL,\n" +
 		"PRIMARY KEY(" + OrderItemCartIdColumnName + ", " + OrderItemProductIdColumnName + "),\n" +
 		"FOREIGN KEY(" + OrderItemCartIdColumnName + ") REFERENCES " + CartTableName + "(" + CartIdColumnName + "),\n" +
 		"FOREIGN KEY(" + OrderItemProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + "));")
@@ -189,8 +189,8 @@ func createDatabaseHoldTableIfNotExists(databasePtr *sql.DB) {
 
 func createDatabaseSJoinTableIfNotExists(databasePtr *sql.DB) {
 	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + StaffJoinActivityTableName + " (\n" +
-		StaffJoinActivityStaffUserNameColumnName + "VARCHAR(16)		NOT NULL,\n" +
-		StaffJoinActivityActivityIdColumnName + "	INTEGER			NOT NULL,\n" +
+		StaffJoinActivityStaffUserNameColumnName + "	VARCHAR(16)		NOT NULL,\n" +
+		StaffJoinActivityActivityIdColumnName + "		INTEGER			NOT NULL,\n" +
 		"PRIMARY KEY(" + StaffJoinActivityStaffUserNameColumnName + ", " + StaffJoinActivityActivityIdColumnName + "),\n" +
 		"FOREIGN KEY(" + StaffJoinActivityStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
 		"FOREIGN KEY(" + StaffJoinActivityActivityIdColumnName + ") REFERENCES " + ActivityTableName + "(" + ActivityIdColumnName + "));")
