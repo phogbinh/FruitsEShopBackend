@@ -67,15 +67,13 @@ func createDatabaseQATableIfNotExitsts(databasePtr *sql.DB) {
 		QA_CustomerUserNameColumnName + "	VARCHAR(30)		NOT NULL,\n" +
 		QA_QuestionColumnname + "			VARCHAR(100)	DEFAULT(''),\n" +
 		QA_AnswerColumnName + "				VARCHAR(100)	DEFAULT(''),\n" +
-		QA_AskDateColumnName + "			DATE			NOT NULL,\n" +
-		QA_AskTimeColumnName + "			TIME			NOT NULL,\n" +
-		QA_AnsDateColumnName + "			DATE,\n" +
-		QA_AnsTimeColumnName + "			TIME,\n" +
+		QA_AskDatetimeColumnName + "		DATETIME		NOT NULL,\n" +
+		QA_AnsDatetimeColumnName + "		DATETIME,\n" +
 		"PRIMARY KEY(" + QA_ProductIdColumnName + "),\n" +
 		"FOREIGN KEY(" + QA_ProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + "),\n" +
 		"FOREIGN KEY(" + QA_StaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
 		"FOREIGN KEY(" + QA_CustomerUserNameColumnName + ")	REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
-		"CONSTRAINT qa_check_date_interval		CHECK (" + QA_AskDateColumnName + " < " + QA_AnsDateColumnName + "));")
+		"CONSTRAINT qa_check_date_interval		CHECK (" + QA_AskDatetimeColumnName + " < " + QA_AnsDatetimeColumnName + "));")
 	panicCreateTableError(createTableError)
 }
 
@@ -213,10 +211,10 @@ func createDatabasePJoinTableIfNotExists(databasePtr *sql.DB) {
 
 func createDatabaseTakeOffTableIfNotExists(databasePtr *sql.DB) {
 	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + TakeOffTableName + " (\n" +
-		TakeOffAdminUserNameColumnName + "	VARCHAR(30)		NOT NULL,\n" +
+		TakeOffUserNameColumnName + "		VARCHAR(30)		NOT NULL,\n" +
 		TakeOffProductIdColumnName + "		INTEGER			NOT NULL,\n" +
-		"PRIMARY KEY(" + TakeOffAdminUserNameColumnName + ", " + TakeOffProductIdColumnName + "),\n" +
-		"FOREIGN KEY(" + TakeOffAdminUserNameColumnName + ") REFERENCES " + AdminTableName + "(" + AdminUserNameColumnName + "),\n" +
+		"PRIMARY KEY(" + TakeOffUserNameColumnName + ", " + TakeOffProductIdColumnName + "),\n" +
+		"FOREIGN KEY(" + TakeOffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
 		"FOREIGN KEY(" + TakeOffProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + "));")
 	panicCreateTableError(createTableError)
 }

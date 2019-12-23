@@ -12,23 +12,23 @@ import (
 AddOrderItemToCartHandler is a function for gin to handle AddOrderItemToCart api
 */
 func AddOrderItemToCartHandler(c *gin.Context) {
-	var addToCart AddToCart
+	var orderItem OrderItem
 
-	productID, err := strconv.Atoi(c.Query("p_id"))
+	productID, err := strconv.Atoi(c.Query(database.OrderItemProductIdColumnName))
 	if err != nil {
 		c.Status(400)
 	} else {
 		addToCart.ProductID = productID
 	}
 
-	cartID, err := strconv.Atoi(c.Query("cart_id"))
+	cartID, err := strconv.Atoi(c.Query(database.OrderItemCartIdColumnName))
 	if err != nil {
 		c.Status(400)
 	} else {
 		addToCart.CartID = cartID
 	}
 
-	quantity, err := strconv.Atoi(c.Query("quantity"))
+	quantity, err := strconv.Atoi(c.Query(database.OrderItemQuantity))
 	if err != nil {
 		c.Status(400)
 	} else {

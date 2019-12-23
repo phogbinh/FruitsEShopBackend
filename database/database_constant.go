@@ -29,10 +29,8 @@ const (
 	QA_CustomerUserNameColumnName = "CustomerUserName"
 	QA_QuestionColumnname         = "Question"
 	QA_AnswerColumnName           = "Answer"
-	QA_AskDateColumnName          = "AskDate"
-	QA_AskTimeColumnName          = "AskTime"
-	QA_AnsDateColumnName          = "AnsDate"
-	QA_AnsTimeColumnName          = "AnsTime"
+	QA_AskDatetimeColumnName      = "AskDatetime"
+	QA_AnsDatetimeColumnName      = "AnsDatetime"
 )
 
 const (
@@ -118,7 +116,7 @@ const (
 )
 
 const (
-	TakeOffTableName               = "take_off"
-	TakeOffAdminUserNameColumnName = "ActivityUserName"
-	TakeOffProductIdColumnName     = "ProductId"
+	TakeOffTableName           = "take_off"
+	TakeOffUserNameColumnName  = "UserName"
+	TakeOffProductIdColumnName = "ProductId"
 )
