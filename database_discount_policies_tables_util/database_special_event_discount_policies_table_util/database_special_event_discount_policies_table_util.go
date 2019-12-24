@@ -5,6 +5,7 @@ import (
 
 	discountPoliciesTablesConst "backend/database_discount_policies_tables_util/database_discount_policies_tables_const"
 	"backend/database_util"
+	. "backend/model"
 	"backend/util"
 )
 
@@ -27,9 +28,15 @@ const (
 		"FOREIGN KEY(" + codeColumnName + ") REFERENCES " + discountPoliciesTablesConst.DiscountPoliciesTableName + "(" + discountPoliciesTablesConst.DiscountPoliciesCodeColumnName + ")" + util.EndOfLine +
 		"	ON DELETE CASCADE" + util.EndOfLine +
 		")"
+	queryInsertDiscountPolicy = "INSERT INTO " + tableName + " VALUES(?, ?, ?, ?)"
 )
 
 // CreateTableIfNotExists creates table `seasonings_discount_policies`.
 func CreateTableIfNotExists(databasePtr *sql.DB) error {
 	return database_util.CreateTableIfNotExists(databasePtr, queryCreateTable)
+}
+
+// InsertDiscountPolicy inserts the given discount policy to the database table `seasonings_discount_policies`.
+func InsertDiscountPolicy(discountPolicy DiscountPolicy, databasePtr *sql.DB) Status {
+	return database_util.PrepareThenExecuteQuery(databasePtr, queryInsertDiscountPolicy, discountPolicy.Code, discountPolicy.SpecialEventRate, discountPolicy.SpecialEventBeginDate, discountPolicy.SpecialEventEndDate)
 }

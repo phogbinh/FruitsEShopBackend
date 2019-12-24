@@ -13,7 +13,8 @@ import (
 )
 
 const (
-	userNamePath = ":" + DUTU.UserNameColumnName
+	userNamePath         = ":" + DUTU.UserNameColumnName
+	discountPoliciesPath = "discount-policies"
 )
 
 /*
@@ -52,6 +53,10 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 		auth.PUT(
 			util.RightSlash+DUTU.TableName+util.RightSlash+userNamePath+"/register-staff",
 			handler.RegisterStaffHandler(databasePtr))
+
+		auth.POST(
+			util.RightSlash+userNamePath+util.RightSlash+discountPoliciesPath,
+			handler.CreateDiscountPolicyHandler(databasePtr))
 	}
 }
 
