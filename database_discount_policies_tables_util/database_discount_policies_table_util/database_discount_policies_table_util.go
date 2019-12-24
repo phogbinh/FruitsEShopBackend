@@ -49,8 +49,8 @@ const (
 		"FOREIGN KEY(" + staffUserNameColumnName + ") REFERENCES " + usersTable.TableName + "(" + usersTable.UserNameColumnName + ")" + util.EndOfLine +
 		"	ON DELETE CASCADE" + util.EndOfLine +
 		")"
-	queryInsertDiscountPolicy    = "INSERT INTO " + tableName + " VALUES(?, ?, ?, ?, ?)"
-	queryGetDiscountPolicyByCode = "SELECT" + util.EndOfLine +
+	queryInsertDiscountPolicy = "INSERT INTO " + tableName + " VALUES(?, ?, ?, ?, ?)"
+	queryGetDiscountPolicies  = "SELECT" + util.EndOfLine +
 		tableName + "." + codeColumnName + "," + util.EndOfLine +
 		tableName + "." + nameColumnName + "," + util.EndOfLine +
 		tableName + "." + descriptionColumnName + "," + util.EndOfLine +
@@ -66,8 +66,9 @@ const (
 		"FROM " + tableName + util.EndOfLine +
 		"		LEFT OUTER JOIN " + discountPoliciesTablesConst.ShippingDiscountPoliciesTableName + "		ON " + tableName + "." + codeColumnName + " = " + discountPoliciesTablesConst.ShippingDiscountPoliciesTableName + "." + discountPoliciesTablesConst.ShippingDiscountPoliciesCodeColumnName + util.EndOfLine +
 		"		LEFT OUTER JOIN " + discountPoliciesTablesConst.SeasoningsDiscountPoliciesTableName + "		ON " + tableName + "." + codeColumnName + " = " + discountPoliciesTablesConst.SeasoningsDiscountPoliciesTableName + "." + discountPoliciesTablesConst.SeasoningsDiscountPoliciesCodeColumnName + util.EndOfLine +
-		"		LEFT OUTER JOIN " + discountPoliciesTablesConst.SpecialEventDiscountPoliciesTableName + "	ON " + tableName + "." + codeColumnName + " = " + discountPoliciesTablesConst.SpecialEventDiscountPoliciesTableName + "." + discountPoliciesTablesConst.SpecialEventDiscountPoliciesCodeColumnName + util.EndOfLine +
-		"WHERE " + tableName + "." + codeColumnName + " = ?"
+		"		LEFT OUTER JOIN " + discountPoliciesTablesConst.SpecialEventDiscountPoliciesTableName + "	ON " + tableName + "." + codeColumnName + " = " + discountPoliciesTablesConst.SpecialEventDiscountPoliciesTableName + "." + discountPoliciesTablesConst.SpecialEventDiscountPoliciesCodeColumnName + util.EndOfLine
+	queryGetDiscountPolicyByCode  = queryGetDiscountPolicies + "WHERE " + tableName + "." + codeColumnName + " = ?"
+	queryGetStaffDiscountPolicies = queryGetDiscountPolicies + "WHERE " + tableName + "." + staffUserNameColumnName + " = ?"
 )
 
 // CreateTableIfNotExists creates table `discount_policies`.
@@ -145,4 +146,9 @@ func getAllDiscountPolicies(databaseDiscountPoliciesTableRowsPtr *sql.Rows) ([]D
 		discountPolicies = append(discountPolicies, discountPolicy)
 	}
 	return discountPolicies, util.StatusOK()
+}
+
+// GetStaffDiscountPolicies returns all discount policies' information by the given staff's user name.
+func GetStaffDiscountPolicies(staffUserName string, databasePtr *sql.DB) ([]DiscountPolicy, Status) {
+	return getDiscountPoliciesByKeyColumn(queryGetStaffDiscountPolicies, staffUserName, databasePtr)
 }

@@ -57,6 +57,10 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 		auth.POST(
 			util.RightSlash+userNamePath+util.RightSlash+discountPoliciesPath,
 			handler.CreateDiscountPolicyHandler(databasePtr))
+
+		auth.GET(
+			util.RightSlash+userNamePath+util.RightSlash+discountPoliciesPath,
+			handler.GetStaffDiscountPoliciesHandler(databasePtr))
 	}
 }
 
