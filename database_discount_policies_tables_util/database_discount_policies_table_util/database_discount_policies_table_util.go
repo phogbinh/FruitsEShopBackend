@@ -23,7 +23,7 @@ const (
 		"(" + util.EndOfLine +
 		codeColumnName + "			CHAR(9)			NOT NULL," + util.EndOfLine +
 		nameColumnName + "			VARCHAR(255)	NOT NULL," + util.EndOfLine +
-		descriptionColumnName + "			VARCHAR(255)	NOT NULL," + util.EndOfLine +
+		descriptionColumnName + "	VARCHAR(255)	NOT NULL," + util.EndOfLine +
 		typeColumnName + "			VARCHAR(255)	NOT NULL," + util.EndOfLine +
 		staffUserNameColumnName + "	VARCHAR(30)		NOT NULL," + util.EndOfLine +
 		"PRIMARY KEY(" + codeColumnName + ")," + util.EndOfLine +
