@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 
+	discountPoliciesTablesConst "backend/database_discount_policies_tables_util/database_discount_policies_tables_const"
 	DUTU "backend/database_users_table_util"
 	"backend/handler"
 	"backend/middleware"
@@ -13,8 +14,9 @@ import (
 )
 
 const (
-	userNamePath         = ":" + DUTU.UserNameColumnName
-	discountPoliciesPath = "discount-policies"
+	userNamePath           = ":" + DUTU.UserNameColumnName
+	discountPoliciesPath   = "discount-policies"
+	discountPolicyCodePath = ":" + discountPoliciesTablesConst.DiscountPoliciesCodeColumnName
 )
 
 /*
@@ -61,6 +63,10 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 		auth.GET(
 			util.RightSlash+userNamePath+util.RightSlash+discountPoliciesPath,
 			handler.GetStaffDiscountPoliciesHandler(databasePtr))
+
+		auth.DELETE(
+			util.RightSlash+userNamePath+util.RightSlash+discountPoliciesPath+util.RightSlash+discountPolicyCodePath,
+			handler.DeleteStaffDiscountPolicyHandler(databasePtr))
 	}
 }
 
