@@ -12,16 +12,16 @@ import (
 GetOrderItemsInCartHandler is a function for gin to handle GetOrderItemsInCart api
 */
 func GetOrderItemsInCartHandler(c *gin.Context) {
-	var addToCart AddToCart
+	var orderItem OrderItem
 
-	cartID, err := strconv.Atoi(c.Query("cart_id"))
+	cartID, err := strconv.Atoi(c.Query(database.OrderItemCartIdColumnName))
 	if err != nil {
 		c.Status(400)
 	} else {
-		addToCart.CartID = cartID
+		orderItem.CartID = cartID
 	}
 
-	code, items := database.GetOrderItemsInCart(&addToCart, database.SqlDb)
+	code, items := database.GetOrderItemsInCart(&orderItem, database.SqlDb)
 
 	c.JSON(code, gin.H{
 		"items": items,
