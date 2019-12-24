@@ -1,17 +1,17 @@
 package database
 
 import (
-	. "backend/model"
 	"database/sql"
+	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
 // Add order product to cart
-func GetCartIdWithUsername(user *User, databasePtr *sql.DB) (code int, cartId int) {
+func GetCartIdWithUsername(userName string, databasePtr *sql.DB) (code int, cartId int) {
 	row, err := databasePtr.Query("SELECT "+CartIdColumnName+"\n"+
 		"	FROM	"+CustomerOwnCartTableName+"\n"+
-		"	WHERE	"+CustomerOwnCartCustomerUserNameColumnName+"="+"?;", user.UserName)
+		"	WHERE	"+CustomerOwnCartCustomerUserNameColumnName+" = ?;", userName)
 
 	if err != nil {
 		code = 400
@@ -22,6 +22,8 @@ func GetCartIdWithUsername(user *User, databasePtr *sql.DB) (code int, cartId in
 
 	row.Next()
 	err = row.Scan(&cartId)
+	fmt.Println("username = ", userName)
+	fmt.Println("cart id = ", cartId)
 	if err != nil {
 		code = 403
 		return code, -1

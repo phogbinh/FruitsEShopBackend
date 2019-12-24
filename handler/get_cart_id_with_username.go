@@ -3,7 +3,7 @@ package handler
 import (
 	"backend/database"
 	DUTU "backend/database_users_table_util"
-	. "backend/model"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,12 +12,11 @@ import (
 GetCartIdWithUserNameHandler is a function for gin to handle GetCartIdWithUserName api
 */
 func GetCartIdWithUserName(c *gin.Context) {
-	var user User
+	userName := c.Query(DUTU.UserNameColumnName)
 
-	userName := c.Param(DUTU.UserNameColumnName)
-	user.UserName = userName
+	fmt.Println("user name = ", userName)
 
-	code, cartId := database.GetCartIdWithUsername(&user, database.SqlDb)
+	code, cartId := database.GetCartIdWithUsername(userName, database.SqlDb)
 
 	c.JSON(code, gin.H{
 		"CartId": cartId,
