@@ -17,6 +17,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const createTableErrorMessage = "Error creating database table: %q."
+
 func getDatabaseHandler() *sql.DB {
 	databasePtr, openDatabaseError := sql.Open("mysql", os.Getenv("DATABASE_URL"))
 	if openDatabaseError != nil {
@@ -30,7 +32,7 @@ func run() {
 	defer databasePtr.Close()
 	createDatabaseUsersTableError := DUTU.CreateTableIfNotExists(databasePtr)
 	if createDatabaseUsersTableError != nil {
-		log.Fatalf("Error creating database table: %q.", createDatabaseUsersTableError)
+		log.Fatalf(createTableErrorMessage, createDatabaseUsersTableError)
 	}
 	initializeError := discountPolicyTypesTable.Initialize(databasePtr)
 	if initializeError != nil {
@@ -39,19 +41,19 @@ func run() {
 	var createTableError error
 	createTableError = discountPoliciesTable.CreateTableIfNotExists(databasePtr)
 	if createTableError != nil {
-		log.Fatalf("Error creating database table: %q.", createTableError)
+		log.Fatalf(createTableErrorMessage, createTableError)
 	}
 	createTableError = shippingDiscountPoliciesTable.CreateTableIfNotExists(databasePtr)
 	if createTableError != nil {
-		log.Fatalf("Error creating database table: %q.", createTableError)
+		log.Fatalf(createTableErrorMessage, createTableError)
 	}
 	createTableError = seasoningsDiscountPoliciesTable.CreateTableIfNotExists(databasePtr)
 	if createTableError != nil {
-		log.Fatalf("Error creating database table: %q.", createTableError)
+		log.Fatalf(createTableErrorMessage, createTableError)
 	}
 	createTableError = specialEventDiscountPoliciesTable.CreateTableIfNotExists(databasePtr)
 	if createTableError != nil {
-		log.Fatalf("Error creating database table: %q.", createTableError)
+		log.Fatalf(createTableErrorMessage, createTableError)
 	}
 	db.SqlDb = databasePtr
 	db.CreateDatabases(db.SqlDb)
