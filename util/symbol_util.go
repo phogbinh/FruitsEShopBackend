@@ -7,4 +7,5 @@ const (
 	ClosingParenthesis = ")"
 	RightSlash         = "/"
 	ColonSpace         = ": "
+	EndOfLine          = "\n"
 )
