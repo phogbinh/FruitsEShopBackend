@@ -33,6 +33,7 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 	router.PUT("/modifyorderitemquantity", handler.ModifyOrderItemQuantityHandler)
 	router.GET("/getcartidwithusername", handler.GetCartIdWithUserName)
 
+	router.GET("/buy", handler.BuyHandler)
 	initializeRouterManageUserHandlers(router, databasePtr)
 
 	router.POST("/login", handler.LoginHandler(databasePtr))
