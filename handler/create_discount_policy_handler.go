@@ -15,8 +15,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-// CreateDiscountPolicyHandler creates a discount policy and responds the discount policy's information.
-func CreateDiscountPolicyHandler(databasePtr *sql.DB) gin.HandlerFunc {
+// CreateStaffDiscountPolicyHandler creates a discount policy for the given staff and responds the discount policy's information.
+func CreateStaffDiscountPolicyHandler(databasePtr *sql.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		discountPolicy, getStatus := getDiscountPolicyFromRequest(context)
 		if !util.IsStatusOK(getStatus) {
