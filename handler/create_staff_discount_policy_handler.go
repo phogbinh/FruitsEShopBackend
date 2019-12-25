@@ -23,6 +23,10 @@ func CreateStaffDiscountPolicyHandler(databasePtr *sql.DB) gin.HandlerFunc {
 			context.JSON(getStatus.HttpStatusCode, gin.H{util.JsonError: getStatus.ErrorMessage})
 			return
 		}
+		if !discountPolicyTypesTable.IsValidDiscountPolicyType(discountPolicy.Type) {
+			context.JSON(http.StatusBadRequest, gin.H{util.JsonError: "The given discount policy type is invalid."})
+			return
+		}
 		insertStatus := discountPoliciesTable.InsertDiscountPolicyToSuperclassAndSubclassTables(discountPolicy, databasePtr)
 		if !util.IsStatusOK(insertStatus) {
 			context.JSON(insertStatus.HttpStatusCode, gin.H{util.JsonError: insertStatus.ErrorMessage})

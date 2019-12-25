@@ -65,3 +65,8 @@ func insertInitialTypesIfNotExist(databasePtr *sql.DB) error {
 func insertTypeIfNotExists(typeName string, databasePtr *sql.DB) Status {
 	return database_util.PrepareThenExecuteQuery(databasePtr, queryInsertTypeIfNotExists, typeName, typeName)
 }
+
+// IsValidDiscountPolicyType returns true if the given discount policy type is valid.
+func IsValidDiscountPolicyType(discountPolicyType string) bool {
+	return discountPolicyType == TypeShipping || discountPolicyType == TypeSeasonings || discountPolicyType == TypeSpecialEvent
+}
