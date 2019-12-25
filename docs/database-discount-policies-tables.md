@@ -62,7 +62,7 @@ A JSON object containing all discount policies' information of the given staff f
         "seasoningsEndDate": "",
         "specialEventRate": "0.05",
         "specialEventBeginDate": "2018-01-01",
-        "specialEventEndDate": "2021-01-31",
+        "specialEventEndDate": "2021-01-31"
     },
     {
         "code": "SEA000001",
@@ -76,7 +76,7 @@ A JSON object containing all discount policies' information of the given staff f
         "seasoningsEndDate": "2020-01-01",
         "specialEventRate": "",
         "specialEventBeginDate": "",
-        "specialEventEndDate": "",
+        "specialEventEndDate": ""
     },
     {
         "code": "SHI000001",
