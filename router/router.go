@@ -31,7 +31,7 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 	router.DELETE("/deleteorderitemincart", handler.DeleteOrderItemToCartHandler)
 	router.GET("/getorderitemsincart", handler.GetOrderItemsInCartHandler)
 	router.PUT("/modifyorderitemquantity", handler.ModifyOrderItemQuantityHandler)
-	router.GET("/getcartidwithusername", handler.GetCartIdWithUserName)
+	router.GET("/getcartidwithusername", handler.GetCartIdWithUserNameHandler)
 
 	router.GET("/buy", handler.BuyHandler)
 	router.GET("/getorder", handler.GetOrderHandler)

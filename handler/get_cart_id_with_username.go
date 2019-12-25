@@ -11,7 +11,7 @@ import (
 /*
 GetCartIdWithUserNameHandler is a function for gin to handle GetCartIdWithUserName api
 */
-func GetCartIdWithUserName(c *gin.Context) {
+func GetCartIdWithUserNameHandler(c *gin.Context) {
 	userName := c.Query(DUTU.UserNameColumnName)
 
 	fmt.Println("user name = ", userName)

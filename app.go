@@ -21,14 +21,13 @@ func getDatabaseHandler() *sql.DB {
 }
 
 func run() {
-	// databasePtr := getDatabaseHandler()
-	// defer databasePtr.Close()
-	db.Init()
-	databasePtr := db.SqlDb
+	databasePtr := getDatabaseHandler()
+	defer databasePtr.Close()
 	createDatabaseUsersTableError := DUTU.CreateTableIfNotExists(databasePtr)
 	if createDatabaseUsersTableError != nil {
 		log.Fatalf("Error creating database table: %q.", createDatabaseUsersTableError)
 	}
+	db.SqlDb = databasePtr
 	db.CreateDatabases(db.SqlDb)
 
 	var httpServer *gin.Engine
@@ -37,7 +36,7 @@ func run() {
 
 	router.Register(httpServer, databasePtr)
 
-	serverAddr := "127.0.0.1:8080"
+	serverAddr := "0.0.0.0:8080"
 
 	// listen and serve on 0.0.0.0:8080
 	httpServer.Run(serverAddr)

@@ -30,9 +30,7 @@ func GetOrder(user User, databasePtr *sql.DB) (code int, jsonData string) {
 	}
 
 	tableData := make([]map[string]interface{}, 0)
-	// TODO: need to transfer to correct data
-	appendRowsDataIntoTableData(rows, tableData, columns)
-
+	appendRowsDataIntoTableData(rows, &tableData, columns)
 	json, err := json.Marshal(tableData)
 
 	if err != nil {
