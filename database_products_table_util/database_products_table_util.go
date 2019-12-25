@@ -9,7 +9,7 @@ import (
 
 const (
 	TableName                                = "product"
-	IdColumnName                             = "p_id"
+	IdColumnName                             = "ProductId"
 	SpecialEventDiscountPolicyCodeColumnName = "SpecialEventDiscountPolicyCode"
 )
 
