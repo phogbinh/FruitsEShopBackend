@@ -3,7 +3,6 @@ package database_discount_policies_table_util
 import (
 	"database/sql"
 	"errors"
-	"strconv"
 
 	discountPoliciesTablesConst "backend/database_discount_policies_tables_util/database_discount_policies_tables_const"
 	discountPolicyTypesTable "backend/database_discount_policies_tables_util/database_discount_policy_types_table_util"
@@ -131,39 +130,58 @@ func GetDiscountPolicyByCode(code string, databasePtr *sql.DB) (DiscountPolicy, 
 }
 
 func getDiscountPolicyByKeyColumn(queryGetDiscountPolicyByKeyColumn string, keyColumnValue string, databasePtr *sql.DB) (DiscountPolicy, Status) {
-	var dumpDiscountPolicy DiscountPolicy
-	discountPolicies, getStatus := getDiscountPoliciesByKeyColumn(queryGetDiscountPolicyByKeyColumn, keyColumnValue, databasePtr)
+	object, getStatus := database_util.GetObjectByKeyColumn(queryGetDiscountPolicyByKeyColumn, keyColumnValue, databasePtr)
 	if !util.IsStatusOK(getStatus) {
-		return dumpDiscountPolicy, getStatus
+		return *new(DiscountPolicy), getStatus
 	}
-	if len(discountPolicies) != 1 {
-		return dumpDiscountPolicy, util.StatusInternalServerError(getDiscountPolicyByKeyColumn, errors.New("Query 1 discount policy but got "+strconv.Itoa(len(discountPolicies))+" discount policy(s) instead."))
-	}
-	return discountPolicies[0], util.StatusOK()
+	return getDiscountPolicy(object)
 }
 
 func getDiscountPoliciesByKeyColumn(queryGetDiscountPoliciesByKeyColumn string, keyColumnValue string, databasePtr *sql.DB) ([]DiscountPolicy, Status) {
-	queryRowsPtr, queryError := databasePtr.Query(queryGetDiscountPoliciesByKeyColumn, keyColumnValue)
-	if queryError != nil {
-		return nil, util.StatusInternalServerError(getDiscountPoliciesByKeyColumn, queryError)
-	}
-	defer queryRowsPtr.Close()
-	discountPolicies, getStatus := getAllDiscountPolicies(queryRowsPtr)
+	objects, getStatus := database_util.GetObjectsByKeyColumn(queryGetDiscountPoliciesByKeyColumn, keyColumnValue, databasePtr)
 	if !util.IsStatusOK(getStatus) {
 		return nil, getStatus
 	}
-	return discountPolicies, util.StatusOK()
+	return getDiscountPolicies(objects)
 }
 
 func getAllDiscountPolicies(databaseDiscountPoliciesTableRowsPtr *sql.Rows) ([]DiscountPolicy, Status) {
+	objects, getStatus := database_util.GetAllObjects(databaseDiscountPoliciesTableRowsPtr)
+	if !util.IsStatusOK(getStatus) {
+		return nil, getStatus
+	}
+	return getDiscountPolicies(objects)
+}
+
+func getDiscountPolicies(objects [][]interface{}) ([]DiscountPolicy, Status) {
 	var discountPolicies []DiscountPolicy
-	for databaseDiscountPoliciesTableRowsPtr.Next() {
-		var discountPolicy DiscountPolicy
-		scanError := databaseDiscountPoliciesTableRowsPtr.Scan(&discountPolicy.Code, &discountPolicy.Name, &discountPolicy.Description, &discountPolicy.Type, &discountPolicy.StaffUserName, &discountPolicy.ShippingMinimumOrderPrice, &discountPolicy.SeasoningsRate, &discountPolicy.SeasoningsBeginDate, &discountPolicy.SeasoningsEndDate, &discountPolicy.SpecialEventRate, &discountPolicy.SpecialEventBeginDate, &discountPolicy.SpecialEventEndDate)
-		if scanError != nil {
-			return nil, util.StatusInternalServerError(getAllDiscountPolicies, scanError)
+	for _, object := range objects {
+		discountPolicy, getStatus := getDiscountPolicy(object)
+		if !util.IsStatusOK(getStatus) {
+			return nil, getStatus
 		}
 		discountPolicies = append(discountPolicies, discountPolicy)
 	}
 	return discountPolicies, util.StatusOK()
+}
+
+func getDiscountPolicy(object []interface{}) (DiscountPolicy, Status) {
+	rawBytesList, getStatus := database_util.GetRawBytesList(object)
+	if !util.IsStatusOK(getStatus) {
+		return *new(DiscountPolicy), getStatus
+	}
+	var discountPolicy DiscountPolicy
+	discountPolicy.Code = string(rawBytesList[0])
+	discountPolicy.Name = string(rawBytesList[1])
+	discountPolicy.Description = string(rawBytesList[2])
+	discountPolicy.Type = string(rawBytesList[3])
+	discountPolicy.StaffUserName = string(rawBytesList[4])
+	discountPolicy.ShippingMinimumOrderPrice = string(rawBytesList[5])
+	discountPolicy.SeasoningsRate = string(rawBytesList[6])
+	discountPolicy.SeasoningsBeginDate = string(rawBytesList[7])
+	discountPolicy.SeasoningsEndDate = string(rawBytesList[8])
+	discountPolicy.SpecialEventRate = string(rawBytesList[9])
+	discountPolicy.SpecialEventBeginDate = string(rawBytesList[10])
+	discountPolicy.SpecialEventEndDate = string(rawBytesList[11])
+	return discountPolicy, util.StatusOK()
 }

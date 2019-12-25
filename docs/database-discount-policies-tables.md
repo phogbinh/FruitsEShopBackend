@@ -22,41 +22,13 @@ A JSON object containing the newly created discount policy's information fetched
     "description": "Description",
     "type": "Shipping",
     "staffUserName": "bill",
-    "shippingMinimumOrderPrice":
-    {
-        "String": "500.00",
-        "Valid": true
-    },
-    "seasoningsRate":
-    {
-        "String": "",
-        "Valid": false
-    },
-    "seasoningsBeginDate":
-    {
-        "String": "",
-        "Valid": false
-    },
-    "seasoningsEndDate":
-    {
-        "String": "",
-        "Valid": false
-    },
-    "specialEventRate":
-    {
-        "String": "",
-        "Valid": false
-    },
-    "specialEventBeginDate":
-    {
-        "String": "",
-        "Valid": false
-    },
-    "specialEventEndDate":
-    {
-        "String": "",
-        "Valid": false
-    }
+    "shippingMinimumOrderPrice": "500.00",
+    "seasoningsRate": "",
+    "seasoningsBeginDate": "",
+    "seasoningsEndDate": "",
+    "specialEventRate": "",
+    "specialEventBeginDate": "",
+    "specialEventEndDate": ""
 }
 ```
 #### Error response format
@@ -84,41 +56,13 @@ A JSON object containing all discount policies' information of the given staff f
         "description": "Description",
         "type": "Special Event",
         "staffUserName": "bill",
-        "shippingMinimumOrderPrice":
-        {
-            "String": "",
-            "Valid": false
-        },
-        "seasoningsRate":
-        {
-            "String": "",
-            "Valid": false
-        },
-        "seasoningsBeginDate":
-        {
-            "String": "",
-            "Valid": false
-        },
-        "seasoningsEndDate":
-        {
-            "String": "",
-            "Valid": false
-        },
-        "specialEventRate":
-        {
-            "String": "0.05",
-            "Valid": true
-        },
-        "specialEventBeginDate":
-        {
-            "String": "2018-01-01",
-            "Valid": true
-        },
-        "specialEventEndDate":
-        {
-            "String": "2021-01-31",
-            "Valid": true
-        }
+        "shippingMinimumOrderPrice": "",
+        "seasoningsRate": "",
+        "seasoningsBeginDate": "",
+        "seasoningsEndDate": "",
+        "specialEventRate": "0.05",
+        "specialEventBeginDate": "2018-01-01",
+        "specialEventEndDate": "2021-01-31",
     },
     {
         "code": "SEA000001",
@@ -126,41 +70,13 @@ A JSON object containing all discount policies' information of the given staff f
         "description": "Description",
         "type": "Seasonings",
         "staffUserName": "bill",
-        "shippingMinimumOrderPrice":
-        {
-            "String": "",
-            "Valid": false
-        },
-        "seasoningsRate":
-        {
-            "String": "0.05",
-            "Valid": true
-        },
-        "seasoningsBeginDate":
-        {
-            "String": "2019-01-01",
-            "Valid": true
-        },
-        "seasoningsEndDate":
-        {
-            "String": "2020-01-01",
-            "Valid": true
-        },
-        "specialEventRate":
-        {
-            "String": "",
-            "Valid": false
-        },
-        "specialEventBeginDate":
-        {
-            "String": "",
-            "Valid": false
-        },
-        "specialEventEndDate":
-        {
-            "String": "",
-            "Valid": false
-        }
+        "shippingMinimumOrderPrice": "",
+        "seasoningsRate": "0.05",
+        "seasoningsBeginDate": "2019-01-01",
+        "seasoningsEndDate": "2020-01-01",
+        "specialEventRate": "",
+        "specialEventBeginDate": "",
+        "specialEventEndDate": "",
     },
     {
         "code": "SHI000001",
@@ -168,41 +84,13 @@ A JSON object containing all discount policies' information of the given staff f
         "description": "Description",
         "type": "Shipping",
         "staffUserName": "bill",
-        "shippingMinimumOrderPrice":
-        {
-            "String": "500.00",
-            "Valid": true
-        },
-        "seasoningsRate":
-        {
-            "String": "",
-            "Valid": false
-        },
-        "seasoningsBeginDate":
-        {
-            "String": "",
-            "Valid": false
-        },
-        "seasoningsEndDate":
-        {
-            "String": "",
-            "Valid": false
-        },
-        "specialEventRate":
-        {
-            "String": "",
-            "Valid": false
-        },
-        "specialEventBeginDate":
-        {
-            "String": "",
-            "Valid": false
-        },
-        "specialEventEndDate":
-        {
-            "String": "",
-            "Valid": false
-        }
+        "shippingMinimumOrderPrice": "500.00",
+        "seasoningsRate": "",
+        "seasoningsBeginDate": "",
+        "seasoningsEndDate": "",
+        "specialEventRate": "",
+        "specialEventBeginDate": "",
+        "specialEventEndDate": ""
     }
 ]
 ```
