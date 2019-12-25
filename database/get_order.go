@@ -9,10 +9,10 @@ import (
 
 /// GetOrder is a function which handle all order
 func GetOrder(user User, databasePtr *sql.DB) (code int, jsonData string) {
-	rows, getError := databasePtr.Query("SELECT " + ProductNameColumnName + ", " + ProductPriceColumnName + ", " + TradeDateTimeColumnName +
-		" From " + "( " + "SELECT " + ProductIdColumnName + ", " + CustomerOwnCartCustomerUserNameColumnName + ", " + TradeDateTimeColumnName +
-		" FROM " + CustomerOwnCartTableName + " as c join " + TradeTableName + " as t" +
-		"	WHERE " + "c.CartId = t.CartId and c.CustomerUserName = \"jamfly\") as temp join " + ProductTableName + " where temp.ProductId = product.ProductId;")
+	rows, getError := databasePtr.Query("SELECT "+ProductNameColumnName+", "+ProductPriceColumnName+", "+TradeDateTimeColumnName+
+		" From "+"( "+"SELECT "+ProductIdColumnName+", "+CustomerOwnCartCustomerUserNameColumnName+", "+TradeDateTimeColumnName+
+		" FROM "+CustomerOwnCartTableName+" as c join "+TradeTableName+" as t"+
+		"	WHERE "+"c.CartId = t.CartId and c.CustomerUserName = ?) as temp join "+ProductTableName+" where temp.ProductId = product.ProductId;", user.UserName)
 
 	if getError != nil {
 		log.Panicln(getError)
