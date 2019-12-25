@@ -72,19 +72,6 @@ func GetAllUsers(databasePtr *sql.DB) ([]User, Status) {
 	return getAllUsers(queryRowsPtr)
 }
 
-func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
-	var users []User
-	for databaseUsersTableRowsPtr.Next() {
-		var user User
-		scanError := databaseUsersTableRowsPtr.Scan(&user.Mail, &user.Password, &user.UserName, &user.Nickname, &user.Fname, &user.Lname, &user.Phone, &user.Location, &user.Money, &user.Introduction, &user.StaffFlag)
-		if scanError != nil {
-			return nil, util.StatusInternalServerError(getAllUsers, scanError)
-		}
-		users = append(users, user)
-	}
-	return users, util.StatusOK()
-}
-
 // UpdateUserPassword updates the given user's password to the database `users` table.
 func UpdateUserPassword(userName string, userNewPassword string, databasePtr *sql.DB) Status {
 	return database_util.PrepareThenExecuteQuery(databasePtr, queryUpdateUserPassword, userNewPassword, userName)
@@ -140,6 +127,19 @@ func getUsersByKeyColumn(queryGetUserByKeyColumn string, keyColumnValue string, 
 	users, getStatus := getAllUsers(queryRowsPtr)
 	if !util.IsStatusOK(getStatus) {
 		return nil, getStatus
+	}
+	return users, util.StatusOK()
+}
+
+func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
+	var users []User
+	for databaseUsersTableRowsPtr.Next() {
+		var user User
+		scanError := databaseUsersTableRowsPtr.Scan(&user.Mail, &user.Password, &user.UserName, &user.Nickname, &user.Fname, &user.Lname, &user.Phone, &user.Location, &user.Money, &user.Introduction, &user.StaffFlag)
+		if scanError != nil {
+			return nil, util.StatusInternalServerError(getAllUsers, scanError)
+		}
+		users = append(users, user)
 	}
 	return users, util.StatusOK()
 }

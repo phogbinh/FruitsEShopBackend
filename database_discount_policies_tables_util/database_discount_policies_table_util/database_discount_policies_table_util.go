@@ -106,6 +106,25 @@ func insertDiscountPolicyToSubclassTable(discountPolicy DiscountPolicy, database
 	}
 }
 
+// DeleteDiscountPolicy deletes the given discount policy from the database table `discount_policies` and cascadingly from related database tables.
+func DeleteDiscountPolicy(discountPolicyCode string, databasePtr *sql.DB) Status {
+	return database_util.PrepareThenExecuteQuery(databasePtr, queryDeleteDiscountPolicy, discountPolicyCode)
+}
+
+// IsExistingDiscountPolicy determines whether the given discount policy is in the database table `discount_policies`.
+func IsExistingDiscountPolicy(discountPolicyCode string, databasePtr *sql.DB) (bool, Status) {
+	discountPolicies, getStatus := getDiscountPoliciesByKeyColumn(queryGetDiscountPolicyByCode, discountPolicyCode, databasePtr)
+	if !util.IsStatusOK(getStatus) {
+		return false, getStatus
+	}
+	return len(discountPolicies) > 0, util.StatusOK()
+}
+
+// GetStaffDiscountPolicies returns all discount policies' information by the given staff's user name.
+func GetStaffDiscountPolicies(staffUserName string, databasePtr *sql.DB) ([]DiscountPolicy, Status) {
+	return getDiscountPoliciesByKeyColumn(queryGetStaffDiscountPolicies, staffUserName, databasePtr)
+}
+
 // GetDiscountPolicyByCode returns a discount policy's information by the given discount policy code.
 func GetDiscountPolicyByCode(code string, databasePtr *sql.DB) (DiscountPolicy, Status) {
 	return getDiscountPolicyByKeyColumn(queryGetDiscountPolicyByCode, code, databasePtr)
@@ -147,23 +166,4 @@ func getAllDiscountPolicies(databaseDiscountPoliciesTableRowsPtr *sql.Rows) ([]D
 		discountPolicies = append(discountPolicies, discountPolicy)
 	}
 	return discountPolicies, util.StatusOK()
-}
-
-// GetStaffDiscountPolicies returns all discount policies' information by the given staff's user name.
-func GetStaffDiscountPolicies(staffUserName string, databasePtr *sql.DB) ([]DiscountPolicy, Status) {
-	return getDiscountPoliciesByKeyColumn(queryGetStaffDiscountPolicies, staffUserName, databasePtr)
-}
-
-// DeleteDiscountPolicy deletes the given discount policy from the database table `discount_policies` and cascadingly from related database tables.
-func DeleteDiscountPolicy(discountPolicyCode string, databasePtr *sql.DB) Status {
-	return database_util.PrepareThenExecuteQuery(databasePtr, queryDeleteDiscountPolicy, discountPolicyCode)
-}
-
-// IsExistingDiscountPolicy determines whether the given discount policy is in the database table `discount_policies`.
-func IsExistingDiscountPolicy(discountPolicyCode string, databasePtr *sql.DB) (bool, Status) {
-	discountPolicies, getStatus := getDiscountPoliciesByKeyColumn(queryGetDiscountPolicyByCode, discountPolicyCode, databasePtr)
-	if !util.IsStatusOK(getStatus) {
-		return false, getStatus
-	}
-	return len(discountPolicies) > 0, util.StatusOK()
 }
