@@ -4,6 +4,8 @@ import (
 	"backend/database_users_table_util"
 	"database/sql"
 
+	discountPoliciesTablesConst "backend/database_discount_policies_tables_util/database_discount_policies_tables_const"
+	productsTable "backend/database_products_table_util"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -51,8 +53,11 @@ func createDatabaseProductTableIfNotExists(databasePtr *sql.DB) {
 		ProductInventoryColumnName + "		INTEGER			NOT NULL,\n" +
 		ProductSoldQuantityColumnName + "	INTEGER			NOT NULL,\n" +
 		ProductOnSaleDataColumnName + "		DATE			NOT NULL,\n" +
+		productsTable.SpecialEventDiscountPolicyCodeColumnName + "	CHAR(9),\n" +
 		"PRIMARY KEY (" + ProductIdColumnName + "),\n" +
 		"FOREIGN KEY (" + ProductStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + " (" + database_users_table_util.UserNameColumnName + "),\n" +
+		"FOREIGN KEY(" + productsTable.SpecialEventDiscountPolicyCodeColumnName + ") REFERENCES " + discountPoliciesTablesConst.SpecialEventDiscountPoliciesTableName + "(" + discountPoliciesTablesConst.SpecialEventDiscountPoliciesCodeColumnName + ")\n" +
+		"	ON DELETE SET NULL,\n" +
 		"CONSTRAINT p_id_non_negative			CHECK (" + ProductIdColumnName + " >= 0),\n" +
 		"CONSTRAINT price_non_negative 			CHECK (" + ProductPriceColumnName + " >= 0),\n" +
 		"CONSTRAINT inventory_non_negative 		CHECK (" + ProductInventoryColumnName + " >= 0),\n" +

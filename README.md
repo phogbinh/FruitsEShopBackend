@@ -20,6 +20,7 @@ before start contribute this project please make sure that you are familiar with
 * [naming](https://golang.org/doc/effective_go.html#names): better to understand the naming convention 
 * [Database `users` table](https://github.com/NTUT-database/backend/blob/master/docs/database-users-table.md): The documentation for calling the database `users` table API using cURL (Contributed by [phogbinh](https://github.com/phogbinh)).
 * [Database `order_item` table](https://github.com/NTUT-database/backend/blob/master/docs/database-orderItem-table.md): The documentation for calling the database `order_item` table
+* [Database discount policies tables](https://github.com/NTUT-database/backend/blob/master/docs/database-discount-policies-tables.md): The documentation for calling the database discount policies tables API using cURL (Contributed by [phogbinh](https://github.com/phogbinh)).
 
 ## Contributors
 

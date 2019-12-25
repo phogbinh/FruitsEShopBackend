@@ -2,8 +2,6 @@ package database_users_table_util
 
 import (
 	"database/sql"
-	"errors"
-	"strconv"
 
 	"backend/database_util"
 	. "backend/model"
@@ -72,19 +70,6 @@ func GetAllUsers(databasePtr *sql.DB) ([]User, Status) {
 	return getAllUsers(queryRowsPtr)
 }
 
-func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
-	var users []User
-	for databaseUsersTableRowsPtr.Next() {
-		var user User
-		scanError := databaseUsersTableRowsPtr.Scan(&user.Mail, &user.Password, &user.UserName, &user.Nickname, &user.Fname, &user.Lname, &user.Phone, &user.Location, &user.Money, &user.Introduction, &user.StaffFlag)
-		if scanError != nil {
-			return nil, util.StatusInternalServerError(getAllUsers, scanError)
-		}
-		users = append(users, user)
-	}
-	return users, util.StatusOK()
-}
-
 // UpdateUserPassword updates the given user's password to the database `users` table.
 func UpdateUserPassword(userName string, userNewPassword string, databasePtr *sql.DB) Status {
 	return database_util.PrepareThenExecuteQuery(databasePtr, queryUpdateUserPassword, userNewPassword, userName)
@@ -120,26 +105,57 @@ func GetUserByUserName(userName string, databasePtr *sql.DB) (User, Status) {
 }
 
 func getUserByKeyColumn(queryGetUserByKeyColumn string, keyColumnValue string, databasePtr *sql.DB) (User, Status) {
-	var dumpUser User
-	users, getStatus := getUsersByKeyColumn(queryGetUserByKeyColumn, keyColumnValue, databasePtr)
+	object, getStatus := database_util.GetObjectByKeyColumn(queryGetUserByKeyColumn, keyColumnValue, databasePtr)
 	if !util.IsStatusOK(getStatus) {
-		return dumpUser, getStatus
+		return *new(User), getStatus
 	}
-	if len(users) != 1 {
-		return dumpUser, util.StatusInternalServerError(getUserByKeyColumn, errors.New("Query 1 user but got "+strconv.Itoa(len(users))+" user(s) instead."))
-	}
-	return users[0], util.StatusOK()
+	return getUser(object)
 }
 
 func getUsersByKeyColumn(queryGetUserByKeyColumn string, keyColumnValue string, databasePtr *sql.DB) ([]User, Status) {
-	queryRowsPtr, queryError := databasePtr.Query(queryGetUserByKeyColumn, keyColumnValue)
-	if queryError != nil {
-		return nil, util.StatusInternalServerError(getUsersByKeyColumn, queryError)
-	}
-	defer queryRowsPtr.Close()
-	users, getStatus := getAllUsers(queryRowsPtr)
+	objects, getStatus := database_util.GetObjectsByKeyColumn(queryGetUserByKeyColumn, keyColumnValue, databasePtr)
 	if !util.IsStatusOK(getStatus) {
 		return nil, getStatus
 	}
+	return getUsers(objects)
+}
+
+func getAllUsers(databaseUsersTableRowsPtr *sql.Rows) ([]User, Status) {
+	objects, getStatus := database_util.GetAllObjects(databaseUsersTableRowsPtr)
+	if !util.IsStatusOK(getStatus) {
+		return nil, getStatus
+	}
+	return getUsers(objects)
+}
+
+func getUsers(objects [][]interface{}) ([]User, Status) {
+	var users []User
+	for _, object := range objects {
+		user, getStatus := getUser(object)
+		if !util.IsStatusOK(getStatus) {
+			return nil, getStatus
+		}
+		users = append(users, user)
+	}
 	return users, util.StatusOK()
+}
+
+func getUser(object []interface{}) (User, Status) {
+	rawBytesList, getStatus := database_util.GetRawBytesList(object)
+	if !util.IsStatusOK(getStatus) {
+		return *new(User), getStatus
+	}
+	var user User
+	user.Mail = string(rawBytesList[0])
+	user.Password = string(rawBytesList[1])
+	user.UserName = string(rawBytesList[2])
+	user.Nickname = string(rawBytesList[3])
+	user.Fname = string(rawBytesList[4])
+	user.Lname = string(rawBytesList[5])
+	user.Phone = string(rawBytesList[6])
+	user.Location = string(rawBytesList[7])
+	user.Money = string(rawBytesList[8])
+	user.Introduction = string(rawBytesList[9])
+	user.StaffFlag = string(rawBytesList[10])
+	return user, util.StatusOK()
 }

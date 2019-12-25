@@ -1,5 +1,7 @@
 package database
 
+import "backend/database_products_table_util"
+
 const (
 	AdminTableName          = "admin"
 	AdminUserNameColumnName = "AdminUserName"
@@ -10,7 +12,7 @@ const (
 
 const (
 	ProductTableName               = "product"
-	ProductIdColumnName            = "ProductId"
+	ProductIdColumnName            = database_products_table_util.IdColumnName
 	ProductStaffUserNameColumnName = "StaffUserName"
 	ProductDescriptionColumnName   = "Description"
 	ProductNameColumnName          = "Pname"
