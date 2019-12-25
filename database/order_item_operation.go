@@ -37,8 +37,7 @@ func DeleteOrderItemInCart(orderItem *OrderItem, databasePtr *sql.DB) (code int)
 
 // Get all order items in cart
 func GetOrderItemsInCart(orderItem *OrderItem, databasePtr *sql.DB) (code int, jsonData string) {
-	rows, err := databasePtr.Query("SELECT	"+ProductNameColumnName+", "+ProductCategoryColumnName+", "+
-		ProductDescriptionColumnName+", "+ProductSourceColumnName+", "+ProductPriceColumnName+", "+ProductInventoryColumnName+"\n"+
+	rows, err := databasePtr.Query("SELECT	"+ProductNameColumnName+", "+ProductPriceColumnName+", "+OrderItemQuantity+"\n"+
 		"	FROM	"+ProductTableName+", "+OrderItemTableName+"\n"+
 		"	WHERE	"+OrderItemCartIdColumnName+" = ?\n"+
 		"	AND		"+OrderItemTableName+"."+OrderItemProductIdColumnName+" = "+ProductTableName+"."+ProductIdColumnName+";", orderItem.CartID)
@@ -60,7 +59,7 @@ func GetOrderItemsInCart(orderItem *OrderItem, databasePtr *sql.DB) (code int, j
 	}
 
 	tableData := make([]map[string]interface{}, 0)
-	appendRowsDataIntoTableData(rows, tableData, columns)
+	appendRowsDataIntoTableData(rows, &tableData, columns)
 	json, err := json.Marshal(tableData)
 
 	if err != nil {
@@ -73,7 +72,7 @@ func GetOrderItemsInCart(orderItem *OrderItem, databasePtr *sql.DB) (code int, j
 	return 200, jsonData
 }
 
-func appendRowsDataIntoTableData(rows *sql.Rows, tableData []map[string]interface{}, columns []string) {
+func appendRowsDataIntoTableData(rows *sql.Rows, tableData *[]map[string]interface{}, columns []string) {
 	count := len(columns)
 	values := make([]interface{}, count)
 	valuePtrs := make([]interface{}, count)
@@ -81,7 +80,7 @@ func appendRowsDataIntoTableData(rows *sql.Rows, tableData []map[string]interfac
 		putScanValuesIntoValues(valuePtrs, values, rows, count)
 		entry := make(map[string]interface{})
 		putColumnsDataIntoEntry(entry, columns, values)
-		tableData = append(tableData, entry)
+		*tableData = append(*tableData, entry)
 	}
 }
 
