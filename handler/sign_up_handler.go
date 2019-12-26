@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 
+	"backend/database"
 	DUTU "backend/database_users_table_util"
 	. "backend/model"
 	"backend/util"
@@ -23,6 +24,11 @@ func SignUpHandler(databasePtr *sql.DB) gin.HandlerFunc {
 		insertStatus := DUTU.InsertUser(user, databasePtr)
 		if !util.IsStatusOK(insertStatus) {
 			context.JSON(insertStatus.HttpStatusCode, gin.H{util.JsonError: insertStatus.ErrorMessage})
+			return
+		}
+		addStatus := database.AddCartToUser(user.UserName, databasePtr)
+		if !util.IsStatusOK(addStatus) {
+			context.JSON(addStatus.HttpStatusCode, gin.H{util.JsonError: addStatus.ErrorMessage})
 			return
 		}
 		getUser, getStatus := DUTU.GetUserByUserName(user.UserName, databasePtr)
