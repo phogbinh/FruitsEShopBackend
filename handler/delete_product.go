@@ -11,9 +11,15 @@ import (
 DeleteProductHandler is a function for gin to handle DeleteProduct api
 */
 func DeleteProductHandler(c *gin.Context) {
-	productID, _ := strconv.Atoi(c.Query("p_id"))
+	var pid int
+	productID, err := strconv.Atoi(c.Query(database.ProductIdColumnName))
+	if err != nil {
+		c.Status(400)
+	} else {
+		pid = productID
+	}
 
-	status := database.DeleteProduct(productID)
+	code := database.DeleteProduct(pid, database.SqlDb)
 
-	c.Status(status)
+	c.Status(code)
 }

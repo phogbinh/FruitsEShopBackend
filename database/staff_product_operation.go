@@ -3,17 +3,16 @@ package database
 import (
 	"database/sql"
 	"encoding/json"
-	"model/product.go"
+	. "backend/model"
 	"fmt"
 	"strconv"
-
 	_ "github.com/go-sql-driver/mysql"
 )
 
 var serialNumber int = 1000
 
 // get new product id (no repeat serial number)
-func GetNewProductId() (pid string){
+func GetNewProductID() (pid string){
 	pid = strconv.Itoa(serialNumber)
 	serialNumber++
 	return pid
@@ -21,22 +20,22 @@ func GetNewProductId() (pid string){
 
 // Staff add product to database 
 func AddProduct(info *Product, databasePtr *sql.DB) (code int) {
-	_, addError := databasePtr.Exec("INSERT	INTO product (p_id, s_username, description, p_name, category, source, price, inventory, sold_quantity, onsale_date)\n"+
-		"	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
-		 GetNewProductId(), info.StaffName, info.Description, info.Name, info.Category, info.Source, info.Price, info.Inventory, info.Quantity, info.SaleDate)
+	_, addError := databasePtr.Exec("INSERT	INTO "+ProductTableName+" ("+ProductIdColumnName+", "+ProductStaffUserNameColumnName+", "+ProductDescriptionColumnName+", "+ProductNameColumnName+", "+ProductCategoryColumnName+", "+ProductSourceColumnName+", "+ProductPriceColumnName+" , "+ProductInventoryColumnName+", "+ProductSoldQuantityColumnName+", "+ProductOnSaleDateColumnName+", "+productDiscountPolicyCodeColumnName+")\n" +
+	" 	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);" , GetNewProductID(), info.StaffName, info.Description, info.Name, info.Category, info.Source, info.Price, info.Inventory, info.Quantity, info.SaleDate, "000000000")
 
 	if addError != nil {
 		fmt.Println(addError)
-		statusCode = 417
+		code = 417
 	} else {
-		statusCode = 200
+		code = 200
 	}
-	return statusCode
+	return code
 }
 
-func DeleteProduct(productID int, databasePtr *sql.DB) (code int){
-	_, deleteError := databasePtr.Exec("DELETE FROM product\n"+
-		"WHERE 	p_id = ?;" , productID)
+// Delate Product
+func DeleteProduct(productID int, databasePtr *sql.DB) (statusCode int){
+	_, deleteError := databasePtr.Exec("DELETE FROM "+ProductTableName+"\n"+
+		"WHERE 	"+ProductIdColumnName+" = ?;" , productID)
 
 	if deleteError != nil {
 		fmt.Println(deleteError)
@@ -47,18 +46,18 @@ func DeleteProduct(productID int, databasePtr *sql.DB) (code int){
 	return statusCode
 }
 
-// Modify order item quantity
-func ModifyProduct(productID int, info *Product, databasePtr *sql.DB) (code int) {
-	_, modifyError := databasePtr.Exec("UPDATE product\n"+
-		"	SET	s_username = ?\n"+
-		"	,	description = ?\n"+
-		"	,	p_name = ?\n"+
-		"	,	category = ?\n"+
-		"	,	source = ?\n"+
-		"	,	price = ?\n"+
-		"	,	inventory = ?\n"+
-		"	,	quantity = ?\n"+
-		"WHERE	p_id = ?;" , info.StaffName, info.Description, info.Name, info.Category, info.Source, info.Price, info.Inventory, info.Quantity, productID)
+// Modify Product
+func ModifyProduct(productID int, info *Product, databasePtr *sql.DB) (statusCode int) {
+	_, modifyError := databasePtr.Exec("UPDATE "+ProductTableName+"\n"+
+		"	SET	"+ProductStaffUserNameColumnName+" = ?\n"+
+		"	,	"+ProductDescriptionColumnName+" = ?\n"+
+		"	,	"+ProductNameColumnName+" = ?\n"+
+		"	,	"+ProductCategoryColumnName+" = ?\n"+
+		"	,	"+ProductSourceColumnName+" = ?\n"+
+		"	,	"+ProductPriceColumnName+" = ?\n"+
+		"	,	"+ProductInventoryColumnName+" = ?\n"+
+		"	,	"+ProductSoldQuantityColumnName+" = ?\n"+
+		"WHERE	"+ProductIdColumnName+" = ?;" , info.StaffName, info.Description, info.Name, info.Category, info.Source, info.Price, info.Inventory, info.Quantity, productID)
 
 	if modifyError != nil {
 		fmt.Println(modifyError)
@@ -71,13 +70,13 @@ func ModifyProduct(productID int, info *Product, databasePtr *sql.DB) (code int)
 }
 
 // Query Product By ProductName or StaffName
-func QueryProduct(ProductName string, staffName string, databasePtr *sql.DB) (code int) {
-	rows, queryError := databasePtr.Query("SELECT	p_name,  price\n" +
-		"	FROM	product\n"+
-		"	WHERE	p_name = ?\n"+
-		" 	OR s_username = ?" , ProductName , staffName)
+func QueryProduct(ProductName string, staffName string, databasePtr *sql.DB) (code int, jsonData string) {
+	rows, queryError := databasePtr.Query("SELECT	"+ProductNameColumnName+",  "+ProductPriceColumnName+"\n" +
+		"	FROM	"+ProductTableName+"\n"+
+		"	WHERE	"+ProductNameColumnName+" = ?\n"+
+		" 	OR "+ProductStaffUserNameColumnName+" = ?" , ProductName , staffName)
 
-	if err != nil {
+	if queryError != nil {
 		code, jsonData = setFailureDataForQueryProduct();
 		return code, jsonData
 	}
@@ -94,7 +93,7 @@ func QueryProduct(ProductName string, staffName string, databasePtr *sql.DB) (co
 	}
 	
 	tableData := make([]map[string]interface{}, 0)
-	appendRowsDataIntoTableData(rows, tableData, columns)
+	appendRowsDataIntoTableData(rows, &tableData, columns)
 	json, err := json.Marshal(tableData)
 
 	if err != nil {
@@ -111,37 +110,4 @@ func setFailureDataForQueryProduct() (code int, jsonData string) {
 	code = 403
 	jsonData = ""
 	return code, jsonData
-}
-
-func appendRowsDataIntoTableData(rows *sql.Rows, tableData []map[string]interface{}, columns []string) {
-	count := len(columns)
-	values := make([]interface{}, count)
-	valuePtrs := make([]interface{}, count)
-	for rows.Next() {
-		putScanValuesIntoValues(valuePtrs, values, rows, count)
-		entry := make(map[string]interface{})
-		putColumnsDataIntoEntry(entry, columns, values)
-		tableData = append(tableData, entry)
-	}
-}
-
-func putScanValuesIntoValues(valuePtrs []interface{}, values []interface{}, rows *sql.Rows, count int) {
-	for i := 0; i < count; i++ {
-		valuePtrs[i] = &values[i]
-	}
-	rows.Scan(valuePtrs...)
-}
-
-func putColumnsDataIntoEntry(entry map[string]interface{}, columns []string, values []interface{}) {
-	for i, col := range columns {
-		var v interface{}
-		val := values[i]
-		b, ok := val.([]byte)
-		if ok {
-			v = string(b)
-		} else {
-			v = val
-		}
-		entry[col] = v
-	}
 }

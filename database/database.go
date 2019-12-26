@@ -52,7 +52,7 @@ func createDatabaseProductTableIfNotExists(databasePtr *sql.DB) {
 		ProductPriceColumnName + "			INTEGER	 		NOT NULL,\n" +
 		ProductInventoryColumnName + "		INTEGER			NOT NULL,\n" +
 		ProductSoldQuantityColumnName + "	INTEGER			NOT NULL,\n" +
-		ProductOnSaleDataColumnName + "		DATE			NOT NULL,\n" +
+		ProductOnSaleDateColumnName + "		DATE			NOT NULL,\n" +
 		productsTable.SpecialEventDiscountPolicyCodeColumnName + "	CHAR(9),\n" +
 		"PRIMARY KEY (" + ProductIdColumnName + "),\n" +
 		"FOREIGN KEY (" + ProductStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + " (" + database_users_table_util.UserNameColumnName + "),\n" +

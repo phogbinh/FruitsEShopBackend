@@ -21,7 +21,8 @@ const (
 	ProductPriceColumnName         = "Price"
 	ProductInventoryColumnName     = "Inventory"
 	ProductSoldQuantityColumnName  = "SoldQuantity"
-	ProductOnSaleDataColumnName    = "OnSaleDate"
+	ProductOnSaleDateColumnName    = "OnSaleDate"
+	productDiscountPolicyCodeColumnName = "SpecialEventDiscountPolicyCode"
 )
 
 const (

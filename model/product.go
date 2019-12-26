@@ -1,13 +1,13 @@
 package model
 
 type Product struct {
-	Name         string `json:"p_name"`
-	StaffName    string `json:"staffName"`
-	Description  string `json:"description"`
-	Category     string `json:"category"`
-	Source       string `json:"source"`
-	Price        int    `json:"price"`
-	Inventory    int    `json:"inventory"`
-	Quantity     int    `json:"quantity"`
-	SaleDate     string `json:"saleDate"`
+	Name         string `json:"Pname"`
+	StaffName    string `json:"StaffUserName"`
+	Description  string `json:"Description"`
+	Category     string `json:"Category"`
+	Source       string `json:"Source"`
+	Price        int    `json:"Price"`
+	Inventory    int    `json:"Inventory"`
+	Quantity     int    `json:"SoldQuantity"`
+	SaleDate     string `json:"OnSaleDate"`
 }

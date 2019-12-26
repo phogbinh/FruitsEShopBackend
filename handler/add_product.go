@@ -3,8 +3,7 @@ package handler
 import (
 	"backend/database"
 	"strconv"
-	"../model/product.go"
-
+	. "backend/model"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,17 +13,46 @@ AddProductHandler is a function for gin to handle AddProduct api
 func AddProductHandler(c *gin.Context) {
 	var productInfo Product
 	
-	productInfo.StaffName, _ := c.Query("s_username")
-	productInfo.Description, _ := c.Query("description")
-	productInfo.Name, _ := c.Query("p_name")
-	productInfo.Category, _ := c.Query("category")
-	productInfo.Source, _ := c.Query("source")
-	productInfo.Price, _ := strconv.Atoi(c.Query("price"))
-	productInfo.Inventory, _ := strconv.Atoi(c.Query("inventory"))
-	productInfo.Quantity, _ := strconv.Atoi(c.Query("sold_quantity"))
-	productInfo.SaleDate, _ := c.Query("onsale_date")
+	staffName := c.Query(database.ProductStaffUserNameColumnName)
+	productInfo.StaffName = staffName;
 
-	status := database.AddProduct(&productInfo, database.SqlDb)
+	description := c.Query(database.ProductDescriptionColumnName)
+	productInfo.Description = description
 
-	c.Status(status)
+	name := c.Query(database.ProductNameColumnName)
+	productInfo.Name = name
+
+	category := c.Query(database.ProductCategoryColumnName)
+	productInfo.Category = category
+
+	source := c.Query(database.ProductSourceColumnName)
+	productInfo.Source = source
+
+	price, err := strconv.Atoi(c.Query(database.ProductPriceColumnName))
+	if err != nil {
+		c.Status(400)
+	} else {
+		productInfo.Price = price
+	}
+
+	inventory, err := strconv.Atoi(c.Query(database.ProductInventoryColumnName))
+	if err != nil {
+		c.Status(400)
+	} else {
+		productInfo.Inventory = inventory
+	}
+
+	quantity, err := strconv.Atoi(c.Query(database.ProductSoldQuantityColumnName))
+	if err != nil {
+		c.Status(400)
+	} else {
+		productInfo.Quantity = quantity
+	}
+
+	saledate := c.Query(database.ProductOnSaleDateColumnName)
+	productInfo.SaleDate = saledate;
+
+	code := database.AddProduct(&productInfo, database.SqlDb)
+
+	c.Status(code)
 }

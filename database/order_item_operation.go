@@ -4,7 +4,6 @@ import (
 	. "backend/model"
 	"database/sql"
 	"encoding/json"
-
 	_ "github.com/go-sql-driver/mysql"
 )
 
