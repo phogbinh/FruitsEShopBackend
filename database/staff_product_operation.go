@@ -20,8 +20,8 @@ func GetNewProductID() (pid string){
 
 // Staff add product to database 
 func AddProduct(info *Product, databasePtr *sql.DB) (code int) {
-	_, addError := databasePtr.Exec("INSERT	INTO "+ProductTableName+" ("+ProductIdColumnName+", "+ProductStaffUserNameColumnName+", "+ProductDescriptionColumnName+", "+ProductNameColumnName+", "+ProductCategoryColumnName+", "+ProductSourceColumnName+", "+ProductPriceColumnName+" , "+ProductInventoryColumnName+", "+ProductSoldQuantityColumnName+", "+ProductOnSaleDateColumnName+", "+productDiscountPolicyCodeColumnName+")\n" +
-	" 	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);" , GetNewProductID(), info.StaffName, info.Description, info.Name, info.Category, info.Source, info.Price, info.Inventory, info.Quantity, info.SaleDate, "000000000")
+	_, addError := databasePtr.Exec("INSERT	INTO "+ProductTableName+" ("+ProductIdColumnName+", "+ProductStaffUserNameColumnName+", "+ProductDescriptionColumnName+", "+ProductNameColumnName+", "+ProductCategoryColumnName+", "+ProductSourceColumnName+", "+ProductPriceColumnName+" , "+ProductInventoryColumnName+", "+ProductSoldQuantityColumnName+", "+ProductOnSaleDateColumnName+", "+ProductImageSourceColumnName+")\n" +
+	" 	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);" , GetNewProductID(), info.StaffName, info.Description, info.Name, info.Category, info.Source, info.Price, info.Inventory, info.Quantity, info.SaleDate, info.ImageSrc)
 
 	if addError != nil {
 		fmt.Println(addError)
@@ -48,6 +48,8 @@ func DeleteProduct(productID int, databasePtr *sql.DB) (statusCode int){
 
 // Modify Product
 func ModifyProduct(productID int, info *Product, databasePtr *sql.DB) (statusCode int) {
+	fmt.Println(productID)
+	fmt.Println(info)
 	_, modifyError := databasePtr.Exec("UPDATE "+ProductTableName+"\n"+
 		"	SET	"+ProductStaffUserNameColumnName+" = ?\n"+
 		"	,	"+ProductDescriptionColumnName+" = ?\n"+
@@ -57,7 +59,8 @@ func ModifyProduct(productID int, info *Product, databasePtr *sql.DB) (statusCod
 		"	,	"+ProductPriceColumnName+" = ?\n"+
 		"	,	"+ProductInventoryColumnName+" = ?\n"+
 		"	,	"+ProductSoldQuantityColumnName+" = ?\n"+
-		"WHERE	"+ProductIdColumnName+" = ?;" , info.StaffName, info.Description, info.Name, info.Category, info.Source, info.Price, info.Inventory, info.Quantity, productID)
+		"	,	"+ProductImageSourceColumnName+" = ?\n"+
+		"WHERE	"+ProductIdColumnName+" = ?;" , info.StaffName, info.Description, info.Name, info.Category, info.Source, info.Price, info.Inventory, info.Quantity, info.ImageSrc, productID)
 
 	if modifyError != nil {
 		fmt.Println(modifyError)
@@ -70,11 +73,14 @@ func ModifyProduct(productID int, info *Product, databasePtr *sql.DB) (statusCod
 }
 
 // Query Product By ProductName or StaffName
-func QueryProduct(ProductName string, staffName string, databasePtr *sql.DB) (code int, jsonData string) {
-	rows, queryError := databasePtr.Query("SELECT	"+ProductNameColumnName+",  "+ProductPriceColumnName+"\n" +
-		"	FROM	"+ProductTableName+"\n"+
-		"	WHERE	"+ProductNameColumnName+" = ?\n"+
-		" 	OR "+ProductStaffUserNameColumnName+" = ?" , ProductName , staffName)
+func QueryProduct(ProductName string, StaffName string, databasePtr *sql.DB) (code int, jsonData string) {
+	if StaffName != "" {
+		ProductName = "NULL"
+	}
+	rows, queryError := databasePtr.Query("SELECT *\n" +
+	"	FROM	"+ProductTableName+"\n"+
+	"	WHERE	"+ProductNameColumnName+" like ?\n" +
+	"	OR 		"+ProductStaffUserNameColumnName+" = ?", "%" + ProductName + "%", StaffName)
 
 	if queryError != nil {
 		code, jsonData = setFailureDataForQueryProduct();

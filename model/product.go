@@ -10,4 +10,5 @@ type Product struct {
 	Inventory    int    `json:"Inventory"`
 	Quantity     int    `json:"SoldQuantity"`
 	SaleDate     string `json:"OnSaleDate"`
+	ImageSrc 	 string `json:"ImageSrc"`
 }

@@ -15,7 +15,7 @@ func ModifyProductHandler(c *gin.Context) {
 	var productInfo Product
 	var pid int
 
-	productID, err := strconv.Atoi(c.Query(database.ProductSoldQuantityColumnName))
+	productID, err := strconv.Atoi(c.Query(database.ProductIdColumnName))
 	if err != nil {
 		c.Status(400)
 	} else {
@@ -57,6 +57,9 @@ func ModifyProductHandler(c *gin.Context) {
 	} else {
 		productInfo.Quantity = quantity
 	}
+
+	imageSrc:= c.Query(database.ProductImageSourceColumnName)
+	productInfo.ImageSrc = imageSrc
 
 	saledate := c.Query(database.ProductOnSaleDateColumnName)
 	productInfo.SaleDate = saledate;

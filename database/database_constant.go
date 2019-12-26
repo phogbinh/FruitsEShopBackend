@@ -22,6 +22,7 @@ const (
 	ProductInventoryColumnName     = "Inventory"
 	ProductSoldQuantityColumnName  = "SoldQuantity"
 	ProductOnSaleDateColumnName    = "OnSaleDate"
+	ProductImageSourceColumnName   = "ImageSrc"
 	productDiscountPolicyCodeColumnName = "SpecialEventDiscountPolicyCode"
 )
 

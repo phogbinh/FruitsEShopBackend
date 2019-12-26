@@ -51,6 +51,10 @@ func AddProductHandler(c *gin.Context) {
 
 	saledate := c.Query(database.ProductOnSaleDateColumnName)
 	productInfo.SaleDate = saledate;
+	
+	imageSrc:= c.Query(database.ProductImageSourceColumnName)
+	productInfo.ImageSrc = imageSrc
+
 
 	code := database.AddProduct(&productInfo, database.SqlDb)
 
