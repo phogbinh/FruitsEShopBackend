@@ -6,6 +6,7 @@ import (
 
 	discountPoliciesTablesConst "backend/database_discount_policies_tables_util/database_discount_policies_tables_const"
 	productsTable "backend/database_products_table_util"
+
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -84,9 +85,8 @@ func createDatabaseQATableIfNotExitsts(databasePtr *sql.DB) {
 
 func createDatabaseCartTableIfNotExists(databasePtr *sql.DB) {
 	_, createTableError := databasePtr.Exec("CREATE TABLE IF NOT EXISTS " + CartTableName + " (\n" +
-		CartIdColumnName + "	INTEGER			NOT NULL,\n" +
-		"PRIMARY KEY(" + CartIdColumnName + "),\n" +
-		"CONSTRAINT cart_id_non_negative 	CHECK (" + CartIdColumnName + " >= 0));")
+		CartIdColumnName + "	INTEGER			NOT NULL	AUTO_INCREMENT,\n" +
+		"PRIMARY KEY(" + CartIdColumnName + "));")
 	panicCreateTableError(createTableError)
 }
 
