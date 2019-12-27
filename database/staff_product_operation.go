@@ -74,14 +74,13 @@ func ModifyProduct(productID int, info *Product, databasePtr *sql.DB) (statusCod
 
 // Query Product By ProductName or StaffName
 func QueryProduct(ProductName string, StaffName string, ProductId int, databasePtr *sql.DB) (code int, jsonData string) {
-	if StaffName != "" {
-		ProductName = "NULL"
-	}
-
 	if ProductId != 0 {
-		ProductName = "NULL"
+		ProductName = "NULLITEM"
+		StaffName = "NULLSTAFF"
+	}else if StaffName != "" {
+		ProductName = "NULLITEM"
+		ProductId = 0
 	}
-
 	rows, queryError := databasePtr.Query("SELECT *\n" +
 	"	FROM	"+ProductTableName+"\n"+
 	"	WHERE	"+ProductNameColumnName+" like ?\n" +
