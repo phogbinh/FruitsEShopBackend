@@ -73,6 +73,8 @@ Status code + json object
 Pname
 或
 StaffUserName
+或
+ProductId
 
 ---
 GET
@@ -87,20 +89,22 @@ http://localhost:8080/queryproduct?Pname=apple
 /queryproduct?Pname=apple
 ```
 #### Expected response format
+ProductId
 ```json
 {
     "items":
     [
         {
-            "ProductId":1000
-            "PName":"Gold apple", 
-            "SUser":"StaffA"
+            "ProductId":1000,
+            "Pname":"Gold apple", 
+            "StaffUserName":"StaffA",
             "Category":"Apple", 
             "Description":"Very good apple!", 
             "Source":"Taiwan", 
             "Price":100, 
             "Inventory":20,
             "Quantity":1,
+            "ImageSrc":"null",
             "SaleDate":"2019-01-01"
         }
         ...
@@ -131,6 +135,8 @@ or
 Status code
 #### Input
 ```
+每個欄位都要填
+
 ProductId
 StaffUserName
 Description
@@ -143,10 +149,14 @@ SoldQuantity
 OnSaleDate
 ImageSrc
 
+---
+PUT
+http://localhost:8080/modifyproduct?ProductId=1002&StaffUserName=bill&Description=It is an apple&Pname=apple&Category=fruit&Source=taiwan&Price=1000&Inventory=5&SoldQuantity=10000&OnSaleDate=2019-12-25&ImageSrc=file
+
 ```
 #### Example
 ```
-/modifyproduct/ProductId=1&s_username=jeff&description=is good!&p_name=apple...
+/modifyproduct?ProductId=1001&StaffUserName=jeff&Description=is good!&Pname=apple...
 ```
 #### Expected response format
 ```
