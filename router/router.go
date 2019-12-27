@@ -30,27 +30,29 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 
 	router.Use(middleware.NewCORSMiddleware())
 
-	router.POST("/addorderitemtocart", handler.AddOrderItemToCartHandler)
-	router.DELETE("/deleteorderitemincart", handler.DeleteOrderItemToCartHandler)
-	router.GET("/getorderitemsincart", handler.GetOrderItemsInCartHandler)
-	router.PUT("/modifyorderitemquantity", handler.ModifyOrderItemQuantityHandler)
-	router.GET("/getcartidwithusername", handler.GetCartIdWithUserNameHandler)
+	api := router.Group("/api")
 
-	router.GET("/getstafforder", handler.GetStaffOrderHandler)
+	api.POST("/addorderitemtocart", handler.AddOrderItemToCartHandler)
+	api.DELETE("/deleteorderitemincart", handler.DeleteOrderItemToCartHandler)
+	api.GET("/getorderitemsincart", handler.GetOrderItemsInCartHandler)
+	api.PUT("/modifyorderitemquantity", handler.ModifyOrderItemQuantityHandler)
+	api.GET("/getcartidwithusername", handler.GetCartIdWithUserNameHandler)
 
-	router.GET("/buy", handler.BuyHandler)
-	router.GET("/getorder", handler.GetOrderHandler)
+	api.GET("/getstafforder", handler.GetStaffOrderHandler)
 
-	initializeRouterManageUserHandlers(router, databasePtr)
+	api.GET("/buy", handler.BuyHandler)
+	api.GET("/getorder", handler.GetOrderHandler)
 
-	router.POST("/login", handler.LoginHandler(databasePtr))
-	router.POST("/sign-up", handler.SignUpHandler(databasePtr))
-	router.POST("/addproduct", handler.AddProductHandler)
-	router.DELETE("/deleteproduct", handler.DeleteProductHandler)
-	router.PUT("/modifyproduct", handler.ModifyProductHandler)
-	router.GET("/queryproduct", handler.QueryProductHandler)
+	initializeRouterManageUserHandlers(api, databasePtr)
 
-	auth := router.Group("/auth")
+	api.POST("/login", handler.LoginHandler(databasePtr))
+	api.POST("/sign-up", handler.SignUpHandler(databasePtr))
+	api.POST("/addproduct", handler.AddProductHandler)
+	api.DELETE("/deleteproduct", handler.DeleteProductHandler)
+	api.PUT("/modifyproduct", handler.ModifyProductHandler)
+	api.GET("/queryproduct", handler.QueryProductHandler)
+
+	auth := router.Group("/api/auth")
 
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
@@ -76,7 +78,7 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 	}
 }
 
-func initializeRouterManageUserHandlers(router *gin.Engine, databasePtr *sql.DB) {
+func initializeRouterManageUserHandlers(router *gin.RouterGroup, databasePtr *sql.DB) {
 	router.GET(
 		util.RightSlash+DUTU.TableName,
 		handler.RespondJsonOfAllUsersFromDatabaseUsersTableHandler(databasePtr))
