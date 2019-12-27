@@ -73,14 +73,20 @@ func ModifyProduct(productID int, info *Product, databasePtr *sql.DB) (statusCod
 }
 
 // Query Product By ProductName or StaffName
-func QueryProduct(ProductName string, StaffName string, databasePtr *sql.DB) (code int, jsonData string) {
+func QueryProduct(ProductName string, StaffName string, ProductId int, databasePtr *sql.DB) (code int, jsonData string) {
 	if StaffName != "" {
 		ProductName = "NULL"
 	}
+
+	if ProductId != 0 {
+		ProductName = "NULL"
+	}
+
 	rows, queryError := databasePtr.Query("SELECT *\n" +
 	"	FROM	"+ProductTableName+"\n"+
 	"	WHERE	"+ProductNameColumnName+" like ?\n" +
-	"	OR 		"+ProductStaffUserNameColumnName+" = ?", "%" + ProductName + "%", StaffName)
+	"	OR 		"+ProductStaffUserNameColumnName+" = ?\n" +
+	"	OR 		"+ProductIdColumnName+" = ?" , "%" + ProductName + "%", StaffName, ProductId)
 
 	if queryError != nil {
 		code, jsonData = setFailureDataForQueryProduct();
