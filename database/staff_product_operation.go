@@ -5,23 +5,28 @@ import (
 	"encoding/json"
 	. "backend/model"
 	"fmt"
-	"strconv"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 var serialNumber int = 1000
 
 // get new product id (no repeat serial number)
-func GetNewProductID() (pid string){
-	pid = strconv.Itoa(serialNumber)
-	serialNumber++
+func GetNewProductID(databasePtr *sql.DB) (pid int){
+	var productID int
+	err := databasePtr.QueryRow("SELECT MAX("+ProductIdColumnName+")\n" +
+	"	FROM	"+ProductTableName+"\n").Scan(&productID)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		pid = productID + 1
+	}
 	return pid
 }
 
 // Staff add product to database 
 func AddProduct(info *Product, databasePtr *sql.DB) (code int) {
 	_, addError := databasePtr.Exec("INSERT	INTO "+ProductTableName+" ("+ProductIdColumnName+", "+ProductStaffUserNameColumnName+", "+ProductDescriptionColumnName+", "+ProductNameColumnName+", "+ProductCategoryColumnName+", "+ProductSourceColumnName+", "+ProductPriceColumnName+" , "+ProductInventoryColumnName+", "+ProductSoldQuantityColumnName+", "+ProductOnSaleDateColumnName+", "+ProductImageSourceColumnName+")\n" +
-	" 	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);" , GetNewProductID(), info.StaffName, info.Description, info.Name, info.Category, info.Source, info.Price, info.Inventory, info.Quantity, info.SaleDate, info.ImageSrc)
+	" 	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);" , GetNewProductID(databasePtr), info.StaffName, info.Description, info.Name, info.Category, info.Source, info.Price, info.Inventory, info.Quantity, info.SaleDate, info.ImageSrc)
 
 	if addError != nil {
 		fmt.Println(addError)
