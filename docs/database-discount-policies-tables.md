@@ -101,6 +101,39 @@ A JSON object containing all discount policies' information of the given staff f
 }
 ```
 
+### Get a discount policy
+#### Description
+Get a discount policy by code from the database.
+#### Authorization
+N/A.
+#### Response
+A JSON object containing the requested discount policy's information fetched from the database.
+#### Example
+`curl -X GET localhost:8080/discount-policies/SEA000001`
+#### Expected response format
+```json
+{
+    "code": "SEA000001",
+    "name": "A Seasonings Discount Policy",
+    "description": "Description",
+    "type": "Seasonings",
+    "staffUserName": "bill",
+    "shippingMinimumOrderPrice": "",
+    "seasoningsRate": "0.05",
+    "seasoningsBeginDate": "2019-01-01",
+    "seasoningsEndDate": "2020-01-01",
+    "specialEventRate": "",
+    "specialEventBeginDate": "",
+    "specialEventEndDate": ""
+}
+```
+#### Error response format
+```json
+{
+    "error": "error message."
+}
+```
+
 ### Delete staff discount policy
 #### Description
 Delete a discount policy of the given staff from the database table `discount_policies` and cascadingly from either the database table `shipping_discount_policies`, `seasonings_discount_policies` or `special_event_discount_policies` according to the request-to-be-deleted discount policy's type. Additionally, should the given discount policy's type be Special Event, associated products will also be updated to set null on their corresponding fields.
