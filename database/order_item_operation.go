@@ -4,6 +4,7 @@ import (
 	. "backend/model"
 	"database/sql"
 	"encoding/json"
+
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -36,7 +37,7 @@ func DeleteOrderItemInCart(orderItem *OrderItem, databasePtr *sql.DB) (code int)
 
 // Get all order items in cart
 func GetOrderItemsInCart(orderItem *OrderItem, databasePtr *sql.DB) (code int, jsonData string) {
-	rows, err := databasePtr.Query("SELECT	"+ProductNameColumnName+", "+ProductPriceColumnName+", "+OrderItemQuantity+"\n"+
+	rows, err := databasePtr.Query("SELECT	"+OrderItemTableName+"."+ProductIdColumnName+", "+ProductNameColumnName+", "+ProductPriceColumnName+", "+OrderItemQuantity+"\n"+
 		"	FROM	"+ProductTableName+", "+OrderItemTableName+"\n"+
 		"	WHERE	"+OrderItemCartIdColumnName+" = ?\n"+
 		"	AND		"+OrderItemTableName+"."+OrderItemProductIdColumnName+" = "+ProductTableName+"."+ProductIdColumnName+";", orderItem.CartID)
