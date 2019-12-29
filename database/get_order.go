@@ -1,18 +1,18 @@
 package database
 
 import (
-	. "backend/model"
 	"database/sql"
 	"encoding/json"
 	"log"
 )
 
 /// GetOrder is a function which handle all order
-func GetOrder(user User, databasePtr *sql.DB) (code int, jsonData string) {
+func GetOrder(cartId int, databasePtr *sql.DB) (code int, jsonData string) {
 	rows, getError := databasePtr.Query("SELECT "+ProductNameColumnName+", "+ProductPriceColumnName+", "+TradeDateTimeColumnName+
-		" From "+"( "+"SELECT "+ProductIdColumnName+", "+CustomerOwnCartCustomerUserNameColumnName+", "+TradeDateTimeColumnName+
-		" FROM "+CustomerOwnCartTableName+" as c join "+TradeTableName+" as t"+
-		"	WHERE "+"c.CartId = t.CartId and c.CustomerUserName = ?) as temp join "+ProductTableName+" where temp.ProductId = product.ProductId;", user.UserName)
+		" From "+"( "+"SELECT "+ProductIdColumnName+", "+TradeDateTimeColumnName+
+		" FROM "+TradeTableName+" where CartId = ?) as t join "+ProductTableName+" as p"+
+		"	ON "+"t.ProductId = p.ProductId "+
+		" ORDER BY "+"t.DateTime", cartId)
 
 	if getError != nil {
 		log.Panicln(getError)
