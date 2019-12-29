@@ -112,8 +112,8 @@ func createDatabaseOrderItemTableIfNotExists(databasePtr *sql.DB) {
 		OrderItemQuantity + "				INTEGER			NOT NULL,\n" +
 		"PRIMARY KEY(" + OrderItemCartIdColumnName + ", " + OrderItemProductIdColumnName + "),\n" +
 		"FOREIGN KEY(" + OrderItemCartIdColumnName + ") REFERENCES " + CartTableName + "(" + CartIdColumnName + "),\n" +
-		"FOREIGN KEY(" + OrderItemProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + ")\n" +
-		"	ON DELETE CASCADE" +
+		"FOREIGN KEY(" + OrderItemProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + ")" +
+		"	ON DELETE CASCADE" + "	ON UPDATE CASCADE" +
 		");")
 	panicCreateTableError(createTableError)
 }
