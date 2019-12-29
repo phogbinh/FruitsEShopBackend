@@ -12,7 +12,7 @@ func TransactionFromCart(addToCart *OrderItem, databasePtr *sql.DB) (code int) {
 	_, err := databasePtr.Exec("INSERT INTO "+TradeTableName+"("+TradeCartIdColumnName+", "+TradeProductIdColumnName+", "+TradeProductQuantityColumnName+", "+TradeDateTimeColumnName+")\n"+
 		"SELECT CartId, ProductId, Quantity, Now()\n"+
 		"FROM "+OrderItemTableName+"\n"+
-		"WHERE "+OrderItemCartIdColumnName+"= ?\n", addToCart.CartID)
+		"WHERE "+OrderItemCartIdColumnName+"= ?;\n", addToCart.CartID)
 	if err != nil {
 		return 500
 	}
