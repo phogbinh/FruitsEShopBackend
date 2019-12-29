@@ -9,11 +9,11 @@ Required.
 A JSON object containing the newly created discount policy's information fetched from the database.
 #### Example
 ##### Create discount policy `SHI000001` by staff `bill`
-`curl -X POST -H "Authorization: Bearer <token>" -d "{ \"code\": \"SHI000001\", \"name\": \"A Shipping Discount Policy\", \"description\": \"Description\", \"type\": \"Shipping\", \"staffUserName\": \"bill\", \"shippingMinimumOrderPrice\": \"500.00\", \"seasoningsRate\": \"\", \"seasoningsBeginDate\": \"\", \"seasoningsEndDate\": \"\", \"specialEventRate\": \"\", \"specialEventBeginDate\": \"\", \"specialEventEndDate\": \"\", \"specialEventProductIds\": [] }" localhost:8080/auth/bill/discount-policies`
+`curl -X POST -H "Authorization: Bearer <token>" -d "{ \"code\": \"SHI000001\", \"name\": \"A Shipping Discount Policy\", \"description\": \"Description\", \"type\": \"Shipping\", \"staffUserName\": \"bill\", \"shippingMinimumOrderPrice\": \"500.00\", \"seasoningsRate\": \"\", \"seasoningsBeginDate\": \"\", \"seasoningsEndDate\": \"\", \"specialEventRate\": \"\", \"specialEventBeginDate\": \"\", \"specialEventEndDate\": \"\", \"specialEventProductIds\": [] }" localhost:8080/api/auth/bill/discount-policies`
 ##### Create discount policy `SEA000001` by staff `bill`
-`curl -X POST -H "Authorization: Bearer <token>" -d "{ \"code\": \"SEA000001\", \"name\": \"A Seasonings Discount Policy\", \"description\": \"Description\", \"type\": \"Seasonings\", \"staffUserName\": \"bill\", \"shippingMinimumOrderPrice\": \"\", \"seasoningsRate\": \"0.05\", \"seasoningsBeginDate\": \"2019-01-01\", \"seasoningsEndDate\": \"2020-01-01\", \"specialEventRate\": \"\", \"specialEventBeginDate\": \"\", \"specialEventEndDate\": \"\", \"specialEventProductIds\": [] }" localhost:8080/auth/bill/discount-policies`
+`curl -X POST -H "Authorization: Bearer <token>" -d "{ \"code\": \"SEA000001\", \"name\": \"A Seasonings Discount Policy\", \"description\": \"Description\", \"type\": \"Seasonings\", \"staffUserName\": \"bill\", \"shippingMinimumOrderPrice\": \"\", \"seasoningsRate\": \"0.05\", \"seasoningsBeginDate\": \"2019-01-01\", \"seasoningsEndDate\": \"2020-01-01\", \"specialEventRate\": \"\", \"specialEventBeginDate\": \"\", \"specialEventEndDate\": \"\", \"specialEventProductIds\": [] }" localhost:8080/api/auth/bill/discount-policies`
 ##### Create discount policy `SPE000001` by staff `bill` (products having IDs `10` and `25` must be in the database table `products` before calling the API)
-`curl -X POST -H "Authorization: Bearer <token>" -d "{ \"code\": \"SPE000001\", \"name\": \"A Special Event Discount Policy\", \"description\": \"Description\", \"type\": \"Special Event\", \"staffUserName\": \"bill\", \"shippingMinimumOrderPrice\": \"\", \"seasoningsRate\": \"\", \"seasoningsBeginDate\": \"\", \"seasoningsEndDate\": \"\", \"specialEventRate\": \"0.05\", \"specialEventBeginDate\": \"2018-01-01\", \"specialEventEndDate\": \"2021-01-31\", \"specialEventProductIds\": [\"10\", \"25\"] }" localhost:8080/auth/bill/discount-policies`
+`curl -X POST -H "Authorization: Bearer <token>" -d "{ \"code\": \"SPE000001\", \"name\": \"A Special Event Discount Policy\", \"description\": \"Description\", \"type\": \"Special Event\", \"staffUserName\": \"bill\", \"shippingMinimumOrderPrice\": \"\", \"seasoningsRate\": \"\", \"seasoningsBeginDate\": \"\", \"seasoningsEndDate\": \"\", \"specialEventRate\": \"0.05\", \"specialEventBeginDate\": \"2018-01-01\", \"specialEventEndDate\": \"2021-01-31\", \"specialEventProductIds\": [\"10\", \"25\"] }" localhost:8080/api/auth/bill/discount-policies`
 #### Expected response format
 ```json
 {
@@ -46,7 +46,7 @@ Required.
 #### Response
 A JSON object containing all discount policies' information of the given staff from the database.
 #### Example
-`curl -X GET -H "Authorization: Bearer <token>" localhost:8080/auth/bill/discount-policies`
+`curl -X GET -H "Authorization: Bearer <token>" localhost:8080/api/auth/bill/discount-policies`
 #### Expected response format
 ```json
 [
@@ -109,7 +109,7 @@ N/A.
 #### Response
 A JSON object containing the requested discount policy's information fetched from the database.
 #### Example
-`curl -X GET localhost:8080/discount-policies/SEA000001`
+`curl -X GET localhost:8080/api/discount-policies/SEA000001`
 #### Expected response format
 ```json
 {
@@ -142,7 +142,7 @@ Required.
 #### Response
 N/A.
 #### Example
-`curl -X DELETE -H "Authorization: Bearer <token>" localhost:8080/auth/bill/discount-policies/SPE000001`
+`curl -X DELETE -H "Authorization: Bearer <token>" localhost:8080/api/auth/bill/discount-policies/SPE000001`
 #### Error response format
 ```json
 {
