@@ -112,8 +112,8 @@ func createDatabaseOrderItemTableIfNotExists(databasePtr *sql.DB) {
 		OrderItemQuantity + "				INTEGER			NOT NULL,\n" +
 		"PRIMARY KEY(" + OrderItemCartIdColumnName + ", " + OrderItemProductIdColumnName + "),\n" +
 		"FOREIGN KEY(" + OrderItemCartIdColumnName + ") REFERENCES " + CartTableName + "(" + CartIdColumnName + "),\n" +
-		"FOREIGN KEY(" + OrderItemProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + ")\n" +
-		"	ON DELETE CASCADE" +
+		"FOREIGN KEY(" + OrderItemProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + ")" +
+		"	ON DELETE CASCADE" + "	ON UPDATE CASCADE" +
 		");")
 	panicCreateTableError(createTableError)
 }
@@ -134,7 +134,7 @@ func createDatabaseTradeTableIfNotExists(databasePtr *sql.DB) {
 		TradeProductIdColumnName + "		INTEGER		NOT NULL,\n" +
 		TradeProductQuantityColumnName + "	INTEGER		NOT NULL,\n" +
 		TradeDateTimeColumnName + "			DATETIME	NOT NULL,\n" +
-		"PRIMARY KEY(" + TradeCartIdColumnName + ", " + TradeProductIdColumnName + "),\n" +
+		"PRIMARY KEY(" + TradeCartIdColumnName + ", " + TradeProductIdColumnName + ", " + TradeDateTimeColumnName + "),\n" +
 		"FOREIGN KEY(" + TradeProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + "),\n" +
 		"FOREIGN KEY(" + TradeCartIdColumnName + ") REFERENCES " + CartTableName + "(" + CartIdColumnName + "));")
 	panicCreateTableError(createTableError)
