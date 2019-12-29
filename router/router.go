@@ -47,6 +47,7 @@ func Register(router *gin.Engine, databasePtr *sql.DB) {
 
 	api.POST("/login", handler.LoginHandler(databasePtr))
 	api.POST("/sign-up", handler.SignUpHandler(databasePtr))
+	api.GET(util.RightSlash+discountPoliciesPath+util.RightSlash+discountPolicyCodePath, handler.GetDiscountPolicyHandler(databasePtr))
 	api.POST("/addproduct", handler.AddProductHandler)
 	api.DELETE("/deleteproduct", handler.DeleteProductHandler)
 	api.PUT("/modifyproduct", handler.ModifyProductHandler)
