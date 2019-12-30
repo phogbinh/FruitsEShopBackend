@@ -21,5 +21,4 @@ func BuyHandler(c *gin.Context) {
 	code := database.TransactionFromCart(&orderItem, database.SqlDb)
 
 	c.Status(code)
-
 }
