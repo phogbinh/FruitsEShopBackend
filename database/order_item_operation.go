@@ -1,6 +1,7 @@
 package database
 
 import (
+	productsTable "backend/database_products_table_util"
 	. "backend/model"
 	"database/sql"
 	"encoding/json"
@@ -37,7 +38,7 @@ func DeleteOrderItemInCart(orderItem *OrderItem, databasePtr *sql.DB) (code int)
 
 // Get all order items in cart
 func GetOrderItemsInCart(orderItem *OrderItem, databasePtr *sql.DB) (code int, jsonData string) {
-	rows, err := databasePtr.Query("SELECT	"+OrderItemTableName+"."+ProductIdColumnName+", "+ProductNameColumnName+", "+ProductPriceColumnName+", "+OrderItemQuantity+"\n"+
+	rows, err := databasePtr.Query("SELECT	"+OrderItemTableName+"."+ProductIdColumnName+", "+ProductNameColumnName+", "+ProductPriceColumnName+", "+OrderItemQuantity+", "+productsTable.SpecialEventDiscountPolicyCodeColumnName+"\n"+
 		"	FROM	"+ProductTableName+", "+OrderItemTableName+"\n"+
 		"	WHERE	"+OrderItemCartIdColumnName+" = ?\n"+
 		"	AND		"+OrderItemTableName+"."+OrderItemProductIdColumnName+" = "+ProductTableName+"."+ProductIdColumnName+";", orderItem.CartID)
