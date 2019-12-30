@@ -135,7 +135,8 @@ func createDatabaseTradeTableIfNotExists(databasePtr *sql.DB) {
 		TradeProductQuantityColumnName + "	INTEGER		NOT NULL,\n" +
 		TradeDateTimeColumnName + "			DATETIME	NOT NULL,\n" +
 		"PRIMARY KEY(" + TradeCartIdColumnName + ", " + TradeProductIdColumnName + ", " + TradeDateTimeColumnName + "),\n" +
-		"FOREIGN KEY(" + TradeProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + "),\n" +
+		"FOREIGN KEY(" + TradeProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + ")" +
+		"	ON DELETE CASCADE" + "	ON UPDATE CASCADE" + ",\n" +
 		"FOREIGN KEY(" + TradeCartIdColumnName + ") REFERENCES " + CartTableName + "(" + CartIdColumnName + "));")
 	panicCreateTableError(createTableError)
 }
@@ -168,7 +169,8 @@ func createDatabasePEvaluateTableIfNotExists(databasePtr *sql.DB) {
 		ProductEvaluateCustomerUserNameColumnName + "	VARCHAR(30)		NOT NULL,\n" +
 		ProductEvaluateFeedbackColumnName + "			TEXT			NOT NULL,\n" +
 		"PRIMARY KEY(" + ProductEvaluateProductIdColumnName + ", " + ProductEvaluateCustomerUserNameColumnName + "),\n" +
-		"FOREIGN KEY(" + ProductEvaluateProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + "),\n" +
+		"FOREIGN KEY(" + ProductEvaluateProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + ")" +
+		"	ON DELETE CASCADE" + "	ON UPDATE CASCADE" + ",\n" +
 		"FOREIGN KEY(" + ProductEvaluateCustomerUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "));")
 	panicCreateTableError(createTableError)
 }
@@ -211,7 +213,8 @@ func createDatabasePJoinTableIfNotExists(databasePtr *sql.DB) {
 		ProductJoinActivityQuantityColumnName + "	INTEGER			NOT NULL,\n" +
 		ProductJoinActivityDiscountColumnName + "	FLOAT(2)		NOT NULL,\n" +
 		"PRIMARY KEY(" + ProductJoinActivityProductIdColumnName + ", " + ProductJoinActivityActivityIdColumnName + "),\n" +
-		"FOREIGN KEY(" + ProductJoinActivityProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + "),\n" +
+		"FOREIGN KEY(" + ProductJoinActivityProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + ")" +
+		"	ON DELETE CASCADE" + "	ON UPDATE CASCADE" + ",\n" +
 		"FOREIGN KEY(" + ProductJoinActivityActivityIdColumnName + ") REFERENCES " + ActivityTableName + "(" + ActivityIdColumnName + "),\n" +
 		"CONSTRAINT pjoin_discount_digit			CHECK (" + ProductJoinActivityDiscountColumnName + " < 10));")
 	panicCreateTableError(createTableError)
@@ -223,7 +226,8 @@ func createDatabaseTakeOffTableIfNotExists(databasePtr *sql.DB) {
 		TakeOffProductIdColumnName + "		INTEGER			NOT NULL,\n" +
 		"PRIMARY KEY(" + TakeOffUserNameColumnName + ", " + TakeOffProductIdColumnName + "),\n" +
 		"FOREIGN KEY(" + TakeOffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
-		"FOREIGN KEY(" + TakeOffProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + "));")
+		"FOREIGN KEY(" + TakeOffProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + ")" +
+		"	ON DELETE CASCADE" + "	ON UPDATE CASCADE);")
 	panicCreateTableError(createTableError)
 }
 
