@@ -17,17 +17,19 @@ func TransactionFromCart(addToCart *OrderItem, databasePtr *sql.DB) (code int) {
 		return 500
 	}
 
-	_, delete_quantity_err := databasePtr.Exec("DELETE FROM "+OrderItemTableName+" WHERE CartId = ?;", addToCart.CartID)
-	if delete_quantity_err != nil {
-		return 500
-	}
-
 	_, delete_all_item_err := databasePtr.Exec("UPDATE " + ProductTableName + ", " + OrderItemTableName +
 		" SET  " + ProductTableName + "." + ProductSoldQuantityColumnName + " = " +
-		ProductTableName + "." + ProductSoldQuantityColumnName + " - " + OrderItemTableName + "." + OrderItemQuantity +
+		ProductTableName + "." + ProductSoldQuantityColumnName + " + " + OrderItemTableName + "." + OrderItemQuantity +
+		", " + ProductTableName + "." + ProductInventoryColumnName + " = " +
+		ProductTableName + "." + ProductInventoryColumnName + " - " + OrderItemTableName + "." + OrderItemQuantity +
 		" WHERE " + ProductTableName + "." + ProductIdColumnName + " = " + OrderItemTableName + "." + OrderItemProductIdColumnName + ";")
 
 	if delete_all_item_err != nil {
+		return 500
+	}
+
+	_, delete_quantity_err := databasePtr.Exec("DELETE FROM "+OrderItemTableName+" WHERE CartId = ?;", addToCart.CartID)
+	if delete_quantity_err != nil {
 		return 500
 	}
 
