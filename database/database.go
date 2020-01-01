@@ -57,7 +57,8 @@ func createDatabaseProductTableIfNotExists(databasePtr *sql.DB) {
 		ProductImageSourceColumnName + "	VARCHAR(255)	NOT NULL,\n" +
 		productsTable.SpecialEventDiscountPolicyCodeColumnName + "	CHAR(9),\n" +
 		"PRIMARY KEY (" + ProductIdColumnName + "),\n" +
-		"FOREIGN KEY (" + ProductStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + " (" + database_users_table_util.UserNameColumnName + "),\n" +
+		"FOREIGN KEY (" + ProductStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + " (" + database_users_table_util.UserNameColumnName + ")\n" +
+		"	ON DELETE CASCADE,\n" +
 		"FOREIGN KEY(" + productsTable.SpecialEventDiscountPolicyCodeColumnName + ") REFERENCES " + discountPoliciesTablesConst.SpecialEventDiscountPoliciesTableName + "(" + discountPoliciesTablesConst.SpecialEventDiscountPoliciesCodeColumnName + ")\n" +
 		"	ON DELETE SET NULL,\n" +
 		"CONSTRAINT p_id_non_negative			CHECK (" + ProductIdColumnName + " >= 0),\n" +
@@ -77,9 +78,12 @@ func createDatabaseQATableIfNotExitsts(databasePtr *sql.DB) {
 		QA_AskDatetimeColumnName + "		DATETIME		NOT NULL,\n" +
 		QA_AnsDatetimeColumnName + "		DATETIME,\n" +
 		"PRIMARY KEY(" + QA_ProductIdColumnName + "),\n" +
-		"FOREIGN KEY(" + QA_ProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + "),\n" +
-		"FOREIGN KEY(" + QA_StaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
-		"FOREIGN KEY(" + QA_CustomerUserNameColumnName + ")	REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
+		"FOREIGN KEY(" + QA_ProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + ")\n" +
+		"	ON DELETE CASCADE,\n" +
+		"FOREIGN KEY(" + QA_StaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ")\n" +
+		"	ON DELETE CASCADE,\n" +
+		"FOREIGN KEY(" + QA_CustomerUserNameColumnName + ")	REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ")\n" +
+		"	ON DELETE CASCADE,\n" +
 		"CONSTRAINT qa_check_date_interval		CHECK (" + QA_AskDatetimeColumnName + " < " + QA_AnsDatetimeColumnName + "));")
 	panicCreateTableError(createTableError)
 }
@@ -111,7 +115,8 @@ func createDatabaseOrderItemTableIfNotExists(databasePtr *sql.DB) {
 		OrderItemProductIdColumnName + "	INTEGER			NOT NULL,\n" +
 		OrderItemQuantity + "				INTEGER			NOT NULL,\n" +
 		"PRIMARY KEY(" + OrderItemCartIdColumnName + ", " + OrderItemProductIdColumnName + "),\n" +
-		"FOREIGN KEY(" + OrderItemCartIdColumnName + ") REFERENCES " + CartTableName + "(" + CartIdColumnName + "),\n" +
+		"FOREIGN KEY(" + OrderItemCartIdColumnName + ") REFERENCES " + CartTableName + "(" + CartIdColumnName + ")\n" +
+		"	ON DELETE CASCADE,\n" +
 		"FOREIGN KEY(" + OrderItemProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + ")" +
 		"	ON DELETE CASCADE" + "	ON UPDATE CASCADE" +
 		");")
@@ -123,8 +128,11 @@ func createDatabaseCustomerOwnCartTableIfNotExists(databasePtr *sql.DB) {
 		CustomerOwnCartCustomerUserNameColumnName + "	VARCHAR(30)		NOT NULL,\n" +
 		CustomerOwnCartCartIdColumnName + "				INTEGER		NOT NULL,\n" +
 		"PRIMARY KEY(" + CustomerOwnCartCustomerUserNameColumnName + ", " + CustomerOwnCartCartIdColumnName + "),\n" +
-		"FOREIGN KEY(" + CustomerOwnCartCustomerUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
-		"FOREIGN KEY(" + CustomerOwnCartCartIdColumnName + ") REFERENCES " + CartTableName + "(" + CartIdColumnName + "));")
+		"FOREIGN KEY(" + CustomerOwnCartCustomerUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ")\n" +
+		"	ON DELETE CASCADE,\n" +
+		"FOREIGN KEY(" + CustomerOwnCartCartIdColumnName + ") REFERENCES " + CartTableName + "(" + CartIdColumnName + ")\n" +
+		"	ON DELETE CASCADE\n" +
+		");")
 	panicCreateTableError(createTableError)
 }
 
@@ -137,7 +145,9 @@ func createDatabaseTradeTableIfNotExists(databasePtr *sql.DB) {
 		"PRIMARY KEY(" + TradeCartIdColumnName + ", " + TradeProductIdColumnName + ", " + TradeDateTimeColumnName + "),\n" +
 		"FOREIGN KEY(" + TradeProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + ")" +
 		"	ON DELETE CASCADE" + "	ON UPDATE CASCADE" + ",\n" +
-		"FOREIGN KEY(" + TradeCartIdColumnName + ") REFERENCES " + CartTableName + "(" + CartIdColumnName + "));")
+		"FOREIGN KEY(" + TradeCartIdColumnName + ") REFERENCES " + CartTableName + "(" + CartIdColumnName + ")\n" +
+		"	ON DELETE CASCADE\n" +
+		");")
 	panicCreateTableError(createTableError)
 }
 
@@ -147,8 +157,11 @@ func createDatabaseCEvaluateTableIfNotExists(databasePtr *sql.DB) {
 		CustomerEvaluateStaffUserNameColumnName + "		VARCHAR(30)		NOT NULL,\n" +
 		CustomerEvaluateFeedbackColumnName + "			TEXT			NOT NULL,\n" +
 		"PRIMARY KEY(" + CustomerEvaluateCustomerUserNameColumnName + ", " + CustomerEvaluateStaffUserNameColumnName + "),\n" +
-		"FOREIGN KEY(" + CustomerEvaluateCustomerUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
-		"FOREIGN KEY(" + CustomerEvaluateStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "));")
+		"FOREIGN KEY(" + CustomerEvaluateCustomerUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ")\n" +
+		"	ON DELETE CASCADE,\n" +
+		"FOREIGN KEY(" + CustomerEvaluateStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ")\n" +
+		"	ON DELETE CASCADE\n" +
+		");")
 	panicCreateTableError(createTableError)
 }
 
@@ -158,8 +171,11 @@ func createDatabaseSEvaluateTableIfNotExists(databasePtr *sql.DB) {
 		StaffEvaluateStaffUserNameColumnName + "	VARCHAR(30)		NOT NULL,\n" +
 		StaffEvaluateFeedbackColumnName + "			TEXT			NOT NULL,\n" +
 		"PRIMARY KEY(" + StaffEvaluateCustomerUserNameColumnName + ", " + StaffEvaluateStaffUserNameColumnName + "),\n" +
-		"FOREIGN KEY(" + StaffEvaluateCustomerUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
-		"FOREIGN KEY(" + StaffEvaluateStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "));")
+		"FOREIGN KEY(" + StaffEvaluateCustomerUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ")\n" +
+		"	ON DELETE CASCADE,\n" +
+		"FOREIGN KEY(" + StaffEvaluateStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ")\n" +
+		"	ON DELETE CASCADE\n" +
+		");")
 	panicCreateTableError(createTableError)
 }
 
@@ -171,7 +187,9 @@ func createDatabasePEvaluateTableIfNotExists(databasePtr *sql.DB) {
 		"PRIMARY KEY(" + ProductEvaluateProductIdColumnName + ", " + ProductEvaluateCustomerUserNameColumnName + "),\n" +
 		"FOREIGN KEY(" + ProductEvaluateProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + ")" +
 		"	ON DELETE CASCADE" + "	ON UPDATE CASCADE" + ",\n" +
-		"FOREIGN KEY(" + ProductEvaluateCustomerUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "));")
+		"FOREIGN KEY(" + ProductEvaluateCustomerUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ")\n" +
+		"	ON DELETE CASCADE\n" +
+		");")
 	panicCreateTableError(createTableError)
 }
 
@@ -180,8 +198,11 @@ func createDatabaseManageTableIfNotExists(databasePtr *sql.DB) {
 		ManageAdminUserNameColumnName + "	VARCHAR(30)		NOT NULL,\n" +
 		ManageUserNameColumnName + "		VARCHAR(30)		NOT NULL,\n" +
 		"PRIMARY KEY(" + ManageAdminUserNameColumnName + ", " + ManageUserNameColumnName + "),\n" +
-		"FOREIGN KEY(" + ManageAdminUserNameColumnName + ") REFERENCES " + AdminTableName + "(" + AdminUserNameColumnName + "),\n" +
-		"FOREIGN KEY(" + ManageUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "));")
+		"FOREIGN KEY(" + ManageAdminUserNameColumnName + ") REFERENCES " + AdminTableName + "(" + AdminUserNameColumnName + ")\n" +
+		"	ON DELETE CASCADE,\n" +
+		"FOREIGN KEY(" + ManageUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ")\n" +
+		"	ON DELETE CASCADE\n" +
+		");")
 	panicCreateTableError(createTableError)
 }
 
@@ -190,8 +211,11 @@ func createDatabaseHoldTableIfNotExists(databasePtr *sql.DB) {
 		HoldAdminUserNameColumnName + "	VARCHAR(30)		NOT NULL,\n" +
 		HoldActivityIdColumnName + "	INTEGER			NOT NULL,\n" +
 		"PRIMARY KEY(" + HoldAdminUserNameColumnName + ", " + HoldActivityIdColumnName + "),\n" +
-		"FOREIGN KEY(" + HoldAdminUserNameColumnName + ") REFERENCES " + AdminTableName + "(" + AdminUserNameColumnName + "),\n" +
-		"FOREIGN KEY(" + HoldActivityIdColumnName + ") REFERENCES " + ActivityTableName + "(" + ActivityIdColumnName + "));")
+		"FOREIGN KEY(" + HoldAdminUserNameColumnName + ") REFERENCES " + AdminTableName + "(" + AdminUserNameColumnName + ")\n" +
+		"	ON DELETE CASCADE,\n" +
+		"FOREIGN KEY(" + HoldActivityIdColumnName + ") REFERENCES " + ActivityTableName + "(" + ActivityIdColumnName + ")\n" +
+		"	ON DELETE CASCADE\n" +
+		");")
 	panicCreateTableError(createTableError)
 }
 
@@ -200,8 +224,11 @@ func createDatabaseSJoinTableIfNotExists(databasePtr *sql.DB) {
 		StaffJoinActivityStaffUserNameColumnName + "	VARCHAR(30)		NOT NULL,\n" +
 		StaffJoinActivityActivityIdColumnName + "		INTEGER			NOT NULL,\n" +
 		"PRIMARY KEY(" + StaffJoinActivityStaffUserNameColumnName + ", " + StaffJoinActivityActivityIdColumnName + "),\n" +
-		"FOREIGN KEY(" + StaffJoinActivityStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
-		"FOREIGN KEY(" + StaffJoinActivityActivityIdColumnName + ") REFERENCES " + ActivityTableName + "(" + ActivityIdColumnName + "));")
+		"FOREIGN KEY(" + StaffJoinActivityStaffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ")\n" +
+		"	ON DELETE CASCADE,\n" +
+		"FOREIGN KEY(" + StaffJoinActivityActivityIdColumnName + ") REFERENCES " + ActivityTableName + "(" + ActivityIdColumnName + ")\n" +
+		"	ON DELETE CASCADE\n" +
+		");")
 	panicCreateTableError(createTableError)
 }
 
@@ -215,7 +242,8 @@ func createDatabasePJoinTableIfNotExists(databasePtr *sql.DB) {
 		"PRIMARY KEY(" + ProductJoinActivityProductIdColumnName + ", " + ProductJoinActivityActivityIdColumnName + "),\n" +
 		"FOREIGN KEY(" + ProductJoinActivityProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + ")" +
 		"	ON DELETE CASCADE" + "	ON UPDATE CASCADE" + ",\n" +
-		"FOREIGN KEY(" + ProductJoinActivityActivityIdColumnName + ") REFERENCES " + ActivityTableName + "(" + ActivityIdColumnName + "),\n" +
+		"FOREIGN KEY(" + ProductJoinActivityActivityIdColumnName + ") REFERENCES " + ActivityTableName + "(" + ActivityIdColumnName + ")\n" +
+		"	ON DELETE CASCADE,\n" +
 		"CONSTRAINT pjoin_discount_digit			CHECK (" + ProductJoinActivityDiscountColumnName + " < 10));")
 	panicCreateTableError(createTableError)
 }
@@ -225,7 +253,8 @@ func createDatabaseTakeOffTableIfNotExists(databasePtr *sql.DB) {
 		TakeOffUserNameColumnName + "		VARCHAR(30)		NOT NULL,\n" +
 		TakeOffProductIdColumnName + "		INTEGER			NOT NULL,\n" +
 		"PRIMARY KEY(" + TakeOffUserNameColumnName + ", " + TakeOffProductIdColumnName + "),\n" +
-		"FOREIGN KEY(" + TakeOffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + "),\n" +
+		"FOREIGN KEY(" + TakeOffUserNameColumnName + ") REFERENCES " + database_users_table_util.TableName + "(" + database_users_table_util.UserNameColumnName + ")\n" +
+		"	ON DELETE CASCADE,\n" +
 		"FOREIGN KEY(" + TakeOffProductIdColumnName + ") REFERENCES " + ProductTableName + "(" + ProductIdColumnName + ")" +
 		"	ON DELETE CASCADE" + "	ON UPDATE CASCADE);")
 	panicCreateTableError(createTableError)
