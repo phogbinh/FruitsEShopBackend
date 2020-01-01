@@ -14,7 +14,8 @@ func GetStaffOrder(staffUserName string, databasePtr *sql.DB) (code int, jsonDat
 		TradeTableName+"."+TradeProductIdColumnName+" = "+ProductTableName+"."+ProductIdColumnName+"\n"+
 		"	INNER JOIN "+CustomerOwnCartTableName+" ON "+
 		TradeTableName+"."+TradeCartIdColumnName+" = "+CustomerOwnCartTableName+"."+CustomerOwnCartCartIdColumnName+"\n"+
-		"	WHERE "+ProductTableName+"."+ProductStaffUserNameColumnName+" = ?;", staffUserName)
+		"	WHERE "+ProductTableName+"."+ProductStaffUserNameColumnName+" = ?"+
+		"	ORDER BY "+TradeTableName+"."+TradeDateTimeColumnName+";", staffUserName)
 
 	if err != nil {
 		code, jsonData = setFailureDataForGetOrderItemsInCart()
