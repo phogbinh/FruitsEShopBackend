@@ -11,19 +11,19 @@ const (
 )
 
 const (
-	ProductTableName               = "product"
-	ProductIdColumnName            = database_products_table_util.IdColumnName
-	ProductStaffUserNameColumnName = "StaffUserName"
-	ProductDescriptionColumnName   = "Description"
-	ProductNameColumnName          = "Pname"
-	ProductCategoryColumnName      = "Category"
-	ProductSourceColumnName        = "Source"
-	ProductPriceColumnName         = "Price"
-	ProductInventoryColumnName     = "Inventory"
-	ProductSoldQuantityColumnName  = "SoldQuantity"
-	ProductOnSaleDateColumnName    = "OnSaleDate"
-	ProductImageSourceColumnName   = "ImageSrc"
-	productDiscountPolicyCodeColumnName = "SpecialEventDiscountPolicyCode"
+	ProductTableName                    = database_products_table_util.TableName
+	ProductIdColumnName                 = database_products_table_util.IdColumnName
+	ProductStaffUserNameColumnName      = "StaffUserName"
+	ProductDescriptionColumnName        = "Description"
+	ProductNameColumnName               = "Pname"
+	ProductCategoryColumnName           = "Category"
+	ProductSourceColumnName             = "Source"
+	ProductPriceColumnName              = "Price"
+	ProductInventoryColumnName          = "Inventory"
+	ProductSoldQuantityColumnName       = "SoldQuantity"
+	ProductOnSaleDateColumnName         = "OnSaleDate"
+	ProductImageSourceColumnName        = "ImageSrc"
+	productDiscountPolicyCodeColumnName = database_products_table_util.SpecialEventDiscountPolicyCodeColumnName
 )
 
 const (
